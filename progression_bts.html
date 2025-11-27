@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progression Mathématiques BTS</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --text-color: #333;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        /* Sidebar */
+        .sidebar {
+            width: 280px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+        }
+        .sidebar-header {
+            padding: 0 20px 20px;
+            border-bottom: 1px solid var(--secondary-color);
+            margin-bottom: 20px;
+        }
+        .sidebar-header h1 {
+            font-size: 1.2rem;
+            margin: 0;
+            font-weight: 600;
+        }
+        .nav-group {
+            margin-bottom: 15px;
+        }
+        .nav-group-title {
+            padding: 10px 20px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #95a5a6;
+            font-weight: bold;
+        }
+        .nav-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.2s, border-left 0.2s;
+            border-left: 4px solid transparent;
+            font-size: 0.95rem;
+        }
+        .nav-item:hover {
+            background-color: var(--secondary-color);
+        }
+        .nav-item.active {
+            background-color: var(--secondary-color);
+            border-left-color: var(--accent-color);
+        }
+        .nav-item .code {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-right: 8px;
+        }
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .module-header {
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+        .module-code {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        .module-title {
+            font-size: 2rem;
+            margin: 0;
+            color: var(--primary-color);
+        }
+        .section {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .section h2 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            color: var(--secondary-color);
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .column h3 {
+            font-size: 1.1rem;
+            color: var(--accent-color);
+            margin-top: 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+        li {
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+        .comment-box {
+            background-color: #fff8e1;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #5d4037;
+        }
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+                overflow: auto;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                padding: 10px 0;
+            }
+            .main-content {
+                padding: 20px;
+            }
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <div class="sidebar-header">
+        <h1>Progression BTS Maths</h1>
+    </div>
+    <div id="nav-container">
+        <!-- Navigation items will be injected here -->
+    </div>
+</div>
+
+<div class="main-content">
+    <div class="container" id="content-container">
+        <!-- Content will be injected here -->
+        <div class="section">
+            <h2>Bienvenue</h2>
+            <p>Sélectionnez un module dans le menu pour voir les détails de la progression.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    const data = [
+        {
+            semester: "Semestre 1",
+            modules: [
+                {
+                    code: "[MOD07]",
+                    title: "Statistique Descriptive",
+                    content: [
+                        "Série statistique à une variable : méthodes de représentation, caractéristiques de position (médiane, moyenne) et de dispersion (étendue, écart interquartile, écart type).",
+                        "Série statistique à deux variables : Nuage de points, point moyen.",
+                        "Ajustement affine par la méthode des moindres carrés.",
+                        "Coefficient de corrélation linéaire."
+                    ],
+                    capabilities: [
+                        "Utiliser un logiciel ou une calculatrice pour résumer et représenter des séries statistiques à une variable.",
+                        "Interpréter les résultats obtenus pour une série statistique ou pour comparer deux séries statistiques.",
+                        "Choisir des résumés numériques ou graphiques adaptés à une problématique.",
+                        "Utiliser un logiciel ou une calculatrice pour représenter une série statistique à deux variables et en déterminer un ajustement affine.",
+                        "Réaliser un ajustement se ramenant, par un changement de variable simple donné, à un ajustement affine.",
+                        "Utiliser un ajustement pour interpoler ou extrapoler."
+                    ],
+                    comments: "Il s’agit de réactiver les connaissances déjà traitées au lycée. L’utilisation des outils logiciels permet de faire réfléchir les étudiants à la pertinence de regroupements par classes."
+                },
+                {
+                    code: "[MOD08]",
+                    title: "Calcul des Probabilités",
+                    content: [
+                        "Conditionnement et indépendance : Conditionnement par un événement de probabilité non nulle. Indépendance de deux événements.",
+                        "Exemple de loi discrète : Loi binomiale (Schéma de Bernoulli).",
+                        "Exemples de lois à densité : Loi uniforme sur [a, b], Loi normale.",
+                        "Approximation d’une loi binomiale par une loi normale.",
+                        "Théorème de la limite centrée."
+                    ],
+                    capabilities: [
+                        "Construire un arbre et/ou un tableau des probabilités en lien avec une situation donnée.",
+                        "Exploiter l’arbre et/ou le tableau pour déterminer des probabilités.",
+                        "Calculer la probabilité d’un événement (formule des probabilités totales).",
+                        "Utiliser ou justifier l’indépendance de deux événements.",
+                        "Simuler un schéma de Bernoulli.",
+                        "Reconnaître et justifier qu’une situation relève de la loi binomiale.",
+                        "Calculer une probabilité dans le cadre de la loi binomiale, uniforme ou normale.",
+                        "Interpréter l’espérance et l’écart type."
+                    ],
+                    comments: "L’apprentissage doit largement faire appel à l’outil informatique pour la simulation et les calculs. La formule des probabilités totales n’est pas un attendu mais sa mise en œuvre doit être maîtrisée."
+                }
+            ]
+        },
+        {
+            semester: "Semestre 2",
+            modules: [
+                {
+                    code: "[MOD03]",
+                    title: "Calcul Différentiel (Fonctions)",
+                    content: [
+                        "Fonctions de référence : Tangente, arctangente.",
+                        "Compléments : Parité, périodicité.",
+                        "Calculs de dérivées : tan(u), arctan(u), cos(ωt+φ), sin(ωt+φ).",
+                        "Fonctions rationnelles : décomposition en éléments simples.",
+                        "Approximation locale : Développement limité en 0 (Taylor-Young)."
+                    ],
+                    capabilities: [
+                        "Représenter une fonction de référence.",
+                        "Exploiter la représentation graphique pour déterminer parité/périodicité.",
+                        "Calculer la dérivée d’une fonction (à la main ou via logiciel).",
+                        "Étudier les variations d’une fonction simple.",
+                        "Déterminer la décomposition en éléments simples d’une fonction rationnelle.",
+                        "Déterminer un développement limité en 0 à l'aide d'un logiciel.",
+                        "Exploiter un DL pour donner l’équation de la tangente."
+                    ],
+                    comments: "Ce module vient en complément du module « Fonctions d’une variable réelle ». On privilégie des exemples issus de problématiques professionnelles."
+                },
+                {
+                    code: "[MOD05]",
+                    title: "Calcul Intégral",
+                    content: [
+                        "Primitives de fonctions de référence.",
+                        "Calcul intégral : relation de Chasles, linéarité, positivité.",
+                        "Calcul d’aires.",
+                        "Valeur moyenne d’une fonction.",
+                        "Formule d’intégration par parties."
+                    ],
+                    capabilities: [
+                        "Déterminer des primitives (à la main pour les cas simples, via logiciel sinon).",
+                        "Déterminer une intégrale.",
+                        "Déterminer l’aire d’un domaine défini par f(x) ≤ y ≤ g(x).",
+                        "Déterminer et interpréter la valeur moyenne d’une fonction.",
+                        "Calculer une intégrale par intégration par parties."
+                    ],
+                    comments: "L’accent est mis sur la diversité des approches numérique, graphique et algorithmique."
+                }
+            ]
+        },
+        {
+            semester: "Semestre 3",
+            modules: [
+                {
+                    code: "[MOD06]",
+                    title: "Équations Différentielles",
+                    content: [
+                        "Équations linéaires du premier ordre : ay' + by = c(t).",
+                        "Équations linéaires du second ordre à coefficients réels constants : ay'' + by' + cy = d(t).",
+                        "Résolution approchée (Euler) - sur exemple."
+                    ],
+                    capabilities: [
+                        "Représenter à l’aide d’un logiciel la famille des courbes solutions.",
+                        "Résoudre une équation différentielle du premier ou second ordre (cas simples à la main, sinon logiciel).",
+                        "Déterminer la solution vérifiant une condition initiale donnée."
+                    ],
+                    comments: "On s'attache à relier les exemples avec les enseignements scientifiques (phénomènes d'évolution). L'utilisation des outils logiciels est sollicitée."
+                },
+                {
+                    code: "[MOD09]",
+                    title: "Statistique Inférentielle",
+                    content: [
+                        "Estimation ponctuelle (proportion, moyenne, écart type).",
+                        "Estimation par intervalle de confiance (proportion, moyenne).",
+                        "Tests d’hypothèse : bilatéraux et unilatéraux (proportion, moyenne, comparaison).",
+                        "Risques d’erreur de première et de seconde espèce."
+                    ],
+                    capabilities: [
+                        "Estimer ponctuellement un paramètre à partir d'un échantillon.",
+                        "Déterminer un intervalle de confiance à un niveau donné.",
+                        "Déterminer la taille nécessaire d’un échantillon pour une précision donnée.",
+                        "Déterminer la région de rejet et énoncer la règle de décision d'un test.",
+                        "Analyser les risques d’erreur."
+                    ],
+                    comments: "La validité d’une méthode statistique est liée à l’adéquation entre la réalité et le modèle. Les situations artificielles sont à éviter."
+                }
+            ]
+        },
+        {
+            semester: "Semestre 4",
+            modules: [
+                {
+                    code: "[MOD11]",
+                    title: "Fiabilité",
+                    content: [
+                        "Vocabulaire de la fiabilité (MTBF, taux de défaillance...).",
+                        "Lois de fiabilité : Exponentielle, Weibull.",
+                        "Taux de défaillance constant, croissant, décroissant (courbe en baignoire).",
+                        "Systèmes en série, en parallèle."
+                    ],
+                    capabilities: [
+                        "Calculer et interpréter la fiabilité R(t), la défaillance F(t), le taux de défaillance λ(t).",
+                        "Calculer la MTBF.",
+                        "Utiliser la loi exponentielle ou de Weibull pour modéliser une durée de vie.",
+                        "Calculer la fiabilité d'un système simple (série/parallèle)."
+                    ],
+                    comments: "On privilégie les exemples issus du domaine professionnel. Des logiciels spécialisés peuvent être utilisés."
+                }
+            ]
+        }
+    ];
+
+    function renderNav() {
+        const container = document.getElementById('nav-container');
+        let html = '';
+        data.forEach((sem, semIndex) => {
+            html += `<div class="nav-group">
+                <div class="nav-group-title">${sem.semester}</div>`;
+            sem.modules.forEach((mod, modIndex) => {
+                html += `<div class="nav-item" onclick="showModule(${semIndex}, ${modIndex})" id="nav-${semIndex}-${modIndex}">
+                    <span class="code">${mod.code}</span> ${mod.title}
+                </div>`;
+            });
+            html += `</div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function showModule(semIndex, modIndex) {
+        // Update active nav
+        document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+        document.getElementById(`nav-${semIndex}-${modIndex}`).classList.add('active');
+
+        const mod = data[semIndex].modules[modIndex];
+        const container = document.getElementById('content-container');
+        
+        let contentHtml = mod.content.map(item => `<li>${item}</li>`).join('');
+        let capHtml = mod.capabilities.map(item => `<li>${item}</li>`).join('');
+        
+        container.innerHTML = `
+            <div class="module-header">
+                <span class="module-code">${mod.code}</span>
+                <h1 class="module-title">${mod.title}</h1>
+            </div>
+            
+            <div class="content-grid">
+                <div class="section column">
+                    <h3>Contenus</h3>
+                    <ul>${contentHtml}</ul>
+                </div>
+                <div class="section column">
+                    <h3>Capacités attendues</h3>
+                    <ul>${capHtml}</ul>
+                </div>
+            </div>
+
+            ${mod.comments ? `
+            <div class="comment-box">
+                <strong>Commentaires :</strong> ${mod.comments}
+            </div>` : ''}
+        `;
+    }
+
+    // Initialize
+    renderNav();
+    // Show first module by default
+    showModule(0, 0);
+
+</script>
+
+</body>
+</html>
