@@ -143,6 +143,25 @@
             font-size: 0.9rem;
             color: #5d4037;
         }
+        .resource-list { list-style: none; padding-left: 0; margin: 0; }
+        .resource-list li { margin-bottom: 6px; }
+        .resource-list a {
+            color: var(--accent-color);
+            text-decoration: none;
+            border-bottom: 1px dotted var(--accent-color);
+        }
+        .resource-list a:hover { color: var(--primary-color); }
+        .folder-link {
+            float: right;
+            font-size: 0.85rem;
+            background: var(--accent-color);
+            color: white !important;
+            padding: 3px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            border: none !important;
+        }
+        .folder-link:hover { background: var(--secondary-color); }
         /* Responsive */
         @media (max-width: 768px) {
             body {
@@ -427,6 +446,97 @@
         }
     ];
 
+    // Ressources locales réellement présentes dans chaque dossier (scan du 25/06/2026).
+    // La clé est le code module ; le dossier est déduit du code (ex. [MOD00] -> MOD00).
+    // MOD11 n'a pas encore de dossier : pas d'entrée.
+    const resourceMap = {
+        "[MOD00]": [
+            "MOD00_S01_Calculs_Fondamentaux_Cours_v1_0.pdf",
+            "MOD00_S01_Calculs_Fondamentaux_TD_v1_0.pdf",
+            "MOD00_S01_Calculs_Fondamentaux_Evaluation_v1_0.pdf"
+        ],
+        "[MOD01]": [
+            "Nombres_complexes_indus.pdf",
+            "synthese_complexes_elec.pdf",
+            "nombres complexes et électricité.pdf",
+            "RLC Complexes.pdf",
+            "Cours & Exercices d'ELECTRICITE_CESI_20042007.pdf",
+            "poly-elec.pdf",
+            "eval_complexes.pdf",
+            "eval_complexes00.pdf",
+            "corrige_complexes.pdf"
+        ],
+        "[MOD02]": [
+            "MOD02_Suites_Cours_v1_0.pdf",
+            "MOD02_Suites_TD_v1_0.pdf",
+            "MOD02_Suites_Evaluation_v1_0.pdf"
+        ],
+        "[MOD03]": [
+            "MOD03___Calcul_Différentiel.pdf",
+            "MOD03_S01_Introduction_Derivation_Cours_TD_v1_0.pdf",
+            "MOD03_S01_Optimisation_1_Variable_Cours.pdf",
+            "MOD03_S01_Optimisation_1_Variable_TD_v2_0.pdf",
+            "MOD03_S01_Optimisation_Synthese_Cours_TD_v1_0.pdf",
+            "MOD03_S01_Optimisation_Industrielle_Devoir_v1_0.pdf",
+            "MOD03_SEQ04_Optimisation_Fonctions_TD_v1_1.pdf",
+            "Fonctions_exp_et_ln_MOD03.pdf",
+            "Intro_ln___exp.pdf",
+            "TD_Ln_et_Exp.pdf",
+            "TD_AVANCÉ___Exponentielle_et_Logarithme.pdf",
+            "TD_Applications_industrielles_Ln___Exp.pdf",
+            "DS_ln_et_Exp.pdf",
+            "DS_Dérivées CPRP-CRSA-ATI Optimisation.pdf",
+            "Devoir_Surveillé___Dérivation_et_Optimisation.pdf",
+            "Corrigé_DS_Dérivées___Optimisation__21112025.pdf",
+            "MOD03_TP01_Pendule_Simple_Tracker_v1_0.pdf",
+            "MOD03_TP02_Ressort_Oscillant_Tracker_v1_0.pdf",
+            "MOD03_TP03_Chute_Libre_Tracker_v1_0.pdf"
+        ],
+        "[MOD04]": [
+            "MOD04_Fonctions_Classiques_Cours_v1_0.pdf",
+            "MOD04_Fonctions_Classiques_TD_v1_0.pdf",
+            "MOD04_Fonctions_Classiques_Evaluation_v1_0.pdf"
+        ],
+        "[MOD05]": [
+            "MOD05_Calcul_Integral_Cours_Synthese_v1_0.pdf",
+            "TD exercices-integrales simples.pdf"
+        ],
+        "[MOD06]": [
+            "Cours_Equations_Differentielles_Ordre2.pdf",
+            "TD_Activites_Equations_Differentielles.pdf",
+            "TD_EDL1_MOD06.pdf",
+            "TD_EDL1_MOD06_app.pdf"
+        ],
+        "[MOD07]": [
+            "MOD07_S01_Statistiques_1_Variable_Devoir_v1_0.pdf",
+            "MOD07_S01_Statistiques_1_Variable_Controle_v1_0.pdf",
+            "MOD07_S01_Statistiques_1_Variable_Controle_v2_0.pdf",
+            "MOD07_S01_Statistiques_1_Variable_Controle_v3_1_Corrigé.pdf",
+            "MOD07_S01_Statistiques_1_Variable_Corrigé_v1_1_.pdf",
+            "Test_de_Positionnement___Maîtrise_du_Signe_Somme.pdf"
+        ],
+        "[MOD08]": [
+            "Cours_Dénombrement___Probabilités.pdf",
+            "Cours_Dénombrement___corrigé_ex.pdf",
+            "TD_EX.pdf",
+            "correction_ex.pdf",
+            "DS_probabilités_Conditionnelles_et_Loi_Binomiale.pdf",
+            "Corrigé DS_probabilités_Conditionnelles_et_Loi_Binomiale.pdf",
+            "DS_Loi_Normale.pdf",
+            "corrigé_devoir_loi_normale.pdf"
+        ],
+        "[MOD09]": [
+            "BTS_Industriel___MOD09_TD_Statistique_Inférentielle.pdf",
+            "Corrigé___TD_Tests_d_hypothèses_MOD09_Statistique_Inférentielle.pdf",
+            "DEVOIR_SURVEILLÉ___MOD09.pdf",
+            "Corrigé_DS_Tests_MOD09.pdf",
+            "Exercices_approfondissement_MSP.pdf",
+            "Corrigé_EX_appro_MSP.pdf",
+            "Corrigé_Devoir_MSP.pdf",
+            "BTS_CPRP_Cartes_de_contrôle_et_Capabilité.pdf"
+        ]
+    };
+
     function renderNav() {
         const container = document.getElementById('nav-container');
         let html = '';
@@ -453,7 +563,22 @@
         
         let contentHtml = mod.content.map(item => `<li>${item}</li>`).join('');
         let capHtml = mod.capabilities.map(item => `<li>${item}</li>`).join('');
-        
+
+        const folder = mod.code.replace(/[\[\]]/g, '');
+        const res = resourceMap[mod.code] || [];
+        let resHtml;
+        if (res.length > 0) {
+            const links = res.map(f =>
+                `<li><a href="${folder}/${encodeURIComponent(f)}" target="_blank">${f.replace(/\.pdf$/i, '').replace(/_+/g, ' ')}</a></li>`
+            ).join('');
+            resHtml = `<div class="section">
+                <h3>Ressources locales <a class="folder-link" href="${folder}" target="_blank">Ouvrir le dossier</a></h3>
+                <ul class="resource-list">${links}</ul>
+            </div>`;
+        } else {
+            resHtml = `<div class="comment-box">Aucune ressource liée : le dossier de ce module n'existe pas encore.</div>`;
+        }
+
         container.innerHTML = `
             <div class="module-header">
                 <span class="module-code">${mod.code}</span>
@@ -475,6 +600,8 @@
             <div class="comment-box">
                 <strong>Commentaires :</strong> ${mod.comments}
             </div>` : ''}
+
+            ${resHtml}
         `;
     }
 
