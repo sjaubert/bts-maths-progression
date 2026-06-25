@@ -1,0 +1,195 @@
+% ============================================================
+% TD : Les Suites Numériques
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Travaux dirigés (sans corrigés)
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{consigne}{%
+  colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD02 -- TD}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Travaux Dirigés -- MOD02}\\[4pt]
+{\color{white}\large Les Suites numériques}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Séquences : & [S01] Généralités \quad [S02] Suites arithmétiques et géométriques \\
+Compétences : & [C01] termes \quad [C02] représentation / somme \quad [C03] seuil par algorithme ou tableur \\
+\end{tabular}
+
+\begin{consigne}
+\textbf{Consignes.} Justifier la nature des suites et détailler les calculs. Pour les recherches de seuil, on pourra utiliser un tableur ou écrire un algorithme. Calculatrice autorisée.
+\end{consigne}
+
+\section{Généralités \hfill {\normalsize\color{uimmred}[S01]}}
+
+\begin{exo}{Exercice 1 -- Calcul de termes}
+\begin{enumerate}[label=\alph*)]
+  \item $u_n = 5n - 2$ : calculer $u_0$, $u_3$, $u_{10}$.
+  \item $v_n = n^2 - n$ : calculer $v_1$, $v_4$, $v_7$.
+  \item $w_0 = 3$, $w_{n+1} = 2w_n - 1$ : calculer $w_1$, $w_2$, $w_3$, $w_4$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 2 -- Nature d'une suite}
+Pour chaque suite, dire si elle est arithmétique, géométrique ou ni l'une ni l'autre, et préciser la raison s'il y a lieu.
+\begin{enumerate}[label=\alph*)]
+  \item $5,\; 8,\; 11,\; 14,\dots$
+  \item $3,\; 6,\; 12,\; 24,\dots$
+  \item $1,\; 4,\; 9,\; 16,\dots$
+  \item $100,\; 90,\; 81,\; 72{,}9,\dots$
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 3 -- Sens de variation}
+Étudier le sens de variation de la suite définie par $u_n = 2n^2 - 3$ en calculant $u_{n+1} - u_n$.
+\end{exo}
+
+\begin{exo}{Exercice 4 -- Représentation graphique}
+On donne la suite $u_n = 10 - 2n$ pour $n$ de $0$ à $5$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer les six premiers termes.
+  \item Placer les points $(n\,;\,u_n)$ dans un repère.
+  \item Que peut-on dire du sens de variation ?
+\end{enumerate}
+\end{exo}
+
+\section{Suites arithmétiques \hfill {\normalsize\color{uimmred}[S02]\,[C01]\,[C02]}}
+
+\begin{exo}{Exercice 5 -- Terme général et somme}
+Une suite arithmétique a pour premier terme $u_0 = 4$ et raison $r = 6$.
+\begin{enumerate}[label=\alph*)]
+  \item Donner $u_n$ en fonction de $n$.
+  \item Calculer $u_{30}$.
+  \item Calculer $u_0 + u_1 + \dots + u_{30}$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 6 -- Retrouver les paramètres}
+Une suite arithmétique vérifie $u_5 = 23$ et $u_{12} = 51$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer la raison $r$.
+  \item Déterminer $u_0$, puis l'expression de $u_n$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 7 -- Application : montée en cadence}
+Une ligne produit $30$ pièces la première heure, puis $6$ de plus à chaque heure.
+\begin{enumerate}[label=\alph*)]
+  \item Modéliser la production horaire par une suite arithmétique.
+  \item Quelle est la production de la $8^{\text{e}}$ heure ?
+  \item Quelle est la production cumulée sur $8$ heures ?
+\end{enumerate}
+\end{exo}
+
+\section{Suites géométriques \hfill {\normalsize\color{uimmred}[S02]\,[C01]\,[C02]}}
+
+\begin{exo}{Exercice 8 -- Terme général et somme}
+Une suite géométrique a pour premier terme $u_0 = 2$ et raison $q = 3$.
+\begin{enumerate}[label=\alph*)]
+  \item Donner $u_n$ en fonction de $n$.
+  \item Calculer $u_6$.
+  \item Calculer $u_0 + u_1 + \dots + u_6$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 9 -- Intérêts composés}
+Un capital de $8000\,$€ est placé à $4\,\%$ par an.
+\begin{enumerate}[label=\alph*)]
+  \item Exprimer le capital $C_n$ après $n$ années.
+  \item Calculer le capital au bout de $5$ ans.
+  \item De combien a-t-il augmenté en pourcentage sur $5$ ans ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 10 -- Dépréciation}
+Une machine vaut $35\,000\,$€ et perd $12\,\%$ de sa valeur chaque année.
+\begin{enumerate}[label=\alph*)]
+  \item Quelle est la nature de la suite des valeurs ? Donner la raison.
+  \item Exprimer $V_n$ et calculer $V_4$.
+\end{enumerate}
+\end{exo}
+
+\section{Recherche de seuil \hfill {\normalsize\color{uimmred}[C03]}}
+
+\begin{exo}{Exercice 11 -- Seuil par le calcul ou le tableur}
+On reprend le capital de l'exercice 9 ($C_0 = 8000$, $q = 1{,}04$).
+\begin{enumerate}[label=\alph*)]
+  \item À l'aide d'un tableur, déterminer la première année où le capital dépasse $10\,000\,$€.
+  \item Décrire la formule de cellule utilisée.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 12 -- Écriture d'un algorithme}
+Une population de bactéries de $200$ individus augmente de $25\,\%$ par heure.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la nature de la suite et son terme général.
+  \item Écrire un algorithme (en langage naturel ou en Python) déterminant le nombre d'heures au bout duquel la population dépasse $1000$ individus.
+  \item Donner ce nombre d'heures.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 13 -- Maintenance préventive}
+Le jeu d'un roulement, initialement de $0{,}05\,$mm, augmente de $6\,\%$ à chaque cycle. Le jeu maximal toléré est $0{,}12\,$mm.
+\begin{enumerate}[label=\alph*)]
+  \item Modéliser le jeu par une suite géométrique.
+  \item Déterminer le nombre de cycles avant d'atteindre le seuil de tolérance.
+\end{enumerate}
+\end{exo}
+
+\vfill
+\begin{center}\color{uimmgray}\small
+\textit{Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}

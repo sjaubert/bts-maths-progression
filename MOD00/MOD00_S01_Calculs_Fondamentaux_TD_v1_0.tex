@@ -1,0 +1,220 @@
+% ============================================================
+% TD : Pré-requis - Calculs fondamentaux
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Travaux dirigés (sans corrigés)
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+% Carte d'exercice
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{consigne}{%
+  colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD00 -- TD}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+% ----- Bandeau de titre -----
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Travaux Dirigés -- MOD00}\\[4pt]
+{\color{white}\large Pré-requis : Calculs fondamentaux}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Séquence : & [S01] Calculs fondamentaux \\
+Compétences : & [C01] à [C07] -- logique, relatifs, fractions, calcul littéral, équations, mise en équation \\
+\end{tabular}
+
+\begin{consigne}
+\textbf{Consignes.} Tous les calculs doivent être justifiés. Les résultats fractionnaires sont donnés sous forme simplifiée. La calculatrice est autorisée pour les vérifications, pas pour remplacer le raisonnement.
+\end{consigne}
+
+\section{Logique \hfill {\normalsize\color{uimmred}[C01]}}
+
+\begin{exo}{Exercice 1 -- Valeur de vérité et négation}
+Pour chaque proposition, indiquer si elle est vraie ou fausse, puis écrire sa négation.
+\begin{enumerate}[label=\alph*)]
+  \item $\forall x \in \mathbb{R},\; x^2 \geq x$
+  \item $\exists n \in \mathbb{N},\; n^2 = 16$
+  \item $\forall x \in \mathbb{R},\; (x > 2 \Rightarrow x^2 > 4)$
+  \item $\exists x \in \mathbb{R},\; x^2 + 1 = 0$
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 2 -- Implication, réciproque, équivalence}
+Soit $n$ un entier. On considère : $P$ : ``$n$ est divisible par $6$'' et $Q$ : ``$n$ est divisible par $3$''.
+\begin{enumerate}[label=\alph*)]
+  \item L'implication $P \Rightarrow Q$ est-elle vraie ? Justifier.
+  \item Énoncer la réciproque et dire si elle est vraie.
+  \item A-t-on l'équivalence $P \Leftrightarrow Q$ ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 3 -- Conditions nécessaire et suffisante}
+Compléter par ``condition nécessaire'', ``condition suffisante'' ou ``nécessaire et suffisante''.
+\begin{enumerate}[label=\alph*)]
+  \item Pour qu'un quadrilatère soit un carré, il est \dots\ qu'il ait quatre angles droits.
+  \item Pour qu'un produit soit nul, il est \dots\ que l'un des facteurs soit nul.
+\end{enumerate}
+\end{exo}
+
+\section{Relatifs, priorités et puissances \hfill {\normalsize\color{uimmred}[C02]}}
+
+\begin{exo}{Exercice 4 -- Calculs avec priorités}
+Calculer en détaillant les étapes.
+\begin{enumerate}[label=\alph*)]
+  \item $-8 + 5 \times (-3)$
+  \item $12 - 4 \times (2 - 5)$
+  \item $(-3)^2 - (-2)^3$
+  \item $-2^4 + (-2)^4$
+  \item $\dfrac{-15 + 3 \times 4}{-1}$
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 5 -- Puissances}
+Écrire sous la forme d'une seule puissance de $10$.
+\begin{enumerate}[label=\alph*)]
+  \item $10^6 \times 10^{-3}$
+  \item $\dfrac{10^{-2}}{10^{5}}$
+  \item $\left(10^{3}\right)^{4}$
+  \item $\dfrac{10^7 \times 10^{-4}}{10^{-2}}$
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 6 -- Application : notation scientifique}
+Un signal a une période $T = 20\,\mu$s et une fréquence $f = 1/T$. Exprimer $T$ en notation scientifique (en secondes), puis calculer $f$ en kHz.
+\end{exo}
+
+\section{Fractions \hfill {\normalsize\color{uimmred}[C03]}}
+
+\begin{exo}{Exercice 7 -- Opérations sur les fractions}
+Donner le résultat sous forme de fraction irréductible.
+\begin{enumerate}[label=\alph*)]
+  \item $\dfrac{5}{6} - \dfrac{3}{4}$
+  \item $\dfrac{7}{10} + \dfrac{2}{15}$
+  \item $\dfrac{3}{8} \times \dfrac{4}{9}$
+  \item $\dfrac{5}{6} \div \dfrac{10}{3}$
+  \item $\dfrac{\frac{2}{3}}{\frac{4}{5}}$
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 8 -- Résistances en parallèle}
+Deux résistances $R_1 = 12\,\Omega$ et $R_2 = 4\,\Omega$ sont en parallèle. La résistance équivalente vérifie $\dfrac{1}{R_{eq}} = \dfrac{1}{R_1} + \dfrac{1}{R_2}$. Calculer $R_{eq}$ en détaillant le calcul de fractions.
+\end{exo}
+
+\section{Calcul littéral \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{exo}{Exercice 9 -- Développer et réduire}
+\begin{enumerate}[label=\alph*)]
+  \item $3(2x - 5) - 2(x - 4)$
+  \item $(x + 3)(x - 7)$
+  \item $(2x - 1)^2$
+  \item $(3x + 5)(3x - 5)$
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 10 -- Factoriser}
+\begin{enumerate}[label=\alph*)]
+  \item $6x^2 + 9x$
+  \item $x^2 - 36$
+  \item $4x^2 - 25$
+  \item $(x - 2)(x + 5) + (x - 2)(3x)$
+  \item $x^2 + 10x + 25$
+\end{enumerate}
+\end{exo}
+
+\section{Équations et systèmes \hfill {\normalsize\color{uimmred}[C05]}}
+
+\begin{exo}{Exercice 11 -- Premier degré}
+Résoudre.
+\begin{enumerate}[label=\alph*)]
+  \item $7x - 4 = 3x + 12$
+  \item $5(x - 2) = 3x + 4$
+  \item $\dfrac{x}{3} + 2 = \dfrac{x}{2} - 1$
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 12 -- Systèmes}
+Résoudre par la méthode de votre choix.
+\begin{enumerate}[label=\alph*)]
+  \item $\begin{cases} x + y = 12 \\ 2x - y = 3 \end{cases}$
+  \item $\begin{cases} 3x + 2y = 16 \\ 5x - 2y = 8 \end{cases}$
+\end{enumerate}
+\end{exo}
+
+\section{Second degré \hfill {\normalsize\color{uimmred}[C06]}}
+
+\begin{exo}{Exercice 13 -- Résolution}
+Résoudre dans $\mathbb{R}$.
+\begin{enumerate}[label=\alph*)]
+  \item $x^2 - 9x + 20 = 0$
+  \item $3x^2 - 5x - 2 = 0$
+  \item $x^2 - 10x + 25 = 0$
+  \item $2x^2 + x + 3 = 0$
+\end{enumerate}
+\end{exo}
+
+\section{Poser un problème \hfill {\normalsize\color{uimmred}[C07]}}
+
+\begin{exo}{Exercice 14 -- Mise en équation (premier degré)}
+Un technicien facture un déplacement fixe de $45\,$€ plus $35\,$€ par heure d'intervention. Une facture s'élève à $185\,$€. Poser une équation et déterminer le nombre d'heures facturées.
+\end{exo}
+
+\begin{exo}{Exercice 15 -- Mise en équation (système)}
+Un lot de $50$ pièces contient des pièces de type A à $4\,$€ et de type B à $7\,$€. La valeur totale du lot est $275\,$€. Déterminer le nombre de pièces de chaque type.
+\end{exo}
+
+\begin{exo}{Exercice 16 -- Mise en équation (second degré)}
+Une plaque rectangulaire a une aire de $48\,$cm$^2$. Sa longueur dépasse sa largeur de $2\,$cm. Déterminer ses dimensions.
+\end{exo}
+
+\vfill
+\begin{center}\color{uimmgray}\small
+\textit{Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}

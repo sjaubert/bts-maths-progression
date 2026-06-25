@@ -1,0 +1,195 @@
+% ============================================================
+% TD : Fonctions classiques d'une variable réelle
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Travaux dirigés (sans corrigés) - compétences à valider
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{consigne}{%
+  colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newtcolorbox{avalider}{%
+  colback=yellow!14, colframe=uimmred!85!black, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD04 -- TD}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Travaux Dirigés -- MOD04}\\[4pt]
+{\color{white}\large Fonctions classiques d'une variable réelle}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Séquences : & [S01] Fonctions classiques \quad [S02] Circulaires \quad [S03] Hyperboliques \\
+\end{tabular}
+
+\begin{avalider}
+\footnotesize $\bigstar$ \textbf{Codes compétences à valider.} Le module MOD04 n'est pas encore au plan officiel ; les codes [C0x] sont une proposition à confirmer.
+\end{avalider}
+
+\begin{consigne}
+\textbf{Consignes.} Détailler les calculs et préciser les domaines de définition. Les angles sont en radians. Calculatrice autorisée pour les valeurs approchées.
+\end{consigne}
+
+\section{Fonctions quadratiques \hfill {\normalsize\color{uimmred}[S01]\,[C01]}}
+
+\begin{exo}{Exercice 1 -- Forme canonique et sommet}
+Soit $f(x) = x^2 - 6x + 5$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer les coordonnées du sommet.
+  \item Donner la forme canonique.
+  \item Déterminer les racines et la forme factorisée.
+  \item Dresser le tableau de signes de $f$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 2 -- Parabole tournée vers le bas}
+Soit $g(x) = -2x^2 + 12x - 10$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer le sommet et le sens de variation.
+  \item Pour quelle valeur de $x$ la fonction est-elle maximale ? Que vaut ce maximum ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 3 -- Optimisation}
+On dispose de $40\,$m de clôture pour délimiter un enclos rectangulaire contre un mur (un seul côté est le mur, donc trois côtés à clôturer). On note $x$ la largeur.
+\begin{enumerate}[label=\alph*)]
+  \item Exprimer l'aire $A(x)$ de l'enclos.
+  \item Déterminer la largeur qui maximise l'aire, puis l'aire maximale.
+\end{enumerate}
+\end{exo}
+
+\section{Fractions rationnelles \hfill {\normalsize\color{uimmred}[C02]}}
+
+\begin{exo}{Exercice 4 -- Domaine et signe}
+Soit $f(x) = \dfrac{2x - 4}{x - 3}$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer le domaine de définition.
+  \item Résoudre $f(x) = 0$.
+  \item Étudier le signe de $f(x)$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 5 -- Équations et inéquations}
+\begin{enumerate}[label=\alph*)]
+  \item Résoudre $\dfrac{x + 1}{x - 2} = 3$.
+  \item Résoudre l'inéquation $\dfrac{x - 5}{x + 1} \leq 0$.
+\end{enumerate}
+\end{exo}
+
+\section{Logarithme et exponentielle \hfill {\normalsize\color{uimmred}[C03]}}
+
+\begin{exo}{Exercice 6 -- Équations}
+Résoudre dans $\mathbb{R}$.
+\begin{enumerate}[label=\alph*)]
+  \item $e^{2x} = 9$
+  \item $\ln(3x - 1) = 2$
+  \item $e^{2x} - 4e^x + 3 = 0$
+  \item $\ln(x) + \ln(x - 2) = \ln(3)$
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 7 -- Propriétés algébriques}
+Simplifier les expressions suivantes.
+\begin{enumerate}[label=\alph*)]
+  \item $\ln(8) - \ln(2)$
+  \item $\ln(e^3) + e^{\ln 5}$
+  \item $\ln\!\left(\dfrac{1}{e^2}\right)$
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 8 -- Charge d'un condensateur}
+La tension d'un condensateur en charge vaut $u(t) = 10\,(1 - e^{-t/0{,}2})$ (V, $t$ en s).
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $u(0)$ et la limite de $u$ en $+\infty$.
+  \item À quel instant $t$ la tension atteint-elle $8\,$V ?
+\end{enumerate}
+\end{exo}
+
+\section{Fonctions circulaires \hfill {\normalsize\color{uimmred}[S02]\,[C01]\,[C02]\,[C03]}}
+
+\begin{exo}{Exercice 9 -- Valeurs et équations}
+\begin{enumerate}[label=\alph*)]
+  \item Donner les valeurs exactes de $\cos\dfrac{\pi}{6}$, $\sin\dfrac{\pi}{4}$, $\tan\dfrac{\pi}{3}$.
+  \item Résoudre $\cos x = \dfrac{\sqrt{3}}{2}$ sur $[0\,;\,2\pi[$.
+  \item Résoudre $\sin x = -\dfrac{1}{2}$ sur $[0\,;\,2\pi[$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 10 -- Fonctions réciproques}
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $\arcsin\!\left(\dfrac{\sqrt{2}}{2}\right)$, $\arccos(0)$, $\arctan(\sqrt{3})$.
+  \item En électricité, le déphasage vaut $\varphi = \arctan\!\left(\dfrac{X}{R}\right)$. Calculer $\varphi$ pour $X = 50\,\Omega$ et $R = 50\,\Omega$.
+\end{enumerate}
+\end{exo}
+
+\section{Fonctions hyperboliques \hfill {\normalsize\color{uimmred}[S03]\,[C01]\,[C02]\,[C03]}}
+
+\begin{exo}{Exercice 11 -- Définitions et propriétés}
+\begin{enumerate}[label=\alph*)]
+  \item À partir des définitions, montrer que $\cosh^2 x - \sinh^2 x = 1$.
+  \item Calculer $\cosh(0)$, $\sinh(0)$, $\tanh(0)$.
+  \item Donner les dérivées de $\sinh x$, $\cosh x$ et $\tanh x$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 12 -- Réciproques et chaînette}
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $\operatorname{argsinh}(0)$ et $\operatorname{argtanh}\!\left(\dfrac{1}{2}\right)$ (valeur exacte puis approchée).
+  \item Un câble suspendu a pour équation $y = 5\cosh\!\left(\dfrac{x}{5}\right)$. Calculer la hauteur du câble en $x = 0$ et en $x = 5$ (valeur approchée).
+\end{enumerate}
+\end{exo}
+
+\vfill
+\begin{center}\color{uimmgray}\small
+\textit{Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}

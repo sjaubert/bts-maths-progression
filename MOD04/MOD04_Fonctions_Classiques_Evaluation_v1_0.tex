@@ -1,0 +1,134 @@
+% ============================================================
+% Évaluation : Fonctions classiques d'une variable réelle
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Sans barème, sans corrigés - compétences à valider
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{consigne}{%
+  colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newtcolorbox{avalider}{%
+  colback=yellow!14, colframe=uimmred!85!black, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD04 -- Éval}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Évaluation -- MOD04}\\[4pt]
+{\color{white}\large Fonctions classiques d'une variable réelle}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Nom, prénom : & \dotfill \\
+Séquences : & [S01] Fonctions classiques \quad [S02] Circulaires \quad [S03] Hyperboliques \\
+\end{tabular}
+
+\begin{avalider}
+\footnotesize $\bigstar$ \textbf{Codes compétences à valider} (module MOD04 non encore inscrit au plan officiel).
+\end{avalider}
+
+\begin{consigne}
+\textbf{Consignes.} Justifier chaque réponse, préciser les domaines de définition, les angles sont en radians.
+\end{consigne}
+
+\section{Fonction quadratique \hfill {\normalsize\color{uimmred}[C01]}}
+\begin{exo}{Exercice 1}
+Soit $f(x) = x^2 - 4x - 5$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer le sommet et le sens de variation.
+  \item Déterminer les racines.
+  \item Donner le signe de $f$.
+\end{enumerate}
+\end{exo}
+
+\section{Fraction rationnelle \hfill {\normalsize\color{uimmred}[C02]}}
+\begin{exo}{Exercice 2}
+Soit $g(x) = \dfrac{3x - 6}{x + 2}$.
+\begin{enumerate}[label=\alph*)]
+  \item Donner le domaine de définition.
+  \item Résoudre $g(x) = 0$.
+  \item Étudier le signe de $g(x)$.
+\end{enumerate}
+\end{exo}
+
+\section{Logarithme et exponentielle \hfill {\normalsize\color{uimmred}[C03]}}
+\begin{exo}{Exercice 3}
+Résoudre dans $\mathbb{R}$.
+\begin{enumerate}[label=\alph*)]
+  \item $e^{3x} = 4$
+  \item $\ln(2x + 1) = 0$
+  \item $e^{2x} - 6e^x + 5 = 0$
+\end{enumerate}
+\end{exo}
+
+\section{Trigonométrie \hfill {\normalsize\color{uimmred}[C01]\,[C02]\,[C03]}}
+\begin{exo}{Exercice 4}
+\begin{enumerate}[label=\alph*)]
+  \item Résoudre $\cos x = \dfrac{1}{2}$ sur $[0\,;\,2\pi[$.
+  \item Calculer $\arctan(1)$ et $\arcsin\!\left(-\dfrac{1}{2}\right)$.
+\end{enumerate}
+\end{exo}
+
+\section{Fonctions hyperboliques \hfill {\normalsize\color{uimmred}[C01]\,[C02]}}
+\begin{exo}{Exercice 5}
+\begin{enumerate}[label=\alph*)]
+  \item Rappeler les définitions de $\cosh x$ et $\sinh x$ à partir de l'exponentielle.
+  \item Vérifier que $\cosh^2 x - \sinh^2 x = 1$.
+  \item Donner la dérivée de $h(x) = \sinh(2x)$.
+\end{enumerate}
+\end{exo}
+
+\vfill
+\begin{center}\color{uimmgray}\small
+\textit{Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}
