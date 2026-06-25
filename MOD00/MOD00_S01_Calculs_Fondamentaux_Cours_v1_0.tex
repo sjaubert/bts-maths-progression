@@ -1,0 +1,906 @@
+% ============================================================
+% Cours : Pré-requis - Calculs fondamentaux
+% Pôle Formation UIMM - CVDL
+% BTS Industriel - Mathématiques
+% Auteur : S. JAUBERT
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+
+% ----- Encodage et langue -----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ----- Polices sans-serif -----
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% ----- Mise en page -----
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+
+% ----- Mathématiques -----
+\usepackage{amsmath,amssymb,amsfonts}
+
+% ----- Graphiques et couleurs -----
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathmorphing, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ----- Boîtes colorées -----
+\usepackage[most]{tcolorbox}
+
+% ----- En-tête et pied de page -----
+\usepackage{fancyhdr}
+
+% ----- Hyperliens -----
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+% ----- Enumération personnalisée -----
+\usepackage{enumitem}
+
+% ----- Tableaux -----
+\usepackage{booktabs,array}
+
+% ============================================================
+% CHARTE GRAPHIQUE UIMM
+% ============================================================
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+
+% ----- Styles des sections -----
+\usepackage{titlesec}
+\titleformat{\section}
+  {\LARGE\bfseries\color{uimmblue}}
+  {\thesection.}{0.5em}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.5pt]}]
+\titleformat{\subsection}
+  {\Large\bfseries\color{uimmblue}}
+  {\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}
+  {\large\bfseries\color{uimmblue!80!black}}
+  {\thesubsubsection.}{0.5em}{}
+
+% ----- Puces personnalisées -----
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+\setlist[itemize,2]{label={\color{uimmblue}--}}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+
+% ============================================================
+% BOÎTES TCOLORBOX
+% ============================================================
+% Définition
+\newtcolorbox{definition}[1][]{%
+  colback=uimmlightblue,
+  colframe=uimmblue,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{Définition}~#1},
+  coltitle=white,
+  boxrule=1pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Théorème / Propriété
+\newtcolorbox{theoreme}[1][]{%
+  colback=uimmlightblue!50,
+  colframe=uimmblue!80!black,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{Théorème / Propriété}~#1},
+  coltitle=white,
+  boxrule=1.2pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Méthode
+\newtcolorbox{methode}[1][]{%
+  colback=green!5,
+  colframe=green!50!black,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{Méthode}~#1},
+  coltitle=white,
+  boxrule=1pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Exemple
+\newtcolorbox{exemple}[1][]{%
+  colback=orange!5,
+  colframe=orange!70!black,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{Exemple}~#1},
+  coltitle=white,
+  boxrule=1pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Remarque
+\newtcolorbox{remarque}[1][]{%
+  colback=uimmlightgray,
+  colframe=uimmgray,
+  fonttitle=\bfseries,
+  title={\textsf{Remarque}~#1},
+  boxrule=0.8pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Application industrielle
+\newtcolorbox{appliindus}[1][]{%
+  colback=uimmred!5,
+  colframe=uimmred!80!black,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{$\triangleright$ Application industrielle}~#1},
+  coltitle=white,
+  boxrule=1.2pt,
+  arc=4pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Piège à éviter
+\newtcolorbox{piege}[1][]{%
+  colback=red!4,
+  colframe=red!60!black,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{$\bigtriangleup$ Erreur fréquente}~#1},
+  coltitle=white,
+  boxrule=1pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% ============================================================
+% EN-TÊTE / PIED DE PAGE
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancyhead[L]{%
+  \raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}%
+}
+\fancyhead[C]{%
+  \begin{minipage}{8cm}
+    \centering
+    {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+    {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}
+  \end{minipage}
+}
+\fancyhead[R]{%
+  {\small\color{uimmblue}\textbf{MOD00}}
+}
+
+\fancyfoot[C]{%
+  {\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}
+}
+
+% ============================================================
+% PAGE DE TITRE
+% ============================================================
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  % Bandeau supérieur bleu
+  \fill[uimmblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  % Logo
+  \node[anchor=north west] at ([xshift=2cm, yshift=-0.5cm]current page.north west)
+    {\includegraphics[height=3cm]{logo_uimm_placeholder.jpg}};
+  % Nom de la structure
+  \node[anchor=north east, white, font=\large\bfseries] at ([xshift=-2cm, yshift=-1.5cm]current page.north east)
+    {Pôle Formation UIMM - CVDL};
+  \node[anchor=north east, white, font=\small, align=right] at ([xshift=-2cm, yshift=-2.2cm]current page.north east)
+    {BTS Industriel -- Mathématiques\\[2pt]S. Jaubert};
+  % Bandeau rouge décoratif
+  \fill[uimmred] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.4cm]current page.north east);
+  % Titre principal
+  \node[anchor=center, text width=14cm, align=center] at ([yshift=-1cm]current page.center) {
+    {\fontsize{28}{34}\selectfont\bfseries\color{uimmblue} Pré-requis\\[6pt] Calculs fondamentaux}\\[20pt]
+    {\Large\color{uimmgray} Module 00 -- Remise à niveau}\\[12pt]
+    {\large\color{uimmgray}\textit{Les outils de base du calcul en BTS industriel}}
+  };
+  % Bandeau inférieur
+  \fill[uimmblue] ([yshift=1.5cm]current page.south west) rectangle (current page.south east);
+  \node[anchor=center, white, font=\small] at ([yshift=0.75cm]current page.south) {
+    Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ La Fabrique de l'Avenir
+  };
+\end{tikzpicture}
+\end{titlepage}
+
+% ============================================================
+% FICHE MODULE - BLOC / THÈME / COMPÉTENCES
+% ============================================================
+\thispagestyle{fancy}
+
+\vspace*{0.5cm}
+
+\begin{center}
+{\LARGE\bfseries\color{uimmblue} MOD00 -- Pré-requis}\\[6pt]
+{\large\color{uimmgray} Support de cours et travaux dirigés}\\[4pt]
+{\normalsize\color{uimmgray} Auteur : S. JAUBERT \hspace{1cm} Formation : BTS Industriel}
+\end{center}
+
+\vspace{0.8cm}
+
+% ----- Tableau d'information du module -----
+\begin{tcolorbox}[
+  colback=uimmlightblue!30,
+  colframe=uimmblue,
+  title={\textbf{\textsf{Fiche du Module}}},
+  fonttitle=\large\bfseries\color{white},
+  coltitle=white,
+  boxrule=1.2pt,
+  arc=4pt,
+  left=10pt, right=10pt, top=8pt, bottom=8pt
+]
+
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l @{\hspace{12pt}} p{12cm}@{}}
+Bloc / Période : & Semestre 1 \\
+Module :         & {[MOD00]} Pré-requis \\
+Thème :          & Calculs fondamentaux -- Remise à niveau des automatismes de calcul indispensables à l'entrée en BTS industriel \\
+\end{tabular}
+
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+% ----- Séquences et compétences -----
+\begin{tcolorbox}[
+  colback=white,
+  colframe=uimmblue!80!black,
+  title={\textbf{\textsf{Séquences et Compétences travaillées}}},
+  fonttitle=\large\bfseries\color{white},
+  coltitle=white,
+  boxrule=1pt,
+  arc=4pt,
+  left=10pt, right=10pt, top=8pt, bottom=8pt
+]
+
+\textbf{\color{uimmblue} [S01] -- Calculs fondamentaux}
+\begin{itemize}[leftmargin=1.5cm]
+  \item[\textbf{\color{uimmblue}[C01]}] Maîtriser les rudiments de logique classique
+  \item[\textbf{\color{uimmblue}[C02]}] Calculer avec des relatifs
+  \item[\textbf{\color{uimmblue}[C03]}] Effectuer des calculs fractionnaires
+  \item[\textbf{\color{uimmblue}[C04]}] Développer, réduire et factoriser des expressions littérales
+  \item[\textbf{\color{uimmblue}[C05]}] Résoudre des équations linéaires à une ou plusieurs inconnues
+  \item[\textbf{\color{uimmblue}[C06]}] Résoudre des équations du second degré à une inconnue
+  \item[\textbf{\color{uimmblue}[C07]}] Poser un problème
+\end{itemize}
+
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\begin{remarque}[-- Positionnement du cours]
+Ce support couvre l'intégralité de la \textbf{Séquence S01 -- Calculs fondamentaux}. Il sert de socle aux modules suivants (Nombres complexes, Suites, Calcul différentiel et intégral). Chaque section est rattachée à une ou plusieurs compétences \textbf{[C01]} à \textbf{[C07]}, signalées en début de partie.
+\end{remarque}
+
+\newpage
+
+% ============================================================
+% TABLE DES MATIÈRES
+% ============================================================
+\tableofcontents
+\newpage
+
+% ============================================================
+% INTRODUCTION
+% ============================================================
+\section{Introduction et objectifs}
+
+Ce module rassemble les \textbf{automatismes de calcul} indispensables pour aborder sereinement le programme de mathématiques du BTS industriel. Il ne s'agit pas de notions nouvelles, mais d'outils déjà rencontrés au collège et au lycée, qu'il faut savoir mobiliser \textbf{rapidement et sans erreur}.
+
+\begin{remarque}
+En BTS, les mathématiques sont au service des disciplines techniques (électricité, mécanique, automatisme, thermique). Une erreur de signe ou de fraction dans un calcul de dimensionnement peut fausser tout un résultat. La \textbf{rigueur de calcul} est donc une compétence professionnelle à part entière.
+\end{remarque}
+
+\subsection{Objectifs du module}
+À l'issue de ce module, l'étudiant sera capable de :
+\begin{enumerate}
+  \item Utiliser le vocabulaire de la logique (implication, équivalence, quantificateurs) ;
+  \item Calculer avec les nombres relatifs en respectant les règles de signes et de priorités ;
+  \item Manipuler les fractions (somme, produit, quotient, simplification) ;
+  \item Développer, réduire et factoriser une expression littérale ;
+  \item Résoudre une équation du premier degré et un système linéaire ;
+  \item Résoudre une équation du second degré à l'aide du discriminant ;
+  \item Traduire un énoncé en langage mathématique pour poser un problème.
+\end{enumerate}
+
+% ============================================================
+% SECTION 1 : LOGIQUE
+% ============================================================
+\newpage
+\section{Rudiments de logique \hfill {\normalsize\color{uimmred}[C01]}}
+
+\subsection{Propositions et valeur de vérité}
+
+\begin{definition}
+Une \textbf{proposition} est un énoncé mathématique qui est soit \textbf{vrai} (V), soit \textbf{faux} (F), mais jamais les deux à la fois.
+\end{definition}
+
+\begin{exemple}[-- Propositions]
+\begin{itemize}
+  \item ``$3 + 2 = 5$'' est une proposition \textbf{vraie}.
+  \item ``$7$ est un nombre pair'' est une proposition \textbf{fausse}.
+  \item ``$x > 0$'' n'est pas une proposition tant que $x$ n'est pas fixé : sa valeur de vérité dépend de $x$.
+\end{itemize}
+\end{exemple}
+
+\subsection{Connecteurs logiques : ET, OU, NON}
+
+\begin{definition}
+Soient $P$ et $Q$ deux propositions.
+\begin{itemize}
+  \item La \textbf{négation} $\overline{P}$ (non $P$) est vraie quand $P$ est fausse.
+  \item La \textbf{conjonction} $P \text{ et } Q$ est vraie quand $P$ \textbf{et} $Q$ sont vraies toutes les deux.
+  \item La \textbf{disjonction} $P \text{ ou } Q$ est vraie quand \textbf{au moins} l'une des deux est vraie.
+\end{itemize}
+\end{definition}
+
+\begin{remarque}
+Le ``ou'' mathématique est \textbf{inclusif} : ``$P$ ou $Q$'' reste vrai lorsque $P$ et $Q$ sont vraies en même temps. Cela diffère du langage courant (``fromage ou dessert'').
+\end{remarque}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\rowcolors{2}{uimmlightblue!30}{white}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{uimmblue}
+\textcolor{white}{$P$} & \textcolor{white}{$Q$} & \textcolor{white}{$\overline{P}$} & \textcolor{white}{$P$ et $Q$} & \textcolor{white}{$P$ ou $Q$} \\
+\hline
+V & V & F & V & V \\
+\hline
+V & F & F & F & V \\
+\hline
+F & V & V & F & V \\
+\hline
+F & F & V & F & F \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Implication et équivalence}
+
+\begin{definition}
+\begin{itemize}
+  \item L'\textbf{implication} $P \Rightarrow Q$ se lit ``si $P$ alors $Q$''. Elle signifie que dès que $P$ est vraie, $Q$ l'est aussi.
+  \item L'\textbf{équivalence} $P \Leftrightarrow Q$ se lit ``$P$ si et seulement si $Q$''. Elle signifie $P \Rightarrow Q$ \textbf{et} $Q \Rightarrow P$.
+\end{itemize}
+\end{definition}
+
+\begin{exemple}[-- Implication]
+``Si un entier se termine par $0$, alors il est divisible par $5$'' : $P \Rightarrow Q$ est vraie.
+
+La réciproque ``Si un entier est divisible par $5$, alors il se termine par $0$'' est \textbf{fausse} ($15$ est divisible par $5$ mais ne se termine pas par $0$). L'équivalence n'est donc pas vérifiée.
+\end{exemple}
+
+\subsection{Conditions nécessaire et suffisante}
+
+\begin{theoreme}
+Lorsque $P \Rightarrow Q$ :
+\begin{itemize}
+  \item $P$ est une \textbf{condition suffisante} pour $Q$ (il suffit que $P$ pour avoir $Q$) ;
+  \item $Q$ est une \textbf{condition nécessaire} pour $P$ (il faut que $Q$ pour avoir $P$).
+\end{itemize}
+\end{theoreme}
+
+\subsection{Quantificateurs}
+
+\begin{definition}
+\begin{itemize}
+  \item Le quantificateur \textbf{universel} $\forall$ se lit ``pour tout''.
+  \item Le quantificateur \textbf{existentiel} $\exists$ se lit ``il existe (au moins un)''.
+\end{itemize}
+\end{definition}
+
+\begin{exemple}[-- Lecture]
+\begin{itemize}
+  \item $\forall x \in \mathbb{R},\; x^2 \geq 0$ : ``pour tout réel $x$, $x^2$ est positif'' (vrai).
+  \item $\exists x \in \mathbb{R},\; x^2 = 2$ : ``il existe un réel dont le carré vaut $2$'' (vrai, $x = \sqrt{2}$).
+\end{itemize}
+\end{exemple}
+
+\begin{methode}[-- Nier une proposition quantifiée]
+Pour nier, on échange les quantificateurs et on nie la conclusion :
+\[
+\overline{\big(\forall x,\; P(x)\big)} \;=\; \exists x,\; \overline{P(x)}
+\qquad
+\overline{\big(\exists x,\; P(x)\big)} \;=\; \forall x,\; \overline{P(x)}
+\]
+\end{methode}
+
+\begin{appliindus}[-- Cahier des charges]
+Un cahier des charges impose : ``\emph{toutes} les pièces doivent avoir un diamètre compris entre $9{,}98$ et $10{,}02$\,mm''. C'est une proposition universelle ($\forall$). Pour prouver que le lot est non conforme, il suffit d'exhiber \textbf{une seule} pièce hors tolérance : c'est la négation par un contre-exemple ($\exists$).
+\end{appliindus}
+
+% ============================================================
+% SECTION 2 : RELATIFS
+% ============================================================
+\newpage
+\section{Calcul avec les nombres relatifs \hfill {\normalsize\color{uimmred}[C02]}}
+
+\subsection{Règles des signes}
+
+\begin{theoreme}[-- Addition et soustraction]
+\begin{itemize}
+  \item Deux nombres de \textbf{même signe} : on additionne les valeurs et on garde le signe commun.
+  \item Deux nombres de \textbf{signes contraires} : on soustrait les valeurs et on garde le signe du plus grand (en valeur absolue).
+  \item Soustraire un nombre revient à ajouter son opposé : $a - (-b) = a + b$.
+\end{itemize}
+\end{theoreme}
+
+\begin{theoreme}[-- Multiplication et division]
+Le produit (ou le quotient) de deux nombres :
+\begin{itemize}
+  \item de \textbf{même signe} est \textbf{positif} ;
+  \item de \textbf{signes contraires} est \textbf{négatif}.
+\end{itemize}
+\[
+(+)\times(+) = + \qquad (-)\times(-) = + \qquad (+)\times(-) = - \qquad (-)\times(+) = -
+\]
+\end{theoreme}
+
+\begin{exemple}[-- Calculs]
+\[
+-5 + 3 = -2 \qquad -4 - 7 = -11 \qquad -3 \times (-6) = 18 \qquad \frac{-20}{4} = -5
+\]
+\end{exemple}
+
+\subsection{Priorités opératoires}
+
+\begin{methode}[-- Ordre des opérations]
+\begin{enumerate}
+  \item Les \textbf{parenthèses} (de l'intérieur vers l'extérieur) ;
+  \item Les \textbf{puissances} et racines ;
+  \item Les \textbf{multiplications} et \textbf{divisions}, de gauche à droite ;
+  \item Les \textbf{additions} et \textbf{soustractions}, de gauche à droite.
+\end{enumerate}
+\end{methode}
+
+\begin{exemple}[-- Priorités]
+\[
+3 + 4 \times 5 = 3 + 20 = 23 \qquad\text{(et non } 7 \times 5 = 35\text{)}
+\]
+\[
+(3 + 4) \times 5 = 7 \times 5 = 35 \qquad 2 + 3^2 \times (5 - 1) = 2 + 9 \times 4 = 38
+\]
+\end{exemple}
+
+\begin{piege}
+$-3^2 = -9$ car la puissance porte sur $3$ et non sur $-3$. En revanche $(-3)^2 = 9$. Toujours surveiller la place des parenthèses.
+\end{piege}
+
+\subsection{Puissances}
+
+\begin{theoreme}[-- Règles de calcul des puissances]
+Pour $a \neq 0$ et $m, n$ entiers relatifs :
+\[
+a^m \times a^n = a^{m+n} \qquad \frac{a^m}{a^n} = a^{m-n} \qquad (a^m)^n = a^{mn}
+\]
+\[
+a^0 = 1 \qquad a^{-n} = \frac{1}{a^n} \qquad (a\,b)^n = a^n\,b^n
+\]
+\end{theoreme}
+
+\begin{appliindus}[-- Notation scientifique et unités]
+En sciences industrielles, on manipule des ordres de grandeur très différents : une résistance de $4{,}7\,\text{k}\Omega = 4{,}7 \times 10^{3}\,\Omega$, une capacité de $100\,\mu\text{F} = 100 \times 10^{-6}\,\text{F}$. Le produit $R\,C$ (constante de temps) se calcule avec les règles des puissances :
+\[
+\tau = R\,C = (4{,}7 \times 10^{3}) \times (100 \times 10^{-6}) = 470 \times 10^{-3} = 0{,}47\,\text{s}.
+\]
+\end{appliindus}
+
+% ============================================================
+% SECTION 3 : FRACTIONS
+% ============================================================
+\newpage
+\section{Calculs fractionnaires \hfill {\normalsize\color{uimmred}[C03]}}
+
+\subsection{Simplification}
+
+\begin{definition}
+Simplifier une fraction, c'est diviser numérateur et dénominateur par un même nombre non nul :
+\[
+\frac{a \times k}{b \times k} = \frac{a}{b} \quad (k \neq 0).
+\]
+\end{definition}
+
+\begin{exemple}
+\[
+\frac{18}{24} = \frac{6 \times 3}{6 \times 4} = \frac{3}{4}
+\]
+\end{exemple}
+
+\subsection{Addition et soustraction}
+
+\begin{methode}[-- Même opération, même dénominateur]
+\begin{enumerate}
+  \item Réduire les fractions au \textbf{même dénominateur} ;
+  \item Additionner (ou soustraire) les \textbf{numérateurs} ;
+  \item Conserver le dénominateur commun, puis simplifier.
+\end{enumerate}
+\[
+\frac{a}{b} + \frac{c}{d} = \frac{a\,d + b\,c}{b\,d}
+\]
+\end{methode}
+
+\begin{exemple}
+\[
+\frac{2}{3} + \frac{1}{4} = \frac{2 \times 4}{12} + \frac{1 \times 3}{12} = \frac{8 + 3}{12} = \frac{11}{12}
+\]
+\end{exemple}
+
+\subsection{Multiplication et division}
+
+\begin{theoreme}
+\[
+\frac{a}{b} \times \frac{c}{d} = \frac{a\,c}{b\,d}
+\qquad\qquad
+\frac{a}{b} \div \frac{c}{d} = \frac{a}{b} \times \frac{d}{c} = \frac{a\,d}{b\,c}
+\]
+Diviser par une fraction revient à multiplier par son \textbf{inverse}.
+\end{theoreme}
+
+\begin{exemple}
+\[
+\frac{3}{5} \times \frac{10}{9} = \frac{30}{45} = \frac{2}{3}
+\qquad
+\frac{4}{7} \div \frac{2}{3} = \frac{4}{7} \times \frac{3}{2} = \frac{12}{14} = \frac{6}{7}
+\]
+\end{exemple}
+
+\begin{piege}
+On ne peut additionner directement les numérateurs que si les dénominateurs sont \textbf{identiques}. $\dfrac{1}{2} + \dfrac{1}{3} \neq \dfrac{2}{5}$.
+\end{piege}
+
+\begin{appliindus}[-- Résistances en parallèle]
+Deux résistances en parallèle ont une résistance équivalente $R_{eq}$ donnée par :
+\[
+\frac{1}{R_{eq}} = \frac{1}{R_1} + \frac{1}{R_2}
+\quad\Longrightarrow\quad
+R_{eq} = \frac{R_1\,R_2}{R_1 + R_2}.
+\]
+Le passage de la première à la seconde forme est une simple addition de fractions suivie d'une inversion. Pour $R_1 = 6\,\Omega$ et $R_2 = 3\,\Omega$ : $R_{eq} = \dfrac{18}{9} = 2\,\Omega$.
+\end{appliindus}
+
+% ============================================================
+% SECTION 4 : CALCUL LITTÉRAL
+% ============================================================
+\newpage
+\section{Calcul littéral \hfill {\normalsize\color{uimmred}[C04]}}
+
+\subsection{Développer et réduire}
+
+\begin{theoreme}[-- Distributivité]
+\[
+k(a + b) = k\,a + k\,b
+\qquad
+(a + b)(c + d) = a\,c + a\,d + b\,c + b\,d
+\]
+\end{theoreme}
+
+\begin{exemple}
+\[
+3(2x - 5) = 6x - 15
+\qquad
+(x + 2)(x - 3) = x^2 - 3x + 2x - 6 = x^2 - x - 6
+\]
+\end{exemple}
+
+\subsection{Identités remarquables}
+
+\begin{theoreme}
+\[
+(a + b)^2 = a^2 + 2ab + b^2
+\]
+\[
+(a - b)^2 = a^2 - 2ab + b^2
+\]
+\[
+(a + b)(a - b) = a^2 - b^2
+\]
+\end{theoreme}
+
+\begin{exemple}[-- Dans les deux sens]
+\[
+(2x + 3)^2 = 4x^2 + 12x + 9
+\qquad
+x^2 - 25 = (x - 5)(x + 5)
+\]
+\end{exemple}
+
+\subsection{Factoriser}
+
+\begin{methode}[-- Trois réflexes de factorisation]
+\begin{enumerate}
+  \item Chercher un \textbf{facteur commun} : $a\,x + a\,y = a(x + y)$ ;
+  \item Reconnaître une \textbf{identité remarquable} ;
+  \item Combiner les deux si nécessaire.
+\end{enumerate}
+\end{methode}
+
+\begin{exemple}
+\[
+5x^2 + 10x = 5x(x + 2)
+\qquad
+9x^2 - 16 = (3x - 4)(3x + 4)
+\]
+\[
+(x+1)(x-2) + (x+1)(3x) = (x+1)\big[(x-2) + 3x\big] = (x+1)(4x - 2)
+\]
+\end{exemple}
+
+\begin{appliindus}[-- Mise en facteur d'un paramètre]
+En électricité, l'impédance d'un circuit s'écrit parfois $Z = R + R\,j\omega\tau$. Factoriser par $R$ donne $Z = R(1 + j\omega\tau)$, forme directement exploitable pour calculer le module $|Z| = R\sqrt{1 + (\omega\tau)^2}$. La factorisation fait apparaître la structure physique du circuit.
+\end{appliindus}
+
+% ============================================================
+% SECTION 5 : ÉQUATIONS LINÉAIRES
+% ============================================================
+\newpage
+\section{Équations linéaires \hfill {\normalsize\color{uimmred}[C05]}}
+
+\subsection{Équation du premier degré à une inconnue}
+
+\begin{definition}
+Une équation du \textbf{premier degré} à une inconnue $x$ se ramène à la forme $a\,x + b = 0$ avec $a \neq 0$. Sa solution unique est :
+\[
+\boxed{x = -\frac{b}{a}}
+\]
+\end{definition}
+
+\begin{methode}[-- Résolution]
+\begin{enumerate}
+  \item Développer et supprimer les parenthèses ;
+  \item Regrouper les termes en $x$ d'un côté, les constantes de l'autre ;
+  \item Réduire, puis diviser par le coefficient de $x$.
+\end{enumerate}
+\end{methode}
+
+\begin{exemple}
+Résoudre $5x - 3 = 2x + 9$.
+\[
+5x - 2x = 9 + 3 \;\Longrightarrow\; 3x = 12 \;\Longrightarrow\; x = 4.
+\]
+\end{exemple}
+
+\subsection{Systèmes linéaires de deux équations à deux inconnues}
+
+\begin{definition}
+Un système linéaire $2 \times 2$ s'écrit :
+\[
+\begin{cases} a\,x + b\,y = c \\ a'x + b'y = c' \end{cases}
+\]
+Résoudre, c'est trouver le couple $(x\,;\,y)$ vérifiant les deux équations.
+\end{definition}
+
+\begin{methode}[-- Deux techniques]
+\textbf{Substitution} : exprimer une inconnue en fonction de l'autre dans une équation, puis remplacer dans la seconde.
+
+\textbf{Combinaison} : multiplier les équations pour éliminer une inconnue par addition ou soustraction.
+\end{methode}
+
+\begin{exemple}[-- Par combinaison]
+\[
+\begin{cases} 2x + 3y = 8 \\ 4x - 3y = 4 \end{cases}
+\]
+En additionnant les deux lignes : $6x = 12$, donc $x = 2$. En reportant : $4 + 3y = 8$, donc $y = \dfrac{4}{3}$.
+
+Solution : $\left(2\,;\,\dfrac{4}{3}\right)$.
+\end{exemple}
+
+\begin{appliindus}[-- Mélange de deux alliages]
+On veut obtenir $100$\,kg d'un alliage à $20\,\%$ de cuivre à partir de deux alliages titrant respectivement $10\,\%$ et $30\,\%$. En notant $x$ et $y$ les masses utilisées :
+\[
+\begin{cases} x + y = 100 \\ 0{,}10\,x + 0{,}30\,y = 0{,}20 \times 100 \end{cases}
+\]
+La résolution donne $x = 50$\,kg et $y = 50$\,kg. La mise en système traduit directement le bilan de matière.
+\end{appliindus}
+
+% ============================================================
+% SECTION 6 : SECOND DEGRÉ
+% ============================================================
+\newpage
+\section{Équation du second degré \hfill {\normalsize\color{uimmred}[C06]}}
+
+\subsection{Forme et discriminant}
+
+\begin{definition}
+Une équation du \textbf{second degré} à une inconnue s'écrit :
+\[
+a\,x^2 + b\,x + c = 0 \quad (a \neq 0).
+\]
+Son \textbf{discriminant} est $\Delta = b^2 - 4ac$.
+\end{definition}
+
+\begin{theoreme}[-- Nombre et valeur des solutions]
+\begin{itemize}
+  \item Si $\Delta > 0$ : deux solutions réelles distinctes
+  \[
+  x_1 = \frac{-b - \sqrt{\Delta}}{2a}, \qquad x_2 = \frac{-b + \sqrt{\Delta}}{2a}.
+  \]
+  \item Si $\Delta = 0$ : une solution double $x_0 = \dfrac{-b}{2a}$.
+  \item Si $\Delta < 0$ : aucune solution réelle (deux solutions complexes conjuguées, voir MOD01).
+\end{itemize}
+\end{theoreme}
+
+\begin{methode}[-- Résolution]
+\begin{enumerate}
+  \item Identifier $a$, $b$, $c$ (équation ramenée à $\dots = 0$) ;
+  \item Calculer $\Delta = b^2 - 4ac$ ;
+  \item Conclure selon le signe de $\Delta$ et calculer les racines.
+\end{enumerate}
+\end{methode}
+
+\begin{exemple}[-- Deux racines]
+Résoudre $x^2 - 5x + 6 = 0$.
+
+$\Delta = 25 - 24 = 1 > 0$. Donc $x_1 = \dfrac{5 - 1}{2} = 2$ et $x_2 = \dfrac{5 + 1}{2} = 3$.
+\end{exemple}
+
+\begin{exemple}[-- Racine double]
+Résoudre $x^2 - 6x + 9 = 0$.
+
+$\Delta = 36 - 36 = 0$. Racine double $x_0 = \dfrac{6}{2} = 3$. On retrouve $(x-3)^2 = 0$.
+\end{exemple}
+
+\begin{appliindus}[-- Trajectoire et portée]
+La hauteur d'un objet lancé suit une loi du type $h(t) = -\frac{1}{2}g\,t^2 + v_0\,t + h_0$. Déterminer l'instant où l'objet touche le sol revient à résoudre $h(t) = 0$, une équation du second degré en $t$. Le discriminant indique si et quand le sol est atteint. Ce calcul intervient dans le dimensionnement des éjections de pièces, convoyeurs et systèmes de projection.
+\end{appliindus}
+
+% ============================================================
+% SECTION 7 : POSER UN PROBLÈME
+% ============================================================
+\newpage
+\section{Poser un problème \hfill {\normalsize\color{uimmred}[C07]}}
+
+\subsection{De l'énoncé à l'équation}
+
+Poser un problème, c'est \textbf{traduire} une situation concrète en langage mathématique pour pouvoir la résoudre. C'est la compétence \textbf{C3 -- Modéliser} du référentiel.
+
+\begin{methode}[-- Démarche de mise en équation]
+\begin{enumerate}
+  \item \textbf{Choisir l'inconnue} : identifier la grandeur cherchée et la nommer (par exemple $x$), en précisant son unité ;
+  \item \textbf{Traduire} chaque information de l'énoncé par une égalité ou une inégalité ;
+  \item \textbf{Résoudre} l'équation ou le système obtenu ;
+  \item \textbf{Vérifier} que la solution est cohérente avec l'énoncé (signe, unité, ordre de grandeur) ;
+  \item \textbf{Conclure} par une phrase répondant à la question posée.
+\end{enumerate}
+\end{methode}
+
+\begin{exemple}[-- Mise en équation]
+\emph{Un atelier produit des pièces. Le coût fixe est de $500\,$€ et chaque pièce coûte $8\,$€ à produire. Combien de pièces faut-il vendre à $13\,$€ pour atteindre l'équilibre ?}
+
+\textbf{Inconnue :} $x$ = nombre de pièces vendues.
+
+\textbf{Traduction :} recette $= 13x$, coût $= 500 + 8x$. Équilibre : $13x = 500 + 8x$.
+
+\textbf{Résolution :} $5x = 500 \Rightarrow x = 100$.
+
+\textbf{Conclusion :} il faut vendre $100$ pièces pour atteindre le seuil de rentabilité.
+\end{exemple}
+
+\begin{appliindus}[-- Seuil de rentabilité]
+Le calcul du \textbf{seuil de rentabilité} (point mort) est un grand classique de l'organisation industrielle : il s'obtient en posant l'égalité entre le chiffre d'affaires et le coût total. La même démarche s'applique au calcul d'un temps de cycle, d'une cadence ou d'un point d'équilibre énergétique.
+\end{appliindus}
+
+% ============================================================
+% SECTION 8 : EXERCICES
+% ============================================================
+\newpage
+\section{Exercices d'application}
+
+\subsection*{Exercice 1 -- Logique \hfill {\normalsize\color{uimmred}[C01]}}
+Pour chaque proposition, indiquer si elle est vraie ou fausse, puis écrire sa négation.
+\begin{enumerate}[label=\alph*)]
+  \item $\forall x \in \mathbb{R},\; x^2 + 1 > 0$
+  \item $\exists n \in \mathbb{N},\; 2n = 7$
+  \item Si un nombre est divisible par $4$, alors il est divisible par $2$.
+\end{enumerate}
+
+\subsection*{Exercice 2 -- Relatifs et puissances \hfill {\normalsize\color{uimmred}[C02]}}
+Calculer en respectant les priorités :
+\begin{enumerate}[label=\alph*)]
+  \item $-7 + 3 \times (-4)$
+  \item $(-2)^3 + (-3)^2$
+  \item $\dfrac{10^5 \times 10^{-2}}{10^{4}}$
+  \item $2 - 3 \times (4 - 6)^2$
+\end{enumerate}
+
+\subsection*{Exercice 3 -- Fractions \hfill {\normalsize\color{uimmred}[C03]}}
+Donner le résultat sous forme de fraction simplifiée :
+\begin{enumerate}[label=\alph*)]
+  \item $\dfrac{3}{4} - \dfrac{5}{6}$
+  \item $\dfrac{2}{3} \times \dfrac{9}{8}$
+  \item $\dfrac{5}{6} \div \dfrac{10}{3}$
+  \item $\dfrac{1}{2} + \dfrac{2}{3} - \dfrac{1}{4}$
+\end{enumerate}
+
+\subsection*{Exercice 4 -- Calcul littéral \hfill {\normalsize\color{uimmred}[C04]}}
+\begin{enumerate}[label=\alph*)]
+  \item Développer et réduire : $(2x - 1)(x + 4)$.
+  \item Développer : $(3x - 2)^2$.
+  \item Factoriser : $7x^2 - 14x$.
+  \item Factoriser : $x^2 - 49$.
+\end{enumerate}
+
+\subsection*{Exercice 5 -- Équations linéaires \hfill {\normalsize\color{uimmred}[C05]}}
+\begin{enumerate}[label=\alph*)]
+  \item Résoudre $4(x - 2) = 2x + 6$.
+  \item Résoudre le système $\begin{cases} x + 2y = 7 \\ 3x - y = 7 \end{cases}$
+\end{enumerate}
+
+\subsection*{Exercice 6 -- Second degré \hfill {\normalsize\color{uimmred}[C06]}}
+Résoudre dans $\mathbb{R}$ :
+\begin{enumerate}[label=\alph*)]
+  \item $x^2 - 7x + 10 = 0$
+  \item $2x^2 + 3x - 2 = 0$
+  \item $x^2 + 4x + 4 = 0$
+  \item $x^2 + x + 1 = 0$
+\end{enumerate}
+
+\subsection*{Exercice 7 -- Mise en équation \hfill {\normalsize\color{uimmred}[C07]}}
+Un rectangle a un périmètre de $34\,$cm. Sa longueur dépasse sa largeur de $5\,$cm. Déterminer ses dimensions en posant le problème par une équation.
+
+\subsection*{Exercice 8 -- Synthèse industrielle \hfill {\normalsize\color{uimmred}[C05]\,[C07]}}
+Deux machines produisent ensemble $480$ pièces par heure. La machine A produit $40$ pièces de plus par heure que la machine B. Déterminer la cadence de chaque machine.
+
+% ============================================================
+% FORMULAIRE
+% ============================================================
+\newpage
+\section*{Formulaire -- À retenir}
+\addcontentsline{toc}{section}{Formulaire}
+
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, title={\textbf{Formulaire des calculs fondamentaux}}, fonttitle=\large\bfseries\sffamily, coltitle=white, boxrule=1.5pt, arc=5pt]
+
+\textbf{Logique :}
+$\;P \Rightarrow Q$ (implication), $\;P \Leftrightarrow Q$ (équivalence),
+$\;\overline{\forall x, P} = \exists x, \overline{P}$
+
+\vspace{6pt}
+\textbf{Signes :} $\;(-)\times(-) = +$, \quad $(+)\times(-) = -$, \quad $a - (-b) = a + b$
+
+\vspace{6pt}
+\textbf{Puissances :} $\;a^m a^n = a^{m+n}$, \quad $\dfrac{a^m}{a^n} = a^{m-n}$, \quad $(a^m)^n = a^{mn}$, \quad $a^{-n} = \dfrac{1}{a^n}$
+
+\vspace{6pt}
+\textbf{Fractions :} $\;\dfrac{a}{b} + \dfrac{c}{d} = \dfrac{ad + bc}{bd}$, \quad $\dfrac{a}{b} \div \dfrac{c}{d} = \dfrac{a}{b} \times \dfrac{d}{c}$
+
+\vspace{6pt}
+\textbf{Identités remarquables :}
+$\;(a \pm b)^2 = a^2 \pm 2ab + b^2$, \quad $a^2 - b^2 = (a-b)(a+b)$
+
+\vspace{6pt}
+\textbf{Premier degré :} $\;ax + b = 0 \Rightarrow x = -\dfrac{b}{a}$
+
+\vspace{6pt}
+\textbf{Second degré :} $\;ax^2 + bx + c = 0$, \quad $\Delta = b^2 - 4ac$, \quad $x = \dfrac{-b \pm \sqrt{\Delta}}{2a}$ (si $\Delta \geq 0$)
+\end{tcolorbox}
+
+\vfill
+\begin{center}
+\color{uimmgray}\small
+\textit{Document réalisé par le Pôle Formation UIMM -- Centre-Val de Loire}\\
+\textit{La Fabrique de l'Avenir -- S. JAUBERT}
+\end{center}
+
+\end{document}

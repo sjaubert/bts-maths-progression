@@ -1,0 +1,952 @@
+% ============================================================
+% Cours : Équations Différentielles Linéaires du Second Ordre
+% Pôle Formation UIMM - CVDL
+% BTS Industriel - Mathématiques
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+
+% ----- Encodage et langue -----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ----- Polices sans-serif -----
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% ----- Mise en page -----
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+
+% ----- Mathématiques -----
+\usepackage{amsmath,amssymb,amsfonts}
+
+% ----- Graphiques et couleurs -----
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathmorphing, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ----- Boîtes colorées -----
+\usepackage[most]{tcolorbox}
+
+% ----- En-tête et pied de page -----
+\usepackage{fancyhdr}
+
+% ----- Hyperliens -----
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+% ----- Enumération personnalisée -----
+\usepackage{enumitem}
+
+% ----- Tableaux -----
+\usepackage{booktabs,array}
+
+% ============================================================
+% CHARTE GRAPHIQUE UIMM
+% ============================================================
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+
+% ----- Styles des sections -----
+\usepackage{titlesec}
+\titleformat{\section}
+  {\LARGE\bfseries\color{uimmblue}}
+  {\thesection.}{0.5em}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.5pt]}]
+\titleformat{\subsection}
+  {\Large\bfseries\color{uimmblue}}
+  {\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}
+  {\large\bfseries\color{uimmblue!80!black}}
+  {\thesubsubsection.}{0.5em}{}
+
+% ----- Puces personnalisées -----
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+\setlist[itemize,2]{label={\color{uimmblue}--}}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+
+% ============================================================
+% BOÎTES TCOLORBOX
+% ============================================================
+% Définition
+\newtcolorbox{definition}[1][]{%
+  colback=uimmlightblue,
+  colframe=uimmblue,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{Définition}~#1},
+  coltitle=white,
+  boxrule=1pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Théorème / Propriété
+\newtcolorbox{theoreme}[1][]{%
+  colback=uimmlightblue!50,
+  colframe=uimmblue!80!black,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{Théorème / Propriété}~#1},
+  coltitle=white,
+  boxrule=1.2pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Méthode
+\newtcolorbox{methode}[1][]{%
+  colback=green!5,
+  colframe=green!50!black,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{Méthode}~#1},
+  coltitle=white,
+  boxrule=1pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Exemple
+\newtcolorbox{exemple}[1][]{%
+  colback=orange!5,
+  colframe=orange!70!black,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{Exemple}~#1},
+  coltitle=white,
+  boxrule=1pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Remarque
+\newtcolorbox{remarque}[1][]{%
+  colback=uimmlightgray,
+  colframe=uimmgray,
+  fonttitle=\bfseries,
+  title={\textsf{Remarque}~#1},
+  boxrule=0.8pt,
+  arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% Application industrielle
+\newtcolorbox{appliindus}[1][]{%
+  colback=uimmred!5,
+  colframe=uimmred!80!black,
+  fonttitle=\bfseries\color{white},
+  title={\textsf{$\triangleright$ Application industrielle}~#1},
+  coltitle=white,
+  boxrule=1.2pt,
+  arc=4pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt,
+  before skip=10pt, after skip=10pt
+}
+
+% ============================================================
+% EN-TÊTE / PIED DE PAGE
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancyhead[L]{%
+  \raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}%
+}
+\fancyhead[C]{%
+  \begin{minipage}{8cm}
+    \centering
+    {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+    {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}
+  \end{minipage}
+}
+\fancyhead[R]{%
+  {\small\color{uimmblue}\textbf{MOD06}}
+}
+
+\fancyfoot[C]{%
+  {\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill \thepage}
+}
+
+% ============================================================
+% PAGE DE TITRE
+% ============================================================
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  % Bandeau supérieur bleu
+  \fill[uimmblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  % Logo
+  \node[anchor=north west] at ([xshift=2cm, yshift=-0.5cm]current page.north west)
+    {\includegraphics[height=3cm]{logo_uimm_placeholder.jpg}};
+  % Nom de la structure
+  \node[anchor=north east, white, font=\large\bfseries] at ([xshift=-2cm, yshift=-1.5cm]current page.north east)
+    {Pôle Formation UIMM - CVDL};
+  \node[anchor=north east, white, font=\small, align=right] at ([xshift=-2cm, yshift=-2.2cm]current page.north east)
+    {BTS Industriel -- Mathématiques\\[2pt]S. Jaubert};
+  % Bandeau rouge décoratif
+  \fill[uimmred] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.4cm]current page.north east);
+  % Titre principal
+  \node[anchor=center, text width=14cm, align=center] at ([yshift=-1cm]current page.center) {
+    {\fontsize{28}{34}\selectfont\bfseries\color{uimmblue} Équations Différentielles\\[6pt] Linéaires du Second Ordre}\\[20pt]
+    {\Large\color{uimmgray} Module 06 -- Analyse}\\[12pt]
+    {\large\color{uimmgray}\textit{Applications industrielles et physiques}}
+  };
+  % Bandeau inférieur
+  \fill[uimmblue] ([yshift=1.5cm]current page.south west) rectangle (current page.south east);
+  \node[anchor=center, white, font=\small] at ([yshift=0.75cm]current page.south) {
+    Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ La Fabrique de l'Avenir
+  };
+\end{tikzpicture}
+\end{titlepage}
+
+% ============================================================
+% FICHE MODULE - BLOC / THÈME / COMPÉTENCES
+% ============================================================
+\thispagestyle{fancy}
+
+\vspace*{0.5cm}
+
+\begin{center}
+{\LARGE\bfseries\color{uimmblue} MOD06 -- Équations Différentielles}\\[6pt]
+{\large\color{uimmgray} Support de cours et travaux dirigés}\\[4pt]
+{\normalsize\color{uimmgray} Auteur : S. JAUBERT \hspace{1cm} Formation : BTS Industriel Groupement B}
+\end{center}
+
+\vspace{0.8cm}
+
+% ----- Tableau d'information du module -----
+\begin{tcolorbox}[
+  colback=uimmlightblue!30,
+  colframe=uimmblue,
+  title={\textbf{\textsf{Fiche du Module}}},
+  fonttitle=\large\bfseries\color{white},
+  coltitle=white,
+  boxrule=1.2pt,
+  arc=4pt,
+  left=10pt, right=10pt, top=8pt, bottom=8pt
+]
+
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l @{\hspace{12pt}} p{12cm}@{}}
+Bloc / Période : & Semestre 3 \\
+Module :         & {[MOD06]} Équations Différentielles \\
+Thème :          & Résolution d'équations différentielles linéaires à coefficients constants (1\textsuperscript{er} et 2\textsuperscript{nd} ordre) -- Applications physiques et industrielles \\
+\end{tabular}
+
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+% ----- Séquences et compétences -----
+\begin{tcolorbox}[
+  colback=white,
+  colframe=uimmblue!80!black,
+  title={\textbf{\textsf{Séquences et Compétences travaillées}}},
+  fonttitle=\large\bfseries\color{white},
+  coltitle=white,
+  boxrule=1pt,
+  arc=4pt,
+  left=10pt, right=10pt, top=8pt, bottom=8pt
+]
+
+\textbf{\color{uimmblue} [S01] -- Premier ordre}
+\begin{itemize}[leftmargin=1.5cm]
+  \item[\textbf{\color{uimmblue}[C01]}] Résoudre une équation différentielle du premier ordre (à la main ou via logiciel)
+  \item[\textbf{\color{uimmblue}[C02]}] Déterminer la solution vérifiant une condition initiale donnée
+  \item[\textbf{\color{uimmblue}[C03]}] Représenter à l'aide d'un logiciel la famille des courbes solutions
+\end{itemize}
+
+\vspace{6pt}
+{\color{uimmblue}\rule{\linewidth}{0.5pt}}
+\vspace{6pt}
+
+\textbf{\color{uimmblue} [S02] -- Second ordre (coefficients constants)}
+\begin{itemize}[leftmargin=1.5cm]
+  \item[\textbf{\color{uimmblue}[C01]}] Résoudre une équation du second degré à coefficients réels
+  \item[\textbf{\color{uimmblue}[C02]}] Résoudre une équation différentielle du second ordre (à la main ou via logiciel)
+  \item[\textbf{\color{uimmblue}[C03]}] Déterminer la solution vérifiant des conditions initiales données
+\end{itemize}
+
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+\begin{remarque}[-- Positionnement du cours]
+Ce support de cours se concentre sur la \textbf{Séquence S02 -- Second ordre à coefficients constants}. La Séquence S01 (premier ordre) est supposée déjà traitée. Les compétences visées sont \textbf{C01}, \textbf{C02} et \textbf{C03} de la séquence S02.
+\end{remarque}
+
+\newpage
+
+% ============================================================
+% TABLE DES MATIÈRES
+% ============================================================
+\tableofcontents
+\newpage
+
+% ============================================================
+% INTRODUCTION
+% ============================================================
+\section{Introduction et motivations}
+
+Les équations différentielles linéaires du second ordre sont des outils mathématiques fondamentaux pour modéliser de nombreux phénomènes physiques et industriels. Elles décrivent l'évolution de grandeurs physiques dont la variation dépend de la grandeur elle-même et de sa vitesse de variation.
+
+\begin{remarque}
+Dans le monde industriel, on rencontre ces équations dans :
+\begin{itemize}
+  \item Les \textbf{circuits électriques RLC} (électronique, automatisme)
+  \item Les \textbf{systèmes masse-ressort-amortisseur} (vibrations de machines)
+  \item La \textbf{régulation industrielle} (asservissement, capteurs)
+  \item La \textbf{mécanique des structures} (flexion de poutres, oscillations)
+  \item La \textbf{thermique} (transferts de chaleur transitoires)
+\end{itemize}
+\end{remarque}
+
+\subsection{Prérequis}
+\begin{itemize}
+  \item Équations différentielles linéaires du premier ordre à coefficients constants
+  \item Résolution d'équations du second degré (discriminant)
+  \item Nombres complexes (forme trigonométrique)
+  \item Fonctions exponentielles, trigonométriques
+  \item Dérivation et primitives
+\end{itemize}
+
+\subsection{Objectifs du module}
+À l'issue de ce cours, l'étudiant sera capable de :
+\begin{enumerate}
+  \item Identifier une équation différentielle linéaire du second ordre à coefficients constants
+  \item Résoudre l'équation homogène associée (3 cas du discriminant)
+  \item Déterminer une solution particulière
+  \item Appliquer des conditions initiales pour trouver la solution unique
+  \item Interpréter physiquement la solution (régime transitoire / permanent)
+\end{enumerate}
+
+% ============================================================
+% SECTION 1 : GÉNÉRALITÉS
+% ============================================================
+\newpage
+\section{Généralités sur les équations différentielles du 2\textsuperscript{nd} ordre}
+
+\begin{definition}
+Une \textbf{équation différentielle linéaire du second ordre à coefficients constants} est une équation de la forme :
+\[
+\boxed{a\,y''(t) + b\,y'(t) + c\,y(t) = f(t)}
+\]
+où :
+\begin{itemize}
+  \item $a$, $b$, $c$ sont des constantes réelles avec $a \neq 0$
+  \item $y(t)$ est la fonction inconnue
+  \item $y'(t)$ et $y''(t)$ sont ses dérivées première et seconde
+  \item $f(t)$ est le \textbf{second membre} (fonction connue)
+\end{itemize}
+\end{definition}
+
+\begin{definition}
+Lorsque $f(t) = 0$, l'équation est dite \textbf{homogène} (ou \textbf{sans second membre}) :
+\[
+a\,y''(t) + b\,y'(t) + c\,y(t) = 0
+\]
+On l'appelle aussi \textbf{équation homogène associée} lorsqu'on étudie l'équation complète.
+\end{definition}
+
+\begin{exemple}[-- Vocabulaire]
+\renewcommand{\arraystretch}{1.4}
+\begin{center}
+\begin{tabular}{>{\raggedright}p{7cm} c c}
+\toprule
+\textbf{Équation} & \textbf{Ordre} & \textbf{Type} \\
+\midrule
+$y'' + 4y' + 3y = 0$ & 2 & Homogène \\
+$2y'' + 5y' + y = \sin(t)$ & 2 & Avec second membre \\
+$y'' - 9y = e^{2t}$ & 2 & Avec second membre \\
+$y'' + \omega^2 y = 0$ & 2 & Homogène \\
+\bottomrule
+\end{tabular}
+\end{center}
+\end{exemple}
+
+\begin{appliindus}[-- Mise en équation d'un circuit RLC série]
+Considérons un circuit RLC série soumis à une tension $E$ constante. La loi des mailles donne :
+\[
+L\,\frac{d^2q}{dt^2} + R\,\frac{dq}{dt} + \frac{1}{C}\,q = E
+\]
+où $q(t)$ est la charge du condensateur, $L$ l'inductance, $R$ la résistance et $C$ la capacité.
+
+En posant $i(t) = q'(t)$ (intensité), on obtient aussi :
+\[
+L\,\frac{di}{dt} + R\,i + \frac{1}{C}\int_0^t i(\tau)\,d\tau = E
+\]
+\textbf{Identification :} $a = L$, $b = R$, $c = \frac{1}{C}$, $f(t) = E$.
+\end{appliindus}
+
+\begin{appliindus}[-- Système masse-ressort-amortisseur]
+Un solide de masse $m$ est attaché à un ressort de raideur $k$ et amorti par un fluide de coefficient de frottement $f$. L'application du PFD (Principe Fondamental de la Dynamique) donne :
+\[
+m\,\ddot{x}(t) + f\,\dot{x}(t) + k\,x(t) = F_{\text{ext}}(t)
+\]
+où $x(t)$ est le déplacement par rapport à la position d'équilibre.
+
+\textbf{Identification :} $a = m$, $b = f$, $c = k$, second membre $= F_{\text{ext}}(t)$.
+\end{appliindus}
+
+% ============================================================
+% SECTION 2 : RÉSOLUTION DE L'ÉQUATION HOMOGÈNE
+% ============================================================
+\newpage
+\section{Résolution de l'équation homogène}
+
+\subsection{Équation caractéristique}
+
+\begin{theoreme}
+Pour résoudre l'équation homogène $a\,y'' + b\,y' + c\,y = 0$, on recherche des solutions de la forme $y(t) = e^{rt}$.
+
+En substituant dans l'équation, on obtient l'\textbf{équation caractéristique} :
+\[
+\boxed{a\,r^2 + b\,r + c = 0}
+\]
+Le discriminant $\Delta = b^2 - 4ac$ détermine la nature des solutions.
+\end{theoreme}
+
+\begin{methode}[-- Résolution de l'équation caractéristique]
+\begin{enumerate}
+  \item Écrire l'équation caractéristique $ar^2 + br + c = 0$
+  \item Calculer le discriminant $\Delta = b^2 - 4ac$
+  \item Selon le signe de $\Delta$, déterminer les racines et la solution générale
+\end{enumerate}
+\end{methode}
+
+\subsection{Cas 1 : $\Delta > 0$ -- Deux racines réelles distinctes}
+
+\begin{theoreme}[-- Régime apériodique (sur-amorti)]
+Si $\Delta > 0$, l'équation caractéristique admet deux racines réelles distinctes :
+\[
+r_1 = \frac{-b - \sqrt{\Delta}}{2a} \quad \text{et} \quad r_2 = \frac{-b + \sqrt{\Delta}}{2a}
+\]
+La \textbf{solution générale} de l'équation homogène est :
+\[
+\boxed{y_h(t) = A\,e^{r_1 t} + B\,e^{r_2 t}}
+\]
+où $A$ et $B$ sont des constantes déterminées par les conditions initiales.
+\end{theoreme}
+
+\begin{exemple}[1 -- Résolution complète]
+Résoudre : $y'' + 5y' + 6y = 0$
+
+\textbf{Équation caractéristique :} $r^2 + 5r + 6 = 0$
+
+$\Delta = 25 - 24 = 1 > 0$
+
+$r_1 = \dfrac{-5 - 1}{2} = -3$ \quad et \quad $r_2 = \dfrac{-5 + 1}{2} = -2$
+
+\textbf{Solution générale :} $y_h(t) = A\,e^{-3t} + B\,e^{-2t}$
+\end{exemple}
+
+\begin{appliindus}[-- Décharge d'un circuit RLC sur-amorti]
+Circuit avec $L = 1\,$H, $R = 5\,\Omega$, $C = \frac{1}{6}\,$F.
+
+Équation : $q'' + 5q' + 6q = 0$ avec $q(0) = Q_0$ et $q'(0) = i(0) = 0$.
+
+La solution est : $q(t) = 3Q_0\,e^{-2t} - 2Q_0\,e^{-3t}$
+
+\textbf{Interprétation :} Le condensateur se décharge sans oscillation. C'est le \textbf{régime apériodique}. Ce régime est recherché dans les instruments de mesure pour éviter les oscillations parasites.
+\end{appliindus}
+
+\subsection{Cas 2 : $\Delta = 0$ -- Racine double}
+
+\begin{theoreme}[-- Régime critique]
+Si $\Delta = 0$, l'équation caractéristique admet une racine double :
+\[
+r_0 = \frac{-b}{2a}
+\]
+La \textbf{solution générale} est :
+\[
+\boxed{y_h(t) = (A + B\,t)\,e^{r_0 t}}
+\]
+\end{theoreme}
+
+\begin{exemple}[2 -- Racine double]
+Résoudre : $y'' + 4y' + 4y = 0$
+
+\textbf{Équation caractéristique :} $r^2 + 4r + 4 = 0 \Leftrightarrow (r+2)^2 = 0$
+
+$r_0 = -2$ (racine double)
+
+\textbf{Solution générale :} $y_h(t) = (A + Bt)\,e^{-2t}$
+\end{exemple}
+
+\begin{appliindus}[-- Amortissement critique d'une suspension]
+La suspension d'un véhicule est modélisée par $m\ddot{x} + f\dot{x} + kx = 0$.
+
+Le \textbf{régime critique} ($\Delta = 0$, soit $f^2 = 4mk$) correspond au retour le plus rapide à l'équilibre \textbf{sans oscillation}. C'est le réglage optimal des amortisseurs automobile.
+
+Si $f_c = 2\sqrt{mk}$, alors $r_0 = -\frac{f_c}{2m}$ et :
+\[
+x(t) = (x_0 + (v_0 + r_0 x_0)\,t)\,e^{r_0 t}
+\]
+\end{appliindus}
+
+\subsection{Cas 3 : $\Delta < 0$ -- Racines complexes conjuguées}
+
+\begin{theoreme}[-- Régime pseudo-périodique (sous-amorti)]
+Si $\Delta < 0$, l'équation caractéristique admet deux racines complexes conjuguées :
+\[
+r_1 = \alpha + j\beta \quad \text{et} \quad r_2 = \alpha - j\beta
+\]
+avec $\alpha = \dfrac{-b}{2a}$ et $\beta = \dfrac{\sqrt{|\Delta|}}{2a}$
+
+La \textbf{solution générale} est :
+\[
+\boxed{y_h(t) = e^{\alpha t}\left(A\cos(\beta t) + B\sin(\beta t)\right)}
+\]
+ou de façon équivalente : $y_h(t) = C\,e^{\alpha t}\cos(\beta t + \varphi)$
+\end{theoreme}
+
+\begin{remarque}
+\begin{itemize}
+  \item $\alpha$ est le \textbf{coefficient d'amortissement} : si $\alpha < 0$, les oscillations sont amorties
+  \item $\beta$ est la \textbf{pseudo-pulsation} des oscillations
+  \item La \textbf{pseudo-période} vaut $T = \frac{2\pi}{\beta}$
+\end{itemize}
+\end{remarque}
+
+\begin{exemple}[3 -- Racines complexes]
+Résoudre : $y'' + 2y' + 5y = 0$
+
+\textbf{Équation caractéristique :} $r^2 + 2r + 5 = 0$
+
+$\Delta = 4 - 20 = -16 < 0$
+
+$\alpha = \dfrac{-2}{2} = -1$, \quad $\beta = \dfrac{\sqrt{16}}{2} = 2$
+
+\textbf{Solution générale :} $y_h(t) = e^{-t}\left(A\cos(2t) + B\sin(2t)\right)$
+
+Les oscillations sont amorties (car $\alpha = -1 < 0$) avec une pseudo-pulsation $\beta = 2\,$rad/s.
+\end{exemple}
+
+\begin{appliindus}[-- Oscillations d'un circuit RLC sous-amorti]
+Un circuit RLC avec $L = 0{,}1\,$H, $R = 20\,\Omega$, $C = 100\,\mu$F :
+
+$\Delta = R^2 - 4\frac{L}{C} = 400 - 4000 = -3600 < 0$
+
+On obtient des oscillations \textbf{amorties} de la tension aux bornes du condensateur :
+\[
+u_C(t) = U_0\,e^{-\frac{R}{2L}t}\cos\!\left(\sqrt{\frac{1}{LC} - \frac{R^2}{4L^2}}\;t + \varphi\right)
+\]
+
+Ce phénomène est utilisé dans les \textbf{oscillateurs électroniques} et les \textbf{filtres passe-bande}.
+\end{appliindus}
+
+% ============================================================
+% TABLEAU RÉCAPITULATIF
+% ============================================================
+
+\subsection{Tableau récapitulatif}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.6}
+\rowcolors{2}{uimmlightblue!30}{white}
+\begin{tabular}{|>{\centering\arraybackslash}m{2.5cm}|>{\centering\arraybackslash}m{3.5cm}|>{\centering\arraybackslash}m{4.5cm}|>{\centering\arraybackslash}m{3.5cm}|}
+\hline
+\rowcolor{uimmblue}
+\textcolor{white}{\textbf{Discriminant}} & \textcolor{white}{\textbf{Racines}} & \textcolor{white}{\textbf{Solution générale}} & \textcolor{white}{\textbf{Régime}} \\
+\hline
+$\Delta > 0$ & $r_1 \neq r_2 \in \mathbb{R}$ & $A\,e^{r_1 t} + B\,e^{r_2 t}$ & Apériodique (sur-amorti) \\
+\hline
+$\Delta = 0$ & $r_0 \in \mathbb{R}$ (double) & $(A + Bt)\,e^{r_0 t}$ & Critique \\
+\hline
+$\Delta < 0$ & $\alpha \pm j\beta$ & $e^{\alpha t}(A\cos\beta t + B\sin\beta t)$ & Pseudo-périodique (sous-amorti) \\
+\hline
+\end{tabular}
+\end{center}
+
+% ============================================================
+% SECTION 3 : ÉQUATION AVEC SECOND MEMBRE
+% ============================================================
+\newpage
+\section{Équation complète avec second membre}
+
+\begin{theoreme}[-- Structure de la solution générale]
+La solution générale de l'équation complète $a\,y'' + b\,y' + c\,y = f(t)$ est :
+\[
+\boxed{y(t) = y_h(t) + y_p(t)}
+\]
+où :
+\begin{itemize}
+  \item $y_h(t)$ est la solution générale de l'équation homogène (\textbf{régime transitoire})
+  \item $y_p(t)$ est une solution particulière de l'équation complète (\textbf{régime permanent})
+\end{itemize}
+\end{theoreme}
+
+\subsection{Recherche de solution particulière -- Second membre constant}
+
+\begin{methode}[-- $f(t) = K$ (constante)]
+Si $c \neq 0$, on cherche $y_p$ constante : $y_p = \dfrac{K}{c}$.
+\end{methode}
+
+\begin{exemple}[4]
+$y'' + 3y' + 2y = 10$
+
+Solution particulière : $y_p = \dfrac{10}{2} = 5$
+
+Équation caractéristique : $r^2 + 3r + 2 = 0 \Rightarrow r_1 = -1,\; r_2 = -2$
+
+\textbf{Solution générale :} $y(t) = A\,e^{-t} + B\,e^{-2t} + 5$
+\end{exemple}
+
+\subsection{Recherche de solution particulière -- Second membre polynomial}
+
+\begin{methode}[-- $f(t) = $ polynôme de degré $n$]
+On cherche $y_p$ sous forme d'un polynôme de même degré $n$ (si $c \neq 0$).
+\end{methode}
+
+\begin{exemple}[5]
+$y'' + y' + y = 3t + 1$
+
+On pose $y_p = \alpha t + \beta$. Alors $y_p' = \alpha$ et $y_p'' = 0$.
+
+Substitution : $0 + \alpha + \alpha t + \beta = 3t + 1$
+
+Par identification : $\alpha = 3$ et $\alpha + \beta = 1 \Rightarrow \beta = -2$
+
+\textbf{Solution particulière :} $y_p(t) = 3t - 2$
+\end{exemple}
+
+\subsection{Recherche de solution particulière -- Second membre exponentiel}
+
+\begin{methode}[-- $f(t) = P\,e^{\gamma t}$]
+\begin{itemize}
+  \item Si $\gamma$ n'est \textbf{pas} racine de l'équation caractéristique : $y_p = \lambda\,e^{\gamma t}$
+  \item Si $\gamma$ est racine \textbf{simple} : $y_p = \lambda\,t\,e^{\gamma t}$
+  \item Si $\gamma$ est racine \textbf{double} : $y_p = \lambda\,t^2\,e^{\gamma t}$
+\end{itemize}
+\end{methode}
+
+\begin{exemple}[6]
+$y'' - 3y' + 2y = 4e^{3t}$
+
+Équation caractéristique : $r^2 - 3r + 2 = 0 \Rightarrow r_1 = 1,\; r_2 = 2$
+
+$\gamma = 3$ n'est pas racine. On pose $y_p = \lambda\,e^{3t}$.
+
+$y_p'' - 3y_p' + 2y_p = 9\lambda e^{3t} - 9\lambda e^{3t} + 2\lambda e^{3t} = 2\lambda e^{3t} = 4e^{3t}$
+
+Donc $\lambda = 2$ et $y_p = 2e^{3t}$.
+
+\textbf{Solution générale :} $y(t) = A\,e^{t} + B\,e^{2t} + 2e^{3t}$
+\end{exemple}
+
+\subsection{Recherche de solution particulière -- Second membre sinusoïdal}
+
+\begin{methode}[-- $f(t) = P\cos(\omega t) + Q\sin(\omega t)$]
+On cherche $y_p$ sous la forme : $y_p(t) = \lambda\cos(\omega t) + \mu\sin(\omega t)$
+
+On substitue et on identifie les coefficients de $\cos(\omega t)$ et $\sin(\omega t)$.
+\end{methode}
+
+\begin{exemple}[7]
+$y'' + 4y = \cos(t)$
+
+On pose $y_p = \lambda\cos(t) + \mu\sin(t)$.
+
+$y_p'' = -\lambda\cos(t) - \mu\sin(t)$
+
+$y_p'' + 4y_p = 3\lambda\cos(t) + 3\mu\sin(t) = \cos(t)$
+
+Donc $\lambda = \frac{1}{3}$, $\mu = 0$.
+
+\textbf{Solution particulière :} $y_p(t) = \dfrac{1}{3}\cos(t)$
+\end{exemple}
+
+\begin{appliindus}[-- Vibrations forcées d'une machine-outil]
+Une machine de masse $m = 500\,$kg, montée sur des ressorts ($k = 20\,000\,$N/m) avec amortisseur ($f = 1\,000\,$N$\cdot$s/m), soumise à une force excitatrice $F(t) = 200\sin(10t)$ :
+\[
+500\,\ddot{x} + 1000\,\dot{x} + 20000\,x = 200\sin(10t)
+\]
+Simplifiée : $\ddot{x} + 2\dot{x} + 40x = 0{,}4\sin(10t)$
+
+La solution particulière donne l'amplitude et le déphasage des vibrations en régime permanent. Ce calcul est essentiel pour le \textbf{dimensionnement des plots anti-vibratoires} en milieu industriel.
+\end{appliindus}
+
+% ============================================================
+% SECTION 4 : CONDITIONS INITIALES
+% ============================================================
+\newpage
+\section{Détermination des constantes par conditions initiales}
+
+\begin{theoreme}[-- Existence et unicité]
+L'équation $a\,y'' + b\,y' + c\,y = f(t)$ admet une \textbf{unique solution} vérifiant les conditions initiales :
+\[
+y(t_0) = y_0 \quad \text{et} \quad y'(t_0) = y_0'
+\]
+Ces deux conditions permettent de déterminer les constantes $A$ et $B$.
+\end{theoreme}
+
+\begin{methode}[-- Détermination de $A$ et $B$]
+\begin{enumerate}
+  \item Écrire la solution générale $y(t) = y_h(t) + y_p(t)$
+  \item Calculer $y'(t)$
+  \item Appliquer $y(t_0) = y_0$ : obtenir une première équation en $A$ et $B$
+  \item Appliquer $y'(t_0) = y_0'$ : obtenir une seconde équation en $A$ et $B$
+  \item Résoudre le système de 2 équations à 2 inconnues
+\end{enumerate}
+\end{methode}
+
+\begin{exemple}[8 -- Problème de Cauchy complet]
+Résoudre : $y'' + 2y' + 5y = 5$ avec $y(0) = 0$ et $y'(0) = 0$.
+
+\textbf{1) Solution particulière :} $y_p = \frac{5}{5} = 1$
+
+\textbf{2) Équation homogène :} $r^2 + 2r + 5 = 0$, $\Delta = 4 - 20 = -16 < 0$
+
+$\alpha = -1$, $\beta = 2$
+
+$y_h(t) = e^{-t}(A\cos(2t) + B\sin(2t))$
+
+\textbf{3) Solution générale :} $y(t) = e^{-t}(A\cos(2t) + B\sin(2t)) + 1$
+
+\textbf{4) Conditions initiales :}
+
+$y(0) = A + 1 = 0 \Rightarrow A = -1$
+
+$y'(t) = e^{-t}[(-A+2B)\cos(2t) + (-B-2A)\sin(2t)]$
+
+$y'(0) = -A + 2B = 1 + 2B = 0 \Rightarrow B = -\frac{1}{2}$
+
+\textbf{Solution :} $\displaystyle y(t) = 1 - e^{-t}\!\left(\cos(2t) + \frac{1}{2}\sin(2t)\right)$
+\end{exemple}
+
+\begin{appliindus}[-- Réponse indicielle d'un capteur de température]
+Un capteur de température industriel (thermocouple dans un doigt de gant) peut être modélisé par un système du second ordre. Lorsqu'il est plongé dans un fluide à $100\,°$C à $t=0$ :
+\[
+\tau^2\,\ddot{T} + 2m\tau\,\dot{T} + T = 100
+\]
+avec $T(0) = 20\,°$C (température initiale) et $T'(0) = 0$.
+
+Le facteur d'amortissement $m$ détermine la rapidité et la qualité de la réponse du capteur :
+\begin{itemize}
+  \item $m > 1$ : réponse lente sans dépassement
+  \item $m = 1$ : réponse la plus rapide sans dépassement
+  \item $m < 1$ : réponse rapide mais avec des oscillations
+\end{itemize}
+
+Le choix du capteur dans un \textbf{process industriel} dépend de ce compromis rapidité/précision.
+\end{appliindus}
+
+% ============================================================
+% SECTION 5 : APPLICATIONS PHYSIQUES ET INDUSTRIELLES
+% ============================================================
+\newpage
+\section{Applications physiques et industrielles}
+
+\subsection{Circuit RLC série}
+
+\begin{center}
+\begin{tikzpicture}[scale=1.2, >=Stealth, thick]
+  % Circuit
+  \draw (0,0) -- (4,0);
+  % Résistance
+  \draw (0.5,0) -- (0.7,0.3) -- (1.1,-0.3) -- (1.5,0.3) -- (1.9,-0.3) -- (2.1,0);
+  \node[above] at (1.3,0.4) {$R$};
+  % Inductance
+  \draw (2.5,0) arc[start angle=180, end angle=0, radius=0.2]
+        arc[start angle=180, end angle=0, radius=0.2]
+        arc[start angle=180, end angle=0, radius=0.2];
+  \node[above] at (3.1,0.4) {$L$};
+  % Générateur
+  \draw (0,0) -- (0,-2);
+  \draw (-0.3,-0.8) -- (0.3,-0.8);
+  \draw (-0.15,-1.1) -- (0.15,-1.1);
+  \node[left] at (-0.3,-0.95) {$E$};
+  % Condensateur
+  \draw (4,0) -- (4,-0.7);
+  \draw (3.6,-0.7) -- (4.4,-0.7);
+  \draw (3.6,-1) -- (4.4,-1);
+  \draw (4,-1) -- (4,-2);
+  \node[right] at (4.4,-0.85) {$C$};
+  % Fil retour
+  \draw (0,-2) -- (4,-2);
+  % Flèche courant
+  \draw[->, red, thick] (0.3,0.6) -- (1.5,0.6) node[midway, above] {$i(t)$};
+\end{tikzpicture}
+\end{center}
+
+L'équation du circuit s'écrit :
+\[
+L\,\frac{d^2u_C}{dt^2} + R\,\frac{du_C}{dt} + \frac{u_C}{1} = E
+\]
+En divisant par $LC$ et en posant $\omega_0 = \frac{1}{\sqrt{LC}}$ (pulsation propre) et $Q = \frac{1}{R}\sqrt{\frac{L}{C}}$ (facteur de qualité) :
+\[
+\frac{d^2u_C}{dt^2} + \frac{\omega_0}{Q}\frac{du_C}{dt} + \omega_0^2\,u_C = \omega_0^2\,E
+\]
+
+\begin{remarque}
+La nature du régime transitoire dépend du facteur de qualité $Q$ :
+\begin{itemize}
+  \item $Q < \frac{1}{2}$ $\Leftrightarrow$ $\Delta > 0$ : régime \textbf{apériodique}
+  \item $Q = \frac{1}{2}$ $\Leftrightarrow$ $\Delta = 0$ : régime \textbf{critique}
+  \item $Q > \frac{1}{2}$ $\Leftrightarrow$ $\Delta < 0$ : régime \textbf{pseudo-périodique}
+\end{itemize}
+\end{remarque}
+
+\subsection{Système masse-ressort-amortisseur}
+
+Le mouvement d'une masse $m$ suspendue à un ressort de raideur $k$, avec frottement visqueux $f$, est régi par :
+\[
+m\,\ddot{x} + f\,\dot{x} + k\,x = F(t)
+\]
+
+On pose la pulsation propre $\omega_0 = \sqrt{\frac{k}{m}}$ et le coefficient d'amortissement réduit $m = \frac{f}{2\sqrt{mk}}$ :
+\[
+\ddot{x} + 2m\omega_0\,\dot{x} + \omega_0^2\,x = \frac{F(t)}{m}
+\]
+
+\begin{appliindus}[-- Dimensionnement d'un amortisseur de machine]
+Une presse industrielle de $m = 200\,$kg montée sur plots élastiques ($k = 8\,000\,$N/m). On souhaite un retour à l'équilibre \textbf{critique} ($m = 1$) :
+
+$f_c = 2\sqrt{mk} = 2\sqrt{200 \times 8000} = 2\sqrt{1\,600\,000} \approx 2\,530\,$N$\cdot$s/m
+
+L'amortisseur doit avoir un coefficient de frottement visqueux de $\approx 2\,530\,$N$\cdot$s/m.
+\end{appliindus}
+
+\subsection{Oscillations de torsion}
+
+\begin{appliindus}[-- Arbre de transmission]
+Un arbre de transmission subit des oscillations de torsion. En notant $\theta(t)$ l'angle de torsion, $J$ le moment d'inertie, $c$ le coefficient de raideur de torsion et $\mu$ le coefficient d'amortissement :
+\[
+J\,\ddot{\theta} + \mu\,\dot{\theta} + c\,\theta = \Gamma_{\text{ext}}(t)
+\]
+La détermination du régime permet de prédire les vibrations et d'éviter les phénomènes de \textbf{résonance} qui peuvent endommager l'arbre.
+\end{appliindus}
+
+\subsection{Régulation et automatisme}
+
+\begin{appliindus}[-- Système asservi du second ordre]
+En régulation industrielle, de nombreux systèmes (positionnement de bras robotique, régulation de débit, contrôle de niveau) sont modélisés par un système du second ordre. La fonction de transfert a la forme canonique :
+\[
+H(p) = \frac{K}{1 + \frac{2m}{\omega_0}p + \frac{p^2}{\omega_0^2}}
+\]
+La réponse temporelle à un échelon est la solution de l'équation différentielle associée. Les critères de performance industrielle sont :
+\begin{itemize}
+  \item \textbf{Temps de réponse à 5\%} : $t_r \approx \frac{3}{m\omega_0}$
+  \item \textbf{Dépassement} : $D = e^{-\frac{\pi m}{\sqrt{1-m^2}}} \times 100\,\%$
+  \item \textbf{Erreur statique} : dépend du gain $K$
+\end{itemize}
+\end{appliindus}
+
+% ============================================================
+% SECTION 6 : EXERCICES
+% ============================================================
+\newpage
+\section{Exercices d'application}
+
+\subsection*{Exercice 1 -- Résolution d'équation homogène}
+Résoudre les équations différentielles suivantes :
+\begin{enumerate}[label=\alph*)]
+  \item $y'' + 7y' + 12y = 0$
+  \item $y'' - 6y' + 9y = 0$
+  \item $y'' + 2y' + 10y = 0$
+  \item $y'' - y = 0$
+\end{enumerate}
+
+\subsection*{Exercice 2 -- Avec second membre}
+Résoudre les équations suivantes :
+\begin{enumerate}[label=\alph*)]
+  \item $y'' + 4y' + 3y = 6$
+  \item $y'' - 2y' + y = 2e^{3t}$
+  \item $y'' + 9y = \cos(2t)$
+  \item $y'' + y' - 2y = 4t$
+\end{enumerate}
+
+\subsection*{Exercice 3 -- Problème de Cauchy}
+Résoudre $y'' + 6y' + 8y = 16$ avec $y(0) = 0$ et $y'(0) = 2$.
+
+\subsection*{Exercice 4 -- Circuit RLC}
+Un circuit RLC série est constitué d'une résistance $R = 100\,\Omega$, d'une inductance $L = 0{,}5\,$H et d'un condensateur $C = 50\,\mu$F. À $t=0$, on ferme l'interrupteur sur une source de tension $E = 12\,$V.
+\begin{enumerate}[label=\alph*)]
+  \item Écrire l'équation différentielle vérifiée par $u_C(t)$.
+  \item Déterminer le régime de fonctionnement (apériodique, critique ou pseudo-périodique).
+  \item Résoudre avec $u_C(0) = 0$ et $u_C'(0) = 0$.
+  \item Tracer l'allure de $u_C(t)$.
+\end{enumerate}
+
+\subsection*{Exercice 5 -- Vibrations de machine}
+Un moteur électrique de masse $m = 150\,$kg est fixé sur des silentblocs de raideur totale $k = 60\,000\,$N/m. Le coefficient d'amortissement est $f = 3\,000\,$N$\cdot$s/m.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la pulsation propre $\omega_0$ et le coefficient d'amortissement $m$.
+  \item Déterminer le type de régime.
+  \item Si le moteur est écarté de $5\,$mm de sa position d'équilibre puis relâché sans vitesse initiale, déterminer $x(t)$.
+  \item Calculer la pseudo-période des oscillations et le temps de réponse à 5\%.
+\end{enumerate}
+
+\subsection*{Exercice 6 -- Pendule amorti}
+Un pendule simple de longueur $\ell = 1\,$m, amorti par frottement visqueux ($\mu = 0{,}5\,$N$\cdot$s/m pour une masse de $0{,}2\,$kg), vérifie (petits angles) :
+\[
+\ddot{\theta} + \frac{\mu}{m}\,\dot{\theta} + \frac{g}{\ell}\,\theta = 0
+\]
+\begin{enumerate}[label=\alph*)]
+  \item Calculer les paramètres $\omega_0$ et $m$.
+  \item Résoudre avec $\theta(0) = 0{,}1\,$rad et $\dot{\theta}(0) = 0$.
+  \item Au bout de combien de périodes l'amplitude a-t-elle diminué de moitié ?
+\end{enumerate}
+
+% ============================================================
+% ANNEXE : FORMULAIRE
+% ============================================================
+\newpage
+\section*{Formulaire -- À retenir}
+\addcontentsline{toc}{section}{Formulaire}
+
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, title={\textbf{Formulaire des équations différentielles du 2\textsuperscript{nd} ordre}}, fonttitle=\large\bfseries\sffamily, coltitle=white, boxrule=1.5pt, arc=5pt]
+
+\textbf{Forme générale :} $a\,y'' + b\,y' + c\,y = f(t)$ avec $a \neq 0$
+
+\vspace{6pt}
+\textbf{Équation caractéristique :} $ar^2 + br + c = 0$, \quad $\Delta = b^2 - 4ac$
+
+\vspace{6pt}
+\renewcommand{\arraystretch}{1.8}
+\begin{tabular}{|c|c|}
+\hline
+\rowcolor{uimmblue!20}
+\textbf{Cas} & \textbf{Solution homogène $y_h(t)$} \\
+\hline
+$\Delta > 0$ : $r_1, r_2 \in \mathbb{R}$ & $A\,e^{r_1 t} + B\,e^{r_2 t}$ \\
+\hline
+$\Delta = 0$ : $r_0$ double & $(A + Bt)\,e^{r_0 t}$ \\
+\hline
+$\Delta < 0$ : $\alpha \pm j\beta$ & $e^{\alpha t}(A\cos\beta t + B\sin\beta t)$ \\
+\hline
+\end{tabular}
+
+\vspace{8pt}
+\textbf{Solution générale :} $y(t) = y_h(t) + y_p(t)$
+
+\vspace{6pt}
+\textbf{Paramètres physiques :}
+
+$\omega_0 = \sqrt{\dfrac{c}{a}}$ \quad (pulsation propre) \qquad
+$m = \dfrac{b}{2\sqrt{ac}}$ \quad (amortissement réduit)
+
+\vspace{6pt}
+$T_0 = \dfrac{2\pi}{\omega_0}$ \quad (période propre) \qquad
+$T_{ps} = \dfrac{2\pi}{\omega_0\sqrt{1-m^2}}$ \quad (pseudo-période, $m < 1$)
+\end{tcolorbox}
+
+\vfill
+\begin{center}
+\color{uimmgray}\small
+\textit{Document réalisé par le Pôle Formation UIMM -- Centre-Val de Loire}\\
+\textit{La Fabrique de l'Avenir}
+\end{center}
+
+\end{document}

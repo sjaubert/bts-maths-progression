@@ -1,0 +1,436 @@
+% ============================================================
+% CORRIGÉ — Nombres Complexes — MOD01
+% BTS CPRP / CRSA / ATI
+% Auteur : S. JAUBERT — Pôle Formation UIMM - CVDL
+% Compilation : pdflatex corrige_complexes.tex
+% ============================================================
+
+\documentclass[a4paper,11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{icomma}
+
+\usepackage{geometry}
+\geometry{top=2cm, bottom=2cm, left=2cm, right=2cm,
+          headheight=43pt, headsep=0.3cm}
+\setlength{\headheight}{43pt}
+\usepackage{parskip}
+\usepackage{lastpage}
+
+\usepackage{amsmath, amssymb, mathtools}
+\usepackage{array, booktabs, tabularx, multirow}
+\usepackage{enumitem}
+\usepackage[table]{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{fancyhdr}
+
+% ---- Couleurs ----
+\definecolor{uimm-blue}{RGB}{0,70,127}
+\definecolor{uimm-gray}{RGB}{128,128,128}
+\definecolor{light-gray}{RGB}{240,240,240}
+\definecolor{problem-bg}{RGB}{230,240,255}
+\definecolor{sol-bg}{RGB}{232,248,232}
+\definecolor{sol-frame}{RGB}{0,130,60}
+\definecolor{orange-dark}{RGB}{180,90,0}
+
+% ---- En-tête / Pied de page ----
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[C]{%
+  \begin{minipage}[c]{\textwidth}
+    \begin{tabular*}{\textwidth}{@{}l@{\extracolsep{\fill}}c@{\extracolsep{\fill}}r@{}}
+      \IfFileExists{logo_uimm_placeholder.jpg}{%
+        \includegraphics[height=1.0cm]{logo_uimm_placeholder.jpg}%
+      }{%
+        \fcolorbox{uimm-blue}{white}{\parbox[c][1cm][c]{2cm}{%
+          \centering\tiny\textcolor{uimm-blue}{\textbf{Logo\\UIMM}}}}%
+      }
+      &
+      \textcolor{uimm-blue}{\textbf{Pôle Formation UIMM -- CVDL}}
+      &
+      \shortstack[r]{%
+        \small\textcolor{uimm-blue}{\textbf{BTS CPRP / CRSA / ATI}}\\[1pt]%
+        \small MOD01 -- Nombres Complexes%
+      }
+    \end{tabular*}%
+  \end{minipage}%
+}
+\fancyfoot[C]{\textcolor{uimm-gray}{\small
+  Pôle Formation UIMM -- CVDL \quad|\quad S.~JAUBERT
+  \quad|\quad Page~\thepage~sur~\pageref{LastPage}}}
+\renewcommand{\headrulewidth}{0.8pt}
+\renewcommand{\headrule}{%
+  \hbox to\headwidth{\color{uimm-blue}\leaders\hrule height\headrulewidth\hfill}}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% ---- Commandes ----
+\newcommand{\exercice}[2]{%
+  \vspace{10pt}%
+  \begin{tcolorbox}[colback=problem-bg,colframe=uimm-blue,
+    boxrule=1.5pt,arc=4pt,left=8pt,right=8pt,top=6pt,bottom=6pt]
+    {\bfseries\large\textcolor{uimm-blue}{Exercice~#1}}\quad #2
+  \end{tcolorbox}\vspace{4pt}%
+}
+\newcommand{\partie}[2]{%
+  \vspace{8pt}\noindent\textbf{Partie~#1 :}~\underline{#2}\vspace{4pt}\par%
+}
+\newcommand{\ee}{\mathrm{e}}
+\newcommand{\Zunder}{\underline{Z}}
+\newcommand{\Uunder}{\underline{U}}
+\newcommand{\Iunder}{\underline{I}}
+
+% Environnement solution
+\newenvironment{solution}{%
+  \begin{tcolorbox}[colback=sol-bg,colframe=sol-frame,
+    boxrule=1pt,arc=3pt,left=6pt,right=6pt,top=4pt,bottom=4pt,
+    title={\bfseries\textcolor{white}{Solution}},
+    attach boxed title to top left={yshift=-2mm,xshift=4mm},
+    boxed title style={colback=sol-frame,arc=2pt},
+    breakable]
+}{%
+  \end{tcolorbox}\vspace{4pt}%
+}
+
+% Étiquette compétence
+\newcommand{\competence}[1]{%
+  \tcbox[on line,colback=uimm-blue,colframe=uimm-blue,coltext=white,
+    fontupper=\bfseries\footnotesize,boxsep=1pt,left=3pt,right=3pt,
+    top=1pt,bottom=1pt,arc=2pt,boxrule=0pt]{#1}\hspace{4pt}%
+}
+
+% ============================================================
+\begin{document}
+% ============================================================
+
+\thispagestyle{fancy}
+
+\begin{center}
+  \vspace*{0.2cm}
+  {\Huge\bfseries\textcolor{uimm-blue}{BTS CPRP / CRSA / ATI}}\\[6pt]
+  \textcolor{uimm-blue}{\rule{\linewidth}{1.5pt}}\\[4pt]
+  {\Huge\bfseries\textcolor{uimm-blue}{MATHÉMATIQUES -- MOD01}}\\[6pt]
+  {\LARGE\bfseries\textcolor{sol-frame}{CORRIGÉ -- Nombres Complexes}}\\[4pt]
+  \textcolor{uimm-blue}{\rule{\linewidth}{1.5pt}}
+\end{center}
+
+\vspace{0.4cm}
+
+% ============================================================
+\exercice{1}{Maîtrise des formes des nombres complexes \hfill\textit{(12 points)}}
+% ============================================================
+
+\partie{A}{Passage de la forme algébrique aux formes trigonométrique et exponentielle}
+
+\medskip
+
+% ---- Q1 ----
+\noindent\textbf{1.}\quad\competence{C1 -- C3}
+$z_1 = 3 + 3j\sqrt{3}$
+
+\begin{solution}
+\[
+  |z_1| = \sqrt{3^2 + (3\sqrt{3})^2} = \sqrt{9 + 27} = \sqrt{36} = \boxed{6}
+\]
+\[
+  \cos\theta = \frac{3}{6} = \frac{1}{2},\quad \sin\theta = \frac{3\sqrt{3}}{6} = \frac{\sqrt{3}}{2}
+  \quad\Rightarrow\quad \arg(z_1) = \boxed{\dfrac{\pi}{3}}
+\]
+\[
+  z_1 = 6\!\left(\cos\frac{\pi}{3} + j\sin\frac{\pi}{3}\right)
+  \qquad\qquad
+  z_1 = 6\,\ee^{j\pi/3}
+\]
+\end{solution}
+
+% ---- Q2 ----
+\noindent\textbf{2.}\quad\competence{C1 -- C3 -- C4}
+$z_2 = 1 - \sqrt{3}$
+
+\begin{solution}
+\textbf{Analyse préalable :} $\sqrt{3} \approx 1{,}732 > 1$, donc $z_2 = 1 - \sqrt{3} \approx -0{,}732$.
+\textbf{$z_2$ est un réel strictement négatif} (partie imaginaire nulle). Le piège est de tenter un calcul d'argument classique.
+
+\[
+  |z_2| = |1 - \sqrt{3}| = \sqrt{3} - 1 \approx 0{,}732
+\]
+\[
+  \arg(z_2) = \pi \quad \text{(réel négatif)}
+\]
+\[
+  z_2 = (\sqrt{3}-1)\!\left(\cos\pi + j\sin\pi\right)
+  \qquad\qquad
+  z_2 = (\sqrt{3}-1)\,\ee^{j\pi}
+\]
+\end{solution}
+
+% ---- Q3 ----
+\noindent\textbf{3.}\quad\competence{C1 -- C3}
+$z_3 = -2\sqrt{3} - 2j$
+
+\begin{solution}
+\[
+  |z_3| = \sqrt{(-2\sqrt{3})^2 + (-2)^2} = \sqrt{12+4} = \sqrt{16} = \boxed{4}
+\]
+Point $(-2\sqrt{3}\,;\,-2)$ dans le \textbf{troisième quadrant} ($a<0$, $b<0$).
+\[
+  \tan\theta = \frac{-2}{-2\sqrt{3}} = \frac{1}{\sqrt{3}}
+  \quad\Rightarrow\quad \theta = -\pi + \frac{\pi}{6} = \boxed{-\frac{5\pi}{6}}
+\]
+\textit{Vérification :} $\cos(-\tfrac{5\pi}{6}) = -\tfrac{\sqrt{3}}{2} = \tfrac{-2\sqrt{3}}{4}$\checkmark\quad
+$\sin(-\tfrac{5\pi}{6}) = -\tfrac{1}{2} = \tfrac{-2}{4}$\checkmark
+\[
+  z_3 = 4\!\left(\cos\!\left(-\frac{5\pi}{6}\right) + j\sin\!\left(-\frac{5\pi}{6}\right)\right)
+  \qquad
+  z_3 = 4\,\ee^{-j5\pi/6}
+\]
+\end{solution}
+
+\newpage
+
+% ---- Q4 ----
+\noindent\textbf{4.}\quad\competence{C1 -- C3}
+$z_4 = -5j$
+
+\begin{solution}
+$z_4$ est un \textbf{imaginaire pur négatif} ($a=0$, $b=-5$).
+\[
+  |z_4| = 5 \qquad \arg(z_4) = -\frac{\pi}{2}
+\]
+\[
+  z_4 = 5\!\left(\cos\!\left(-\frac{\pi}{2}\right) + j\sin\!\left(-\frac{\pi}{2}\right)\right)
+  \qquad\qquad
+  z_4 = 5\,\ee^{-j\pi/2}
+\]
+\end{solution}
+
+\partie{B}{Passage de la forme exponentielle à la forme algébrique}
+
+% ---- Q5 ----
+\noindent\textbf{5.}\quad\competence{C3}
+$z_5 = 4\,\ee^{j\pi/6}$
+
+\begin{solution}
+\[
+  z_5 = 4\!\left(\cos\frac{\pi}{6} + j\sin\frac{\pi}{6}\right)
+      = 4\!\left(\frac{\sqrt{3}}{2} + j\,\frac{1}{2}\right)
+      = \boxed{2\sqrt{3} + 2j}
+\]
+\end{solution}
+
+% ---- Q6 ----
+\noindent\textbf{6.}\quad\competence{C3}
+$z_6 = \sqrt{2}\,\ee^{-j3\pi/4}$
+
+\begin{solution}
+\[
+  z_6 = \sqrt{2}\!\left(\cos\!\left(-\frac{3\pi}{4}\right)+j\sin\!\left(-\frac{3\pi}{4}\right)\right)
+      = \sqrt{2}\!\left(-\frac{\sqrt{2}}{2} - j\,\frac{\sqrt{2}}{2}\right)
+      = \boxed{-1 - j}
+\]
+\end{solution}
+
+\partie{C}{Opérations}
+
+% ---- Q7 ----
+\noindent\textbf{7.}\quad\competence{C2 -- C3}
+$P = z_1 \times z_4$
+
+\begin{solution}
+On utilise les formes exponentielles $z_1 = 6\,\ee^{j\pi/3}$ et $z_4 = 5\,\ee^{-j\pi/2}$ :
+\[
+  P = 6 \times 5 \cdot \ee^{j\left(\frac{\pi}{3}-\frac{\pi}{2}\right)}
+    = 30\,\ee^{j\left(\frac{2\pi}{6}-\frac{3\pi}{6}\right)}
+    = 30\,\ee^{-j\pi/6}
+\]
+Forme algébrique :
+\[
+  P = 30\!\left(\cos\!\left(-\frac{\pi}{6}\right)+j\sin\!\left(-\frac{\pi}{6}\right)\right)
+    = 30\!\left(\frac{\sqrt{3}}{2} - j\,\frac{1}{2}\right)
+    = \boxed{15\sqrt{3} - 15j}
+\]
+\end{solution}
+
+% ---- Q8 ----
+\noindent\textbf{8.}\quad\competence{C2 -- C3 -- C6}
+$Q = z_5\,/\,z_1$
+
+\begin{solution}
+On utilise $z_5 = 4\,\ee^{j\pi/6}$ et $z_1 = 6\,\ee^{j\pi/3}$ :
+\[
+  Q = \frac{4}{6}\,\ee^{j\left(\frac{\pi}{6}-\frac{\pi}{3}\right)}
+    = \frac{2}{3}\,\ee^{j\left(\frac{\pi}{6}-\frac{2\pi}{6}\right)}
+    = \frac{2}{3}\,\ee^{-j\pi/6}
+\]
+Forme algébrique :
+\[
+  Q = \frac{2}{3}\!\left(\frac{\sqrt{3}}{2} - j\,\frac{1}{2}\right)
+    = \boxed{\dfrac{\sqrt{3}}{3} - \dfrac{j}{3}}
+\]
+\end{solution}
+
+\newpage
+
+% ============================================================
+\exercice{2}{Application à l'électricité -- Circuit RLC série \hfill\textit{(5 points)}}
+% ============================================================
+
+\textit{Données :} $R=100\,\Omega$,\; $L=0{,}2\,\text{H}$,\; $C=10\,\mu\text{F}$,\;
+$\omega=1000\,\text{rad/s}$,\; $u(t)=50\cos(\omega t)$ V.
+
+\medskip
+
+\noindent\textbf{1.}\quad\competence{C1 -- C3}
+Impédances complexes
+
+\begin{solution}
+\[
+  \Zunder_R = R = \mathbf{100\;\Omega}
+\]
+\[
+  \Zunder_L = jL\omega = j \times 0{,}2 \times 1000 = \mathbf{j\,200\;\Omega}
+\]
+\[
+  \Zunder_C = \frac{-j}{C\omega} = \frac{-j}{10\times10^{-6}\times1000}
+            = \frac{-j}{10^{-2}} = \mathbf{-j\,100\;\Omega}
+\]
+\end{solution}
+
+\noindent\textbf{2.}\quad\competence{C3 -- C5}
+Impédance totale
+
+\begin{solution}
+\[
+  \Zunder = \Zunder_R + \Zunder_L + \Zunder_C
+          = 100 + j200 + (-j100)
+          = \boxed{100 + j100\;\Omega}
+\]
+\end{solution}
+
+\noindent\textbf{3.}\quad\competence{C3 -- C4 -- C6}
+Module, argument, interprétation
+
+\begin{solution}
+\[
+  |\Zunder| = \sqrt{100^2 + 100^2} = 100\sqrt{2} \approx \mathbf{141{,}4\;\Omega}
+\]
+\[
+  \varphi = \arg(\Zunder) = \arctan\!\left(\frac{100}{100}\right) = \arctan(1)
+          = \frac{\pi}{4} = \mathbf{45^\circ}
+\]
+\textbf{Interprétation :} $\varphi > 0$ : la tension est en avance sur le courant.
+Le circuit a un \textbf{caractère inductif} car $X_L = 200\,\Omega > X_C = 100\,\Omega$.
+\end{solution}
+
+\noindent\textbf{4.}\quad\competence{C5 -- C6}
+Courant et expression temporelle
+
+\begin{solution}
+Amplitude de référence $\Uunder = 50\,\text{V}$ (phase nulle) :
+\[
+  \Iunder = \frac{\Uunder}{\Zunder}
+          = \frac{50}{100\sqrt{2}\,\ee^{j\pi/4}}
+          = \frac{50}{100\sqrt{2}}\,\ee^{-j\pi/4}
+          = \frac{\sqrt{2}}{4}\,\ee^{-j\pi/4}
+\]
+\[
+  I_m = \frac{50}{100\sqrt{2}} = \frac{1}{2\sqrt{2}} = \frac{\sqrt{2}}{4}
+      \approx \mathbf{0{,}354\;\text{A}}
+  \qquad\qquad \psi = -\frac{\pi}{4} = -45^\circ
+\]
+\[
+  \boxed{i(t) = \frac{\sqrt{2}}{4}\cos\!\left(1000\,t - \frac{\pi}{4}\right)
+              \approx 0{,}354\cos(1000\,t - 45^\circ)\;\text{A}}
+\]
+Le courant est en retard de $45^\circ$ sur la tension, cohérent avec le caractère inductif.
+\end{solution}
+
+\newpage
+
+% ============================================================
+\exercice{3}{Application aux signaux vibratoires \hfill\textit{(3 points -- Bonus)}}
+% ============================================================
+
+\textit{Données :} $x_1(t)=3\cos(\omega t)$ mm,\quad
+$x_2(t)=4\cos\!\left(\omega t+\dfrac{\pi}{2}\right)$ mm.
+
+\medskip
+
+\noindent\textbf{1.}\quad\competence{C1 -- C5}
+Complexes associés (convention valeur efficace)
+
+\begin{solution}
+\[
+  \underline{x}_1 = \frac{3}{\sqrt{2}}\,\ee^{j\cdot 0}
+                  = \frac{3}{\sqrt{2}}
+                  = \frac{3\sqrt{2}}{2}\;\text{mm}
+  \qquad\qquad
+  \underline{x}_2 = \frac{4}{\sqrt{2}}\,\ee^{j\pi/2}
+                  = \frac{4j}{\sqrt{2}}
+                  = \frac{4\sqrt{2}}{2}j\;\text{mm}
+\]
+\end{solution}
+
+\noindent\textbf{2.}\quad\competence{C3 -- C5}
+Calcul de $\underline{x}$, module et argument
+
+\begin{solution}
+\[
+  \underline{x} = \underline{x}_1 + \underline{x}_2
+                = \frac{3}{\sqrt{2}} + \frac{4j}{\sqrt{2}}
+                = \frac{1}{\sqrt{2}}(3 + 4j)\;\text{mm}
+\]
+\[
+  |\underline{x}| = \frac{1}{\sqrt{2}}\sqrt{3^2+4^2}
+                  = \frac{\sqrt{25}}{\sqrt{2}}
+                  = \frac{5}{\sqrt{2}}
+                  = \frac{5\sqrt{2}}{2}
+                  \approx 3{,}54\;\text{mm (valeur efficace)}
+\]
+\[
+  \varphi = \arg(\underline{x}) = \arg(3+4j)
+          = \arctan\!\left(\frac{4}{3}\right)
+          \approx 53{,}1^\circ \approx 0{,}927\;\text{rad}
+\]
+\end{solution}
+
+\noindent\textbf{3.}\quad\competence{C5 -- C6}
+Expression de $x(t)$ et interprétation
+
+\begin{solution}
+Amplitude crête :
+\[
+  A = |\underline{x}|\times\sqrt{2} = \frac{5}{\sqrt{2}}\times\sqrt{2} = \mathbf{5\;\text{mm}}
+\]
+\[
+  \boxed{x(t) = 5\cos\!\left(\omega t + \arctan\frac{4}{3}\right)
+              \approx 5\cos(\omega t + 53{,}1^\circ)\;\text{mm}}
+\]
+
+\medskip
+\textbf{Comparaison :} $A = 5\;\text{mm} < 3 + 4 = 7\;\text{mm}$
+
+\textbf{Explication physique :} Les deux signaux ne sont \textbf{pas en phase}
+(ils sont déphasés de $\pi/2$, soit $90^\circ$). La somme de deux signaux sinusoïdaux
+se calcule géométriquement (comme des vecteurs) et non algébriquement.
+L'amplitude résultante vérifie l'inégalité triangulaire :
+$A = \sqrt{3^2+4^2} = 5 < 3 + 4 = 7$.
+
+\textit{Cas extrêmes :} si les signaux étaient en phase ($\varphi=0$) : $A = 7$ mm ;
+s'ils étaient en opposition de phase ($\varphi=\pi$) : $A = |4-3| = 1$ mm.
+\end{solution}
+
+\vfill
+\begin{center}
+  \textcolor{uimm-gray}{\small --- Fin du corrigé ---}\\[4pt]
+  \textcolor{uimm-gray}{\footnotesize
+    Pôle Formation UIMM -- CVDL \quad|\quad S.~JAUBERT}
+\end{center}
+
+\end{document}

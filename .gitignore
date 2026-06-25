@@ -2,6 +2,8 @@
 Thumbs.db
 Desktop.ini
 .DS_Store
+_write_test.txt
+.Rhistory
 
 # Node modules (if any future use)
 node_modules/
@@ -11,3 +13,30 @@ npm-debug.log
 .vscode/
 .idea/
 *.swp
+
+# LaTeX temporary files
+*.aux
+*.log
+*.fdb_latexmk
+*.fls
+*.toc
+*.out
+*.synctex.gz
+*.bbl
+*.blg
+*.bcf
+*.run.xml
+*.nav
+*.snm
+*.vrb
+*.lof
+*.lot
+*.idx
+*.ind
+*.ilg
+*.glg
+*.glo
+*.gls
+*.acn
+*.acr
+*.alg

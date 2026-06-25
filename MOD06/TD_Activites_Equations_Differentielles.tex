@@ -1,0 +1,460 @@
+% ============================================================
+% TD : Équations Différentielles (1er et 2nd Ordre)
+% Pôle Formation UIMM - CVDL
+% BTS Industriel - Mathématiques
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+
+% ----- Encodage et langue -----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ----- Polices sans-serif -----
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% ----- Mise en page -----
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+
+% ----- Mathématiques -----
+\usepackage{amsmath,amssymb,amsfonts}
+
+% ----- Graphiques et couleurs -----
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathmorphing, calc}
+
+% ----- Boîtes colorées -----
+\usepackage[most]{tcolorbox}
+
+% ----- En-tête et pied de page -----
+\usepackage{fancyhdr}
+
+% ----- Enumération personnalisée -----
+\usepackage{enumitem}
+
+% ============================================================
+% CHARTE GRAPHIQUE UIMM
+% ============================================================
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+
+% ----- Styles des sections -----
+\usepackage{titlesec}
+\titleformat{\section}
+  {\LARGE\bfseries\color{uimmblue}}
+  {Activité~\thesection.\quad}{0em}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.5pt]}]
+
+% ----- Puces personnalisées -----
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+
+% ============================================================
+% EN-TÊTE / PIED DE PAGE
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancyhead[L]{%
+  \raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}%
+}
+\fancyhead[C]{%
+  \begin{minipage}{8cm}
+    \centering
+    {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+    {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}
+  \end{minipage}
+}
+\fancyhead[R]{%
+  {\small\color{uimmblue}\textbf{MOD06}}\\[2pt]
+  {\footnotesize\color{uimmgray} S. JAUBERT}
+}
+
+\fancyfoot[C]{%
+  {\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire -- S. JAUBERT \hfill \thepage}
+}
+
+% ============================================================
+% DÉBUT DU DOCUMENT
+% ============================================================
+\begin{document}
+
+% ============================================================
+% FICHE MODULE - BLOC / THÈME / COMPÉTENCES
+% ============================================================
+
+\begin{center}
+{\LARGE\bfseries\color{uimmblue} Travaux Dirigés}\\[6pt]
+{\large\color{uimmgray} Équations Différentielles -- Situations Industrielles}\\[4pt]
+{\normalsize\color{uimmgray} Spécialités : CPRP, CRSA, ATI}
+\end{center}
+
+\vspace{0.5cm}
+
+% ----- Tableau d'information du module -----
+\begin{tcolorbox}[
+  colback=uimmlightblue!30,
+  colframe=uimmblue,
+  title={\textbf{\textsf{Fiche du Module - Rappel}}},
+  fonttitle=\large\bfseries\color{white},
+  coltitle=white,
+  boxrule=1.2pt,
+  arc=4pt,
+  left=10pt, right=10pt, top=8pt, bottom=8pt
+]
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l @{\hspace{12pt}} p{12cm}@{}}
+Bloc / Période : & Semestre 3 (ou équivalent selon la progression) \\
+Module :         & {[MOD06]} Équations Différentielles \\
+Thème :          & Résolution d'équations différentielles (1\textsuperscript{er} et 2\textsuperscript{nd} ordre) - Applications concrètes \\
+Compétences :    & \textbf{[C01]} Résoudre une équation différentielle (1\textsuperscript{er} ou 2\textsuperscript{nd} ordre)\\
+                 & \textbf{[C02]} Déterminer la solution vérifiant une ou des conditions initiales\\
+                 & \textbf{[C03]} Interpréter physiquement une solution analytique (régime)
+\end{tabular}
+\end{tcolorbox}
+
+\vspace{0.5cm}
+
+% ============================================================
+% RAPPELS DE COURS ET MÉTHODOLOGIE
+% ============================================================
+
+\begin{tcolorbox}[
+  colback=white,
+  colframe=uimmblue!80!black,
+  title={\textbf{\textsf{Rappels Essentiels -- Ordre 1 et Ordre 2}}},
+  fonttitle=\large\bfseries\color{white},
+  coltitle=white,
+  boxrule=1pt,
+  arc=4pt,
+  left=10pt, right=10pt, top=8pt, bottom=8pt
+]
+
+\textbf{\color{uimmblue} $\triangleright$ Équation différentielle linéaire du 1\textsuperscript{er} ordre} constante : $a\,y'(t) + b\,y(t) = c$
+\begin{itemize}[leftmargin=1cm, itemsep=2pt, topsep=2pt]
+  \item \textbf{Équation homogène} ($ay' + by = 0$) : Solution de la forme $y_h(t) = K\,e^{-\frac{b}{a}t}$ (avec $K \in \mathbb{R}$).
+  \item \textbf{Solution particulière} constatant que le second membre est constant : $y_p = \frac{c}{b}$ (si $b \neq 0$).
+  \item \textbf{Solution particulière} Si les coefficients sont non constants, on utilise la méthode de \textbf{variation de la constante}.
+  \item \textbf{Solution générale} : $y(t) = y_h(t) + y_p(t)$.
+\end{itemize}
+
+\vspace{4pt}
+{\color{uimmblue}\rule{\linewidth}{0.5pt}}
+\vspace{4pt}
+
+\textbf{\color{uimmblue} $\triangleright$ Équation différentielle linéaire du 2\textsuperscript{nd} ordre} : $a\,y''(t) + b\,y'(t) + c\,y(t) = f(t)$
+\begin{itemize}[leftmargin=1cm, itemsep=2pt, topsep=2pt]
+  \item On résout l'\textbf{équation caractéristique} $ar^2 + br + c = 0$ (calcul du discriminant $\Delta = b^2 - 4ac$).
+  \item \textbf{Si $\Delta > 0$} (2 racines $r_1, r_2$) $\Rightarrow$ Régime apériodique : $y_h(t) = A\,e^{r_1 t} + B\,e^{r_2 t}$.
+  \item \textbf{Si $\Delta = 0$} (racine double $r_0$) $\Rightarrow$ Régime critique : $y_h(t) = (A + B\,t)\,e^{r_0 t}$.
+  \item \textbf{Si $\Delta < 0$} (racines complexes $\alpha \pm j\beta$) $\Rightarrow$ Régime pseudo-périodique : $y_h(t) = e^{\alpha t}\left(A\cos(\beta t) + B\sin(\beta t)\right)$.
+  \item On ajoute ensuite une \textbf{solution particulière} de même forme que le second membre $f(t)$.
+\end{itemize}
+\end{tcolorbox}
+
+\vspace{1cm}
+
+\textit{Il est conseillé de répondre directement sur ce document. L'espace a été prévu pour développer vos calculs et vos conclusions.}
+
+\newpage
+
+% ============================================================
+% ACTIVITÉ 1 : THERMIQUE (Ordre 1)
+% ============================================================
+\section{Refroidissement d'une pièce mécanique}
+
+Lors du traitement thermique d'une pièce en acier, celle-ci sort d'un four à une température $T_{\text{four}} = 850^{\circ}\text{C}$. Elle est immédiatement plongée dans un bain d'huile maintenu à une température constante $T_{\text{bain}} = 50^{\circ}\text{C}$.
+
+La loi de refroidissement de Newton s'applique. Elle modélise la variation de la température $T(t)$ (en $^{\circ}\text{C}$) de la pièce en fonction du temps $t$ (en secondes) par l'équation différentielle suivante, notée $(E_1)$ :
+\[
+T'(t) + k \cdot T(t) = k \cdot 50
+\]
+où $k = 0,02 \text{ s}^{-1}$ est une constante dépendante du matériau, de la forme de la pièce et de la nature de l'huile.
+
+\begin{enumerate}
+    \item \textbf{Équation homogène associée.} Mettre en évidence l'équation sans second membre associée à l'équation $(E_1)$, puis donner la forme générale de ses solutions, notées $T_h(t)$.
+    
+    \vspace{3.5cm}
+    
+    \item \textbf{Solution particulière.} En remarquant que le second membre de l'équation $(E_1)$ est constant ($k \cdot 50$), déterminer une solution particulière constante que l'on nommera $T_p$.
+    
+    \vspace{3.5cm}
+    
+    \item \textbf{Solution générale.} En déduire l'expression générale de la solution $T(t)$ de l'équation différentielle complète $(E_1)$.
+    
+    \vspace{3.5cm}
+    
+    \item \textbf{Prise en compte des conditions initiales.} Connaissant la température de la pièce au sortir du four (à $t=0$), déterminer la valeur de la constante apparaissant dans $T(t)$. Écrire l'expression définitive de la température $T(t)$.
+    
+    \vspace{4.5cm}
+    
+    \item \textbf{Analyse temporelle.} Le procédé industriel impose que la pièce atteigne une température de $150^{\circ}\text{C}$ avant de passer à l'étape suivante (usinage, manipulation robotisée). Déterminer, par un calcul manuel validé par la calculatrice, le temps $t_1$ (en secondes) nécessaire pour que la pièce refroidisse à cette température.
+\end{enumerate}
+
+\newpage
+
+% ============================================================
+% ACTIVITÉ 2 : USURE NON LINÉAIRE (Ordre 1 avec astuce)
+% ============================================================
+\section{Modèle d'usure d'un outil de coupe}
+
+Dans une opération de tournage, l'usure de l'outil de coupe augmente selon un modèle en \(S\) (courbe sigmoïde). La croissance de l'usure de dépouille (notée $y(t)$, exprimée en mm) au cours du temps d'usinage $t$ (en minutes) s'accélère avec l'usure existante, mais est freinée par une limite d'usure critique ($1/b$). Le phénomène est décrit par l'équation différentielle :
+\[
+(E_2) \quad : \quad y'(t) = 0,1 \cdot y(t) - 0,1 \cdot \big(y(t)\big)^2
+\]
+On suppose que l'outil possède une usure initiale minimale inhérente au rodage du processus : $y(0) = 0,02 \text{ mm}$.
+Cette équation \textbf{n'est pas linéaire} à cause du terme en $(y(t))^2$. Il ne s'agit donc pas d'une équation classique du 1er ordre.
+
+Pour s'y ramener, on va utiliser une ruse algorithmique souvent utilisée dans l'industrie pour les équations de Riccati / Bernoulli. On effectue un changement de variable en posant la fonction $z(t)$ définie par :
+\[
+z(t) = \frac{1}{y(t)}
+\]
+
+\begin{enumerate}
+    \item Exprimer algébriquement la dérivée $z'(t)$ en fonction de $y(t)$ et de la dérivée $y'(t)$.
+    
+    \vspace{3cm}
+    
+    \item En utilisant l'expression de l'équation $(E_2)$, que l'on injectera dans l'expression de $z'(t)$, démontrer que la fonction $z(t)$ vérifie l'équation différentielle du 1er ordre très simple :
+    \[
+    (E_{z}) \quad : \quad z'(t) + 0,1 \cdot z(t) = 0,1
+    \]
+    (C'est l'objectif du changement de variable : transformer l'équation complexe en une équation linéaire à coefficients constants !)
+    
+    \vspace{5cm}
+    
+    \item Résoudre complètement cette équation $(E_{z})$ pour déterminer l'expression de la solution générale de $z(t)$. (Vous pouvez utiliser les acquis de l'Activité 1).
+    
+    \vspace{5cm}
+    
+    \item Exprimer $z(0)$ en fonction de $y(0)$, puis calculer la valeur numérique de la constante.
+    
+    \vspace{3cm}
+    
+    \item En déduire l'expression explicite de l'usure de dépouille véritable : $y(t) = \frac{1}{z(t)}$.
+    
+    \vspace{3cm}
+    
+    \item En utilisant la solution trouvée, calculer la limite de l'usure lorsque le temps d'usinage devient grand ($t \to +\infty$). Conclure sur l'état de l'outil.
+\end{enumerate}
+
+\newpage
+
+% ============================================================
+% ACTIVITÉ 3 : VIBRATIONS AMORTIES (Ordre 2 sans SM)
+% ============================================================
+\section{Amortissement des vibrations d'une machine}
+
+Une pompe industrielle créant des nuisances vibratoires est installée sur des supports silentblocs dans une usine. Afin d'analyser le comportement vibratoire de l'ensemble (pompe + silentbloc), on étudie la position $x(t)$ du centre de gravité de la pompe lors d'un choc (impulsion initiale).
+
+L'équation différentielle modélisant l'évolution de la position $x(t)$ (en mètres) de la machine par rapport à son point d'équilibre est donnée, d'après les lois de la dynamique newtonienne, par :
+\[
+m\cdot x''(t) + f\cdot x'(t) + k\cdot x(t) = 0
+\]
+Avec :
+\begin{itemize}[label=--]
+    \item $m = 100 \text{ kg}$ : masse de la machine,
+    \item $k = 40\,000 \text{ N/m}$ : raideur équivalente des supports antivibratoires.
+\end{itemize}
+
+L'objectif du concepteur (bureau d'études) est de déterminer le type d'amortissement requis. On fera donc varier la valeur de $f$ (coefficient d'amortissement visqueux du support). 
+Le choc initial déplace la machine de $0,05 \text{ m}$ ($x(0) = 0,05$) puis elle est relâchée sans vitesse initiale ($x'(0) = 0$).
+
+\begin{enumerate}
+    \item \textbf{Cas 1 : Sous-amortissement (silentblocs standard).} L'amortissement est faible, $f = 800 \text{ N}\cdot\text{s/m}$.
+    
+       L'équation est alors : $100\,x''(t) + 800\,x'(t) + 40\,000\,x(t) = 0$.
+       \begin{enumerate}
+           \item Simplifier l'équation en divisant tout par $100$, puis écrire l'équation caractéristique associée.
+           \vspace{1cm}
+           \item Calculer le discriminant et les racines associées.
+           \vspace{2.5cm}
+           \item Donner la solution générale de l'équation, et expliquer quel phénomène physique apparaît.
+           \vspace{2.5cm}
+       \end{enumerate}
+    
+    \item \textbf{Cas 2 : Amortissement critique (silentblocs haute de gamme).} On recherche un retour exact, rapide et sans dépassement (pas d'oscillation libre).
+    
+       On suppose ici que $f = 4\,000 \text{ N}\cdot\text{s/m}$.
+       L'équation simplifiée en divisant par $100$ donne : $x''(t) + 40\,x'(t) + 400\,x(t) = 0$.
+       
+       \begin{enumerate}
+           \item Résoudre l'équation caractéristique dans ce préréglage exact.
+           \vspace{2.5cm}
+           \item Écrire l'allure de la solution générale correspondante.
+           \vspace{2.5cm}
+           \item En utilisant les conditions initiales du choc ($x(0) = 0,05$ et $x'(0) = 0$), déterminer la solution unique décrivant le déplacement $x(t)$. (Indication : il faudra calculer $x'(t)$ de base grâce à une dérivée de la forme $(uv)'$).
+           \vspace{5cm}
+       \end{enumerate}     
+\end{enumerate}
+
+\newpage
+
+% ============================================================
+% ACTIVITÉ 4 : ASSERVISSEMENT DE MOTEUR (Ordre 2 avec SM)
+% ============================================================
+\section{Moteur de régulation à commande continue}
+
+Un moteur électrique à courant continu (utilisé sur un robot articulé) est commandé par l'alimentation d'un circuit électrique du 2nd ordre. Pour observer une réponse temporelle d'asservissement, le système est soumis à un brutal changement de consigne (échelon de tension), valant $10 \text{ V}$ à l'instant initial.
+
+La tension $v(t)$ (en Volts) aux bornes du moteur obéit à l'équation différentielle suivante, due aux impédances (R, L, C) :
+\[
+(E_4) \quad : \quad 2\,v''(t) + 5\,v'(t) + 2\,v(t) = 10
+\]
+
+Le condensateur de lissage, initialement déchargé induit que :
+$v(0) = 0$ et $v'(0) = 0$.
+
+\begin{enumerate}
+    \item \textbf{Étude de l'homogène (régime transitoire).}
+    \begin{enumerate}
+        \item Écrire et résoudre l'équation caractéristique associée.
+        \vspace{2.5cm}
+        \item En déduire la solution générale $v_h(t)$ de l'équation homogène. S'agit-il d'un régime périodique amorti (oscillant) ou apériodique (stable immédiatement) ? Pourquoi ?
+        \vspace{2cm}
+    \end{enumerate}
+
+    \vspace{0.5cm}
+
+    \item \textbf{Solution particulière (régime permanent).}
+    
+    L'intensité d'alimentation étant continue (le 10 Volts est fixe), justifier si la tension permanente du circuit une fois stabilisée, sera constante.
+    Si tel est le cas, en déduire une solution particulière $v_p(t) = C^{\text{ste}}$.
+    
+    \vspace{3.5cm}
+
+    \item \textbf{Solution générale globale.}
+    Donner l'expression de la solution générale de l'équation différentielle $(E_4)$.
+    
+    \vspace{2cm}
+
+    \item \textbf{Détermination des conditions initiales.}
+    En appliquant la dérivée adéquate, former le système d'équations permettant de déterminer les deux constantes d'intégration $A$ et $B$ d'après l'énoncé de départ.
+    
+    \vspace{6cm}
+    
+    \item \textbf{Bilan.}
+    Donner l'équation finale $v(t)$ à laquelle devra se confronter le programme de commande du robot. En étudiant le résultat, estimer sa valeur pour un temps très grand ($t \to +\infty$). Est-ce cohérent avec l'énoncé du problème ?
+    
+\end{enumerate}
+
+\newpage
+
+% ============================================================
+% ACTIVITÉ 5 : PROFIL DE VITESSE (Ordre 1 avec variation de constante)
+% ============================================================
+\section{Profil de vitesse d'une broche d'usinage}
+
+Lors d'une opération de dressage "à vitesse de coupe constante" sur un tour à commande numérique, la vitesse de rotation $v(t)$ (exprimée en tr/min) de la broche doit s'adapter en temps réel à l'avance de l'outil vers le centre de la pièce. En raison de l'inertie du mandrin et des caractéristiques du moteur de broche, la consigne de vitesse dynamique suit une équation différentielle \textbf{à coefficients non constants} (qui dépendent du temps d'usinage $t$ en secondes) :
+\[
+(E_5) \quad : \quad t \cdot v'(t) + v(t) = 120 \cdot t^2 \qquad (\text{pour } t \geqslant 1)
+\]
+À l'instant $t = 1 \text{ s}$, la machine vient de s'engager dans la matière, et la vitesse initiale est $v(1) = 60 \text{ tr/min}$.
+
+\begin{enumerate}
+    \item \textbf{Équation homogène.}
+    
+    L'équation homogène associée est approchée par $t \cdot v_h'(t) + v_h(t) = 0$.
+    \begin{enumerate}
+        \item En séparant les variables (pour écrire se ramener à une égalité entre $\frac{v_h'(t)}{v_h(t)}$ et une fraction de $t$), montrer que cette équation conduit à intégrer la fonction $-\frac{1}{t}$.
+        \vspace{2cm}
+        \item En déduire que la forme générale de la solution de l'équation homogène est $v_h(t) = \frac{K}{t}$ (avec $K \in \mathbb{R}$). 
+        \textit{(Indication : $\exp(\ln(a)) = a$ et $\exp(-x) = 1/\exp(x)$)}.
+        \vspace{4cm}
+    \end{enumerate}
+    
+    \item \textbf{Variation de la constante.}
+    
+    Le second membre $120 \cdot t^2$ n'est pas constant. Nous allons utiliser la méthode de \textbf{variation de la constante}.
+    On recherche la solution globale $v(t)$ sous la forme : $v(t) = \frac{K(t)}{t}$, où la "constante" $K$ dépend désormais du temps.
+    
+    \begin{enumerate}
+        \item Démontrer, en utilisant la formule de dérivée $\left(\frac{u}{v}\right)'$, que la dérivée $v'(t)$ vaut :
+        \[
+        v'(t) = \frac{t \cdot K'(t) - K(t)}{t^2}
+        \]
+        \vspace{3cm}
+        \item Remplacer $v(t)$ par $\frac{K(t)}{t}$ et $v'(t)$ par l'expression obtenue ci-dessus directement dans l'équation \textbf{complète} de départ $(E_5)$. 
+        \vspace{3cm}
+        \item Montrer qu'après de multiples simplifications, on obtient de façon très condensée : $K'(t) = 120 \cdot t^2$. 
+        *(NB: cette forte simplification valide toujours que la méthode de la variation est la bonne approche).*
+        \vspace{2.5cm}
+    \end{enumerate}
+    
+    \item \textbf{Résolution de l'activité.}
+    \begin{enumerate}
+        \item Déterminer l'expression de la fonction $K(t)$ par intégration de $K'(t)$. Il restera une vraie constante d'intégration usuelle $C$.
+        \vspace{2.5cm}
+        \item En ressortir l'expression définitive de la modélisation de la vitesse de la broche $v(t) = \frac{K(t)}{t}$.
+        \vspace{3cm}
+        \item Utiliser la condition de départ de l'usinage $v(1) = 60 \text{ tr/min}$ afin de trouver la valeur précise de la constante $C$, et écrire la formule finale de commande de profil de vitesse.
+        \vspace{4cm}
+    \end{enumerate}
+\end{enumerate}
+
+\newpage
+
+% ============================================================
+% ACTIVITÉ 6 : RÉSONANCE D'UNE PALE (Ordre 2 avec 2nd membre variable)
+% ============================================================
+\section{Vibrations et sollicitations aérodynamiques d'une pale d'éolienne}
+
+L'extrémité d'une pale d'éolienne (en composite) fléchit en fonctionnement. À chaque tour, lors du passage de la pale devant le mât, elle subit une variation brutale des contraintes de poussée du vent. À vitesse de rotation stabilisée, cette poussée aérodynamique engendre une "excitation forcée périodique". 
+
+Si on néglige l'amortissement interne des matériaux de haute technologie pour ne se concentrer que sur la flexibilité, la déflexion (décalage par rapport au repos) de la pale de \textbf{$x(t)$} obéit au modèle du 2nd ordre suivant, noté $(E_6)$ :
+\[
+x''(t) + 100 \cdot x(t) = 50 \cdot \cos(8t)
+\]
+
+\begin{enumerate}
+    \item \textbf{Mouvement propre de la pale (Régime libre / Transitoire).}
+    
+    Si soudainement le vent se coupait, l'excitation $50\cos(8t)$ disparaîtrait : il s'agit de l'équation homogène.
+    \begin{enumerate}
+        \item Résoudre l'équation $\Rightarrow x_h''(t) + 100 \cdot x_h(t) = 0$.
+        \vspace{2.5cm}
+        \item Identifier précisément la \textbf{pulsation propre}, notée $\omega_0$ de la pale de cette éolienne. S'agirait-il d'un mouvement stable ou l'équation suggère-t-elle des vibrations mécaniques perpétuelles ?
+        \vspace{2.5cm}
+    \end{enumerate}
+
+    \item \textbf{Réponse de la pale au vent (Régime permanent / Forcé).}
+    
+    L'influence du vent est représentée par le terme avec la fonction trigonométrique $f(t) = 50\cos(\omega_v t)$, le temps de rotation imposant une impulsion de \textbf{pulsation vent $\boldsymbol{\omega_v} = 8 \text{ rad/s}$}.
+    On recherche une solution particulière forcée imposant la même fréquence :
+    \[
+    x_p(t) = A\cos(8t) + B\sin(8t)
+    \]
+    \begin{enumerate}
+        \item Calculer la dérivée seconde $x_p''(t)$.
+        \vspace{3.5cm}
+        \item Remplacer $x_p(t)$ et la valeur trouvée pour sa dérivée seconde dans $(E_6)$ et regrouper proprement les cosinus et les sinus de l'expression.
+        \vspace{3.5cm}
+        \item Par un procédé d'identification rigoureuse (égaliser le tas des $\cos(8t)$ à $50$, et le tas des $\sin(8t)$ à $0$), déterminer les coefficients $A$ et $B$.
+        \vspace{3cm}
+        \item Donner l'allure simplifiée de l'expression entière et finale décrivant la géométrie absolue de la déformation $x(t) = x_h(t) + x_p(t)$.
+        \vspace{2cm}
+    \end{enumerate}
+
+    \item \textbf{Inadéquation Industrielle (Le problème de la Résonance).}
+    
+    Lors d'une rafale soutenue mais ponctuelle, la génératrice s'emballe et atteint brièvement une vitesse de fonctionnement imposant des chocs du "mât" à raison d'une pulsation excitatrice $\boldsymbol{\omega_v} = 10 \text{ rad/s}$.
+    Le second membre de l'équation passe alors à $50\cos(10t)$.
+    
+    \begin{enumerate}
+        \item Quel est le risque flagrant qui va empêcher de procéder comme précédemment à chercher une simple solution particulière $A\cos(10t) + B\sin(10t)$ ?
+        \vspace{2.5cm}
+        \item Analyser l'effet d'une excitation coïncidant parfaitement avec la valeur calculée au "1.b". Que risque de subir la structure de la pale physiquement au bout de quelques secondes si une telle vitesse devait être stabilisée par la machine ?
+        \vspace{3.5cm}
+    \end{enumerate}
+    
+\end{enumerate}
+
+\end{document}

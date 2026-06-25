@@ -1,0 +1,571 @@
+% ============================================================
+% Cours : Les Suites Numériques
+% Pôle Formation UIMM - CVDL
+% BTS Industriel - Mathématiques
+% Auteur : S. JAUBERT
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+
+% ----- Encodage et langue -----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ----- Polices sans-serif -----
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% ----- Mise en page -----
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+
+% ----- Mathématiques -----
+\usepackage{amsmath,amssymb,amsfonts}
+
+% ----- Graphiques et couleurs -----
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathmorphing, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ----- Boîtes colorées -----
+\usepackage[most]{tcolorbox}
+
+% ----- Code / algorithmes -----
+\usepackage{listings}
+
+% ----- En-tête et pied de page -----
+\usepackage{fancyhdr}
+
+% ----- Hyperliens -----
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+% ----- Enumération personnalisée -----
+\usepackage{enumitem}
+
+% ----- Tableaux -----
+\usepackage{booktabs,array}
+
+% ============================================================
+% CHARTE GRAPHIQUE UIMM
+% ============================================================
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+
+% ----- Styles des sections -----
+\usepackage{titlesec}
+\titleformat{\section}
+  {\LARGE\bfseries\color{uimmblue}}
+  {\thesection.}{0.5em}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.5pt]}]
+\titleformat{\subsection}
+  {\Large\bfseries\color{uimmblue}}
+  {\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}
+  {\large\bfseries\color{uimmblue!80!black}}
+  {\thesubsubsection.}{0.5em}{}
+
+% ----- Puces personnalisées -----
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+\setlist[itemize,2]{label={\color{uimmblue}--}}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+
+% ----- Style listings -----
+\lstdefinestyle{uimmpython}{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{uimmblue}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{uimmred},
+  numbers=left,
+  numberstyle=\tiny\color{uimmgray},
+  numbersep=8pt,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{uimmblue},
+  backgroundcolor=\color{uimmlightgray},
+  language=Python
+}
+
+% ============================================================
+% BOÎTES TCOLORBOX
+% ============================================================
+\newtcolorbox{definition}[1][]{%
+  colback=uimmlightblue, colframe=uimmblue,
+  fonttitle=\bfseries\color{white}, title={\textsf{Définition}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{theoreme}[1][]{%
+  colback=uimmlightblue!50, colframe=uimmblue!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Théorème / Propriété}~#1},
+  coltitle=white, boxrule=1.2pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{methode}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Méthode}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{exemple}[1][]{%
+  colback=orange!5, colframe=orange!70!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Exemple}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{remarque}[1][]{%
+  colback=uimmlightgray, colframe=uimmgray,
+  fonttitle=\bfseries, title={\textsf{Remarque}~#1},
+  boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{appliindus}[1][]{%
+  colback=uimmred!5, colframe=uimmred!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\triangleright$ Application industrielle}~#1},
+  coltitle=white, boxrule=1.2pt, arc=4pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+% ============================================================
+% EN-TÊTE / PIED DE PAGE
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{%
+  \begin{minipage}{8cm}\centering
+    {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+    {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}
+  \end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD02}}}
+\fancyfoot[C]{%
+  {\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+% ============================================================
+% PAGE DE TITRE
+% ============================================================
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[uimmblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  \node[anchor=north west] at ([xshift=2cm, yshift=-0.5cm]current page.north west)
+    {\includegraphics[height=3cm]{logo_uimm_placeholder.jpg}};
+  \node[anchor=north east, white, font=\large\bfseries] at ([xshift=-2cm, yshift=-1.5cm]current page.north east)
+    {Pôle Formation UIMM - CVDL};
+  \node[anchor=north east, white, font=\small, align=right] at ([xshift=-2cm, yshift=-2.2cm]current page.north east)
+    {BTS Industriel -- Mathématiques\\[2pt]S. Jaubert};
+  \fill[uimmred] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.4cm]current page.north east);
+  \node[anchor=center, text width=14cm, align=center] at ([yshift=-1cm]current page.center) {
+    {\fontsize{28}{34}\selectfont\bfseries\color{uimmblue} Les Suites Numériques}\\[20pt]
+    {\Large\color{uimmgray} Module 02 -- Analyse}\\[12pt]
+    {\large\color{uimmgray}\textit{Suites arithmétiques, géométriques et applications industrielles}}
+  };
+  \fill[uimmblue] ([yshift=1.5cm]current page.south west) rectangle (current page.south east);
+  \node[anchor=center, white, font=\small] at ([yshift=0.75cm]current page.south) {
+    Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ La Fabrique de l'Avenir};
+\end{tikzpicture}
+\end{titlepage}
+
+% ============================================================
+% FICHE MODULE
+% ============================================================
+\thispagestyle{fancy}
+\vspace*{0.5cm}
+\begin{center}
+{\LARGE\bfseries\color{uimmblue} MOD02 -- Les Suites}\\[6pt]
+{\large\color{uimmgray} Support de cours et travaux dirigés}\\[4pt]
+{\normalsize\color{uimmgray} Auteur : S. JAUBERT \hspace{1cm} Formation : BTS Industriel}
+\end{center}
+\vspace{0.8cm}
+
+\begin{tcolorbox}[colback=uimmlightblue!30, colframe=uimmblue,
+  title={\textbf{\textsf{Fiche du Module}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1.2pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l @{\hspace{12pt}} p{12cm}@{}}
+Bloc / Période : & Semestre 1 \\
+Module :         & {[MOD02]} Les Suites \\
+Thème :          & Étude des suites numériques, suites arithmétiques et géométriques, recherche de seuil par algorithme ou tableur \\
+\end{tabular}
+\end{tcolorbox}
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=white, colframe=uimmblue!80!black,
+  title={\textbf{\textsf{Séquences et Compétences travaillées}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+
+\textbf{\color{uimmblue} [S01] -- Généralités}
+\begin{itemize}[leftmargin=1.5cm]
+  \item[\textbf{\color{uimmblue}[C01]}] Calculer les termes d'une suite (calculatrice / logiciel / algorithme)
+  \item[\textbf{\color{uimmblue}[C02]}] Réaliser et exploiter une représentation graphique des termes d'une suite
+\end{itemize}
+
+\vspace{6pt}{\color{uimmblue}\rule{\linewidth}{0.5pt}}\vspace{6pt}
+
+\textbf{\color{uimmblue} [S02] -- Suites arithmétiques et géométriques}
+\begin{itemize}[leftmargin=1.5cm]
+  \item[\textbf{\color{uimmblue}[C01]}] Écrire le terme général d'une suite arithmétique ou géométrique
+  \item[\textbf{\color{uimmblue}[C02]}] Calculer la somme de $n$ termes consécutifs
+  \item[\textbf{\color{uimmblue}[C03]}] Déterminer un seuil ($u_n \geq a$ ou $u_n \leq 10^{-p}$) à l'aide d'un tableur ou d'un algorithme
+\end{itemize}
+\end{tcolorbox}
+\vspace{0.5cm}
+
+\begin{remarque}[-- Positionnement du cours]
+Ce support couvre les deux séquences \textbf{S01} et \textbf{S02} du module. Les prérequis sont les calculs fondamentaux (MOD00), en particulier les puissances et le calcul littéral. Chaque partie est rattachée à ses compétences \textbf{[C0x]}, signalées en marge.
+\end{remarque}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================================
+% SECTION 1 : GÉNÉRALITÉS
+% ============================================================
+\section{Généralités sur les suites \hfill {\normalsize\color{uimmred}[S01]}}
+
+\subsection{Notion de suite}
+
+\begin{definition}
+Une \textbf{suite numérique} $(u_n)$ est une fonction qui, à tout entier naturel $n$, associe un nombre réel noté $u_n$ (le \textbf{terme de rang} $n$).
+\[
+u : \mathbb{N} \rightarrow \mathbb{R}, \qquad n \mapsto u_n
+\]
+$u_0$ est le \textbf{terme initial}, $u_n$ le terme général, $u_{n+1}$ le terme suivant.
+\end{definition}
+
+\begin{remarque}
+Ne pas confondre le \textbf{rang} $n$ (la place du terme) et la \textbf{valeur} $u_n$ (le nombre). Par exemple, si $u_n = 2n + 1$, le terme de rang $3$ vaut $u_3 = 7$.
+\end{remarque}
+
+\subsection{Deux modes de génération \hfill {\normalsize\color{uimmred}[C01]}}
+
+\begin{definition}[-- Forme explicite]
+La suite est définie par une formule donnant directement $u_n$ en fonction de $n$ :
+\[
+u_n = f(n).
+\]
+\end{definition}
+
+\begin{definition}[-- Forme récurrente]
+La suite est définie par son premier terme et une relation reliant un terme au précédent :
+\[
+\begin{cases} u_0 \text{ donné} \\ u_{n+1} = f(u_n) \end{cases}
+\]
+\end{definition}
+
+\begin{exemple}[-- Les deux formes]
+\begin{itemize}
+  \item Explicite : $u_n = 3n - 1$ donne $u_0 = -1,\; u_1 = 2,\; u_2 = 5,\dots$
+  \item Récurrente : $u_0 = 2,\; u_{n+1} = 2u_n + 1$ donne $u_1 = 5,\; u_2 = 11,\; u_3 = 23,\dots$
+\end{itemize}
+\end{exemple}
+
+\begin{methode}[-- Calculer un terme à la calculatrice ou au tableur]
+\begin{itemize}
+  \item \textbf{Forme explicite :} on remplace $n$ par sa valeur dans la formule.
+  \item \textbf{Forme récurrente au tableur :} en colonne A le rang, en colonne B la valeur. On saisit $u_0$ en B2, puis en B3 la formule traduisant $u_{n+1} = f(u_n)$ (par exemple \texttt{=2*B2+1}), que l'on recopie vers le bas.
+\end{itemize}
+\end{methode}
+
+\subsection{Calcul des termes par algorithme \hfill {\normalsize\color{uimmred}[C01]}}
+
+Un algorithme permet d'automatiser le calcul des termes d'une suite récurrente.
+
+\begin{lstlisting}[style=uimmpython, caption={Calcul des premiers termes d'une suite récurrente}]
+# Suite : u0 = 2 ; u(n+1) = 2*u(n) + 1
+u = 2
+print("u0 =", u)
+for n in range(1, 6):
+    u = 2 * u + 1      # nouvelle valeur a partir de l'ancienne
+    print("u", n, "=", u)
+\end{lstlisting}
+
+\subsection{Représentation graphique \hfill {\normalsize\color{uimmred}[C02]}}
+
+\begin{definition}
+On représente une suite par un \textbf{nuage de points} de coordonnées $(n\,;\,u_n)$. Les points ne sont pas reliés : une suite n'est définie que pour les entiers.
+\end{definition}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=11cm, height=6cm,
+  xlabel={rang $n$}, ylabel={$u_n$},
+  xmin=-0.5, xmax=6.5, ymin=0, ymax=14,
+  grid=both, grid style={uimmlightblue},
+  axis lines=left, tick style={uimmgray},
+  every axis label/.style={uimmblue}
+]
+\addplot[only marks, mark=*, uimmred, mark size=2.5pt]
+  coordinates {(0,2)(1,3.5)(2,5)(3,6.5)(4,8)(5,9.5)(6,11)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\subsection{Sens de variation}
+
+\begin{definition}
+La suite $(u_n)$ est :
+\begin{itemize}
+  \item \textbf{croissante} si $u_{n+1} \geq u_n$ pour tout $n$ ;
+  \item \textbf{décroissante} si $u_{n+1} \leq u_n$ pour tout $n$ ;
+  \item \textbf{constante} si $u_{n+1} = u_n$ pour tout $n$.
+\end{itemize}
+\end{definition}
+
+\begin{methode}[-- Étudier le sens de variation]
+On calcule le signe de la différence $u_{n+1} - u_n$ :
+\begin{itemize}
+  \item si $u_{n+1} - u_n \geq 0$ pour tout $n$ : la suite est croissante ;
+  \item si $u_{n+1} - u_n \leq 0$ pour tout $n$ : la suite est décroissante.
+\end{itemize}
+\end{methode}
+
+% ============================================================
+% SECTION 2 : SUITES ARITHMÉTIQUES
+% ============================================================
+\newpage
+\section{Suites arithmétiques \hfill {\normalsize\color{uimmred}[S02]}}
+
+\subsection{Définition}
+
+\begin{definition}
+Une suite $(u_n)$ est \textbf{arithmétique} si l'on passe d'un terme au suivant en ajoutant toujours le même nombre $r$, appelé \textbf{raison} :
+\[
+u_{n+1} = u_n + r.
+\]
+\end{definition}
+
+\begin{methode}[-- Reconnaître une suite arithmétique]
+La différence entre deux termes consécutifs est constante : $u_{n+1} - u_n = r$. Si ce n'est pas le cas, la suite n'est pas arithmétique.
+\end{methode}
+
+\subsection{Terme général \hfill {\normalsize\color{uimmred}[C01]}}
+
+\begin{theoreme}
+Pour une suite arithmétique de premier terme $u_0$ et de raison $r$ :
+\[
+\boxed{u_n = u_0 + n\,r}
+\]
+Plus généralement, à partir du terme de rang $p$ : $u_n = u_p + (n - p)\,r$.
+\end{theoreme}
+
+\begin{exemple}
+$u_0 = 5$, raison $r = 3$. Alors $u_n = 5 + 3n$, et $u_{10} = 5 + 30 = 35$.
+\end{exemple}
+
+\subsection{Somme de termes consécutifs \hfill {\normalsize\color{uimmred}[C02]}}
+
+\begin{theoreme}
+La somme de termes consécutifs d'une suite arithmétique vaut :
+\[
+\boxed{S = (\text{nombre de termes}) \times \frac{\text{premier terme} + \text{dernier terme}}{2}}
+\]
+En particulier : $\displaystyle \sum_{k=0}^{n} u_k = (n+1)\,\frac{u_0 + u_n}{2}$.
+\end{theoreme}
+
+\begin{exemple}
+Somme des entiers de $1$ à $100$ : $1 + 2 + \dots + 100 = 100 \times \dfrac{1 + 100}{2} = 5050$.
+\end{exemple}
+
+\begin{appliindus}[-- Empilement et cadence linéaire]
+Une ligne de production monte en cadence : $20$ pièces la première heure, puis $5$ de plus à chaque heure. La production horaire $u_n = 20 + 5n$ est arithmétique. La production cumulée sur une journée de $8$\,h se calcule avec la formule de la somme, utile pour le suivi de capacité.
+\end{appliindus}
+
+% ============================================================
+% SECTION 3 : SUITES GÉOMÉTRIQUES
+% ============================================================
+\newpage
+\section{Suites géométriques \hfill {\normalsize\color{uimmred}[S02]}}
+
+\subsection{Définition}
+
+\begin{definition}
+Une suite $(u_n)$ est \textbf{géométrique} si l'on passe d'un terme au suivant en multipliant toujours par le même nombre $q$ non nul, appelé \textbf{raison} :
+\[
+u_{n+1} = q \times u_n.
+\]
+\end{definition}
+
+\begin{methode}[-- Reconnaître une suite géométrique]
+Le quotient de deux termes consécutifs est constant : $\dfrac{u_{n+1}}{u_n} = q$ (avec $u_n \neq 0$).
+\end{methode}
+
+\subsection{Terme général \hfill {\normalsize\color{uimmred}[C01]}}
+
+\begin{theoreme}
+Pour une suite géométrique de premier terme $u_0$ et de raison $q$ :
+\[
+\boxed{u_n = u_0 \times q^{\,n}}
+\]
+Plus généralement : $u_n = u_p \times q^{\,n-p}$.
+\end{theoreme}
+
+\begin{exemple}
+$u_0 = 1000$, raison $q = 1{,}05$. Alors $u_n = 1000 \times 1{,}05^{\,n}$, et $u_4 = 1000 \times 1{,}05^4 \approx 1215{,}5$.
+\end{exemple}
+
+\subsection{Somme de termes consécutifs \hfill {\normalsize\color{uimmred}[C02]}}
+
+\begin{theoreme}
+Pour $q \neq 1$, la somme des termes consécutifs vaut :
+\[
+\boxed{S = (\text{premier terme}) \times \frac{1 - q^{\,\text{nombre de termes}}}{1 - q}}
+\]
+En particulier : $\displaystyle \sum_{k=0}^{n} u_k = u_0 \,\frac{1 - q^{\,n+1}}{1 - q}$.
+\end{theoreme}
+
+\begin{exemple}
+$1 + 2 + 4 + 8 + \dots + 2^{10} = 1 \times \dfrac{1 - 2^{11}}{1 - 2} = 2^{11} - 1 = 2047$.
+\end{exemple}
+
+\begin{appliindus}[-- Intérêts composés et dépréciation]
+Un capital placé à $3\,\%$ par an suit une suite géométrique de raison $q = 1{,}03$ : $C_n = C_0 \times 1{,}03^{\,n}$. À l'inverse, la valeur d'une machine qui perd $15\,\%$ par an suit une suite géométrique de raison $q = 0{,}85$. Ces modèles servent au calcul d'amortissement comptable et de retour sur investissement.
+\end{appliindus}
+
+\subsection{Comportement à l'infini}
+
+\begin{theoreme}
+Pour une suite géométrique de raison $q > 0$ :
+\begin{itemize}
+  \item si $q > 1$ : la suite croît vers $+\infty$ (croissance exponentielle) ;
+  \item si $q = 1$ : la suite est constante ;
+  \item si $0 < q < 1$ : la suite décroît vers $0$.
+\end{itemize}
+\end{theoreme}
+
+% ============================================================
+% SECTION 4 : RECHERCHE DE SEUIL
+% ============================================================
+\newpage
+\section{Recherche d'un seuil \hfill {\normalsize\color{uimmred}[C03]}}
+
+Déterminer un \textbf{seuil}, c'est trouver le plus petit rang $n$ à partir duquel une condition est vérifiée (par exemple $u_n \geq a$ ou $u_n \leq 10^{-p}$). On utilise un tableur ou un algorithme avec une boucle conditionnelle.
+
+\begin{methode}[-- Principe de l'algorithme de seuil]
+\begin{enumerate}
+  \item Initialiser le premier terme et le rang $n = 0$ ;
+  \item Tant que la condition n'est pas atteinte : calculer le terme suivant et incrémenter $n$ ;
+  \item Afficher le rang $n$ qui réalise le seuil.
+\end{enumerate}
+\end{methode}
+
+\begin{lstlisting}[style=uimmpython, caption={Plus petit rang n tel que u(n) depasse un seuil}]
+# Suite geometrique : u0 = 1000 ; q = 1.05 ; seuil a = 2000
+u = 1000
+q = 1.05
+seuil = 2000
+n = 0
+while u < seuil:
+    u = q * u
+    n = n + 1
+print("Premier rang depassant le seuil : n =", n)
+print("Valeur correspondante : u =", round(u, 2))
+\end{lstlisting}
+
+\begin{exemple}[-- Lecture au tableur]
+Avec $u_0 = 1000$ et $q = 1{,}05$, on recopie la formule \texttt{=1,05*B2} vers le bas et on repère la première ligne où la valeur dépasse $2000$. On trouve $n = 15$ ($u_{15} \approx 2079$).
+\end{exemple}
+
+\begin{appliindus}[-- Maintenance préventive]
+Le jeu d'un roulement augmente de $4\,\%$ à chaque cycle de production. En partant d'un jeu initial mesuré, l'algorithme de seuil donne le nombre de cycles avant d'atteindre le jeu maximal toléré : c'est la base d'un plan de maintenance préventive.
+\end{appliindus}
+
+% ============================================================
+% SECTION 5 : EXERCICES
+% ============================================================
+\newpage
+\section{Exercices d'application}
+
+\subsection*{Exercice 1 -- Calcul de termes \hfill {\normalsize\color{uimmred}[C01]}}
+\begin{enumerate}[label=\alph*)]
+  \item $u_n = 4n - 3$ : calculer $u_0$, $u_5$ et $u_{20}$.
+  \item $u_0 = 1$, $u_{n+1} = 3u_n - 2$ : calculer $u_1$, $u_2$, $u_3$.
+\end{enumerate}
+
+\subsection*{Exercice 2 -- Nature d'une suite \hfill {\normalsize\color{uimmred}[C01]}}
+Pour chaque suite, dire si elle est arithmétique, géométrique ou ni l'une ni l'autre, en précisant la raison.
+\begin{enumerate}[label=\alph*)]
+  \item $3,\; 7,\; 11,\; 15,\dots$
+  \item $2,\; 6,\; 18,\; 54,\dots$
+  \item $1,\; 4,\; 9,\; 16,\dots$
+\end{enumerate}
+
+\subsection*{Exercice 3 -- Suite arithmétique \hfill {\normalsize\color{uimmred}[C01]\,[C02]}}
+Une suite arithmétique a pour premier terme $u_0 = 7$ et raison $r = 4$.
+\begin{enumerate}[label=\alph*)]
+  \item Donner l'expression de $u_n$.
+  \item Calculer $u_{25}$.
+  \item Calculer la somme $u_0 + u_1 + \dots + u_{25}$.
+\end{enumerate}
+
+\subsection*{Exercice 4 -- Suite géométrique \hfill {\normalsize\color{uimmred}[C01]\,[C02]}}
+Une population de bactéries double toutes les heures. À $t = 0$, on compte $500$ bactéries.
+\begin{enumerate}[label=\alph*)]
+  \item Modéliser par une suite géométrique : donner $u_0$, $q$ et $u_n$.
+  \item Combien de bactéries après $6$\,heures ?
+  \item Calculer le nombre total cumulé sur les $6$ premières heures.
+\end{enumerate}
+
+\subsection*{Exercice 5 -- Recherche de seuil \hfill {\normalsize\color{uimmred}[C03]}}
+Un capital de $5000\,$€ est placé à $2{,}5\,\%$ par an.
+\begin{enumerate}[label=\alph*)]
+  \item Exprimer le capital $C_n$ après $n$ années.
+  \item Écrire un algorithme déterminant l'année où le capital dépasse $7000\,$€.
+  \item Donner ce rang.
+\end{enumerate}
+
+\subsection*{Exercice 6 -- Synthèse industrielle \hfill {\normalsize\color{uimmred}[C01]\,[C03]}}
+Une machine perd $8\,\%$ de sa valeur chaque année. Sa valeur d'achat est $40\,000\,$€.
+\begin{enumerate}[label=\alph*)]
+  \item Quelle est la nature de la suite des valeurs annuelles ? Donner sa raison.
+  \item Exprimer $V_n$ puis calculer $V_5$.
+  \item Au bout de combien d'années la valeur passe-t-elle sous $20\,000\,$€ ?
+\end{enumerate}
+
+% ============================================================
+% FORMULAIRE
+% ============================================================
+\newpage
+\section*{Formulaire -- À retenir}
+\addcontentsline{toc}{section}{Formulaire}
+
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, title={\textbf{Formulaire des suites numériques}}, fonttitle=\large\bfseries\sffamily, coltitle=white, boxrule=1.5pt, arc=5pt]
+
+\renewcommand{\arraystretch}{1.8}
+\begin{tabular}{|>{\centering\arraybackslash}m{3cm}|>{\centering\arraybackslash}m{2.2cm}|>{\centering\arraybackslash}m{4cm}|>{\centering\arraybackslash}m{4cm}|}
+\hline
+\rowcolor{uimmblue}
+\textcolor{white}{\textbf{Type}} & \textcolor{white}{\textbf{Récurrence}} & \textcolor{white}{\textbf{Terme général}} & \textcolor{white}{\textbf{Somme $\sum_{k=0}^{n} u_k$}} \\
+\hline
+Arithmétique & $u_{n+1} = u_n + r$ & $u_n = u_0 + nr$ & $(n+1)\dfrac{u_0 + u_n}{2}$ \\
+\hline
+Géométrique & $u_{n+1} = q\,u_n$ & $u_n = u_0\,q^{\,n}$ & $u_0\dfrac{1 - q^{\,n+1}}{1 - q}$ \;($q \neq 1$) \\
+\hline
+\end{tabular}
+
+\vspace{8pt}
+\textbf{Sens de variation :} étudier le signe de $u_{n+1} - u_n$.
+
+\vspace{4pt}
+\textbf{Limite d'une géométrique ($q>0$) :} $q>1 \to +\infty$ ; \; $q=1 \to$ constante ; \; $0<q<1 \to 0$.
+\end{tcolorbox}
+
+\vfill
+\begin{center}
+\color{uimmgray}\small
+\textit{Document réalisé par le Pôle Formation UIMM -- Centre-Val de Loire}\\
+\textit{La Fabrique de l'Avenir -- S. JAUBERT}
+\end{center}
+
+\end{document}
