@@ -1,0 +1,194 @@
+% ============================================================
+% TD : Fiabilité (FMD)
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Travaux dirigés (sans corrigés)
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD11 -- TD}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Travaux Dirigés -- MOD11}\\[4pt]
+{\color{white}\large Fiabilité (FMD)}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Séquence : & [S01] Concepts et lois \\
+Compétences : & [C01] vocabulaire \quad [C02] données \quad [C03] ajustement \quad [C04] probabilités, MTBF \quad [C05] périodicité \\
+\end{tabular}
+
+\begin{consigne}
+\textbf{Consignes.} Détailler les calculs, préciser les unités. On rappelle : $R_S = \prod R_i$ (série), $R_P = 1 - \prod(1-R_i)$ (parallèle), $\text{MTBF}_{\exp} = 1/\lambda$, $D = \text{MTBF}/(\text{MTBF}+\text{MTTR})$. Calculatrice autorisée ; un tableur peut être utilisé pour les ajustements.
+\end{consigne}
+
+\section{Systèmes série et parallèle \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{exo}{Exercice 1 -- Série}
+Quatre composants A, B, C, D en série ont pour fiabilités $0{,}98$ ; $0{,}97$ ; $0{,}95$ ; $0{,}99$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer la fiabilité de l'ensemble.
+  \item Quelle devrait être la fiabilité de D pour que l'ensemble atteigne au moins $0{,}90$ ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 2 -- Recherche d'un composant}
+Quatre composants en série ont pour fiabilités $0{,}92$ ; $b$ ; $0{,}5$ ; $0{,}76$. La fiabilité de l'ensemble est de $30\,\%$. Déterminer $b$.
+\end{exo}
+
+\begin{exo}{Exercice 3 -- Parallèle}
+Quatre composants en parallèle ont pour fiabilités $0{,}80$ ; $0{,}70$ ; $0{,}75$ ; $0{,}85$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer la fiabilité de l'ensemble.
+  \item On veut porter l'ensemble à $0{,}999$ en n'agissant que sur le composant B. Quelle nouvelle fiabilité de B faut-il ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 4 -- Système mixte}
+Un dispositif est composé de deux composants A et B en parallèle (redondance), montés en série avec un composant C. Les fiabilités à $1000$\,h sont $R_A = 0{,}87$, $R_B = 0{,}85$, $R_C = 0{,}94$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la fiabilité du bloc parallèle A/B.
+  \item En déduire la fiabilité de l'ensemble.
+\end{enumerate}
+\end{exo}
+
+\section{Taux de défaillance et données \hfill {\normalsize\color{uimmred}[C01]\,[C02]}}
+
+\begin{exo}{Exercice 5 -- Taux de défaillance empirique}
+Sur $14$ machines identiques, on relève par intervalle le nombre de défaillants.
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|c|c|}
+\hline
+\rowcolor{uimmlightblue}
+Intervalle $\Delta t$ (h) & 0--150 & 150--200 & 200--300 & 300--600 & 600--750 \\
+\hline
+En service au début & 14 & 13 & 11 & 7 & 2 \\
+\hline
+Défaillants pendant $\Delta t$ & 1 & 2 & 4 & 5 & 2 \\
+\hline
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=\alph*)]
+  \item Calculer le taux de défaillance $\lambda(t)$ de chaque intervalle.
+  \item Représenter l'allure de $R(t)$.
+  \item Déterminer une période $T$ de changement systématique correspondant à une fiabilité de $90\,\%$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 6 -- Capteurs}
+Sur $150$ capteurs neufs, on relève par intervalle de $100$\,h les nombres de défaillants : $12, 10, 5, 4, 7$.
+\begin{enumerate}[label=\alph*)]
+  \item Dresser le tableau des survivants au début de chaque intervalle.
+  \item Calculer le taux de défaillance empirique de chaque intervalle.
+\end{enumerate}
+\end{exo}
+
+\section{Loi exponentielle \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{exo}{Exercice 7 -- Vérification d'une loi}
+Historique d'une machine, TBF (jours) de $7$ pannes : $24, 27, 30, 33, 37, 43, 52$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $F$ et $R$ par les rangs médians ($F_i = (i-0{,}3)/(N+0{,}4)$).
+  \item Calculer $Y = \ln(1/R)$ et tester l'alignement de $Y$ en fonction du TBF.
+  \item La durée de vie suit-elle une loi exponentielle ? Si oui, estimer $\lambda$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 8 -- Redondance active}
+Deux chariots travaillent en redondance active, chacun de loi $R(t) = e^{-\lambda t}$, de MTBF $54$\,h.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $\lambda$ et la fiabilité d'un chariot à $16$\,h.
+  \item En déduire la fiabilité du système (parallèle) à $16$\,h.
+\end{enumerate}
+\end{exo}
+
+\section{Loi de Weibull \hfill {\normalsize\color{uimmred}[C03]\,[C04]}}
+
+\begin{exo}{Exercice 9 -- Étude d'un moteur}
+On dispose des TBF (h) d'un moteur (échantillon ordonné). Un ajustement de Weibull donne $\beta = 1{,}4$, $\eta = 1200$\,h, $\gamma = 0$.
+\begin{enumerate}[label=\alph*)]
+  \item À quelle partie de la courbe en baignoire correspond ce $\beta$ ?
+  \item Calculer la MTBF (on prendra $\Gamma(1 + 1/1{,}4) \approx 0{,}911$).
+  \item Calculer la fiabilité à $500$\,h.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 10 -- Roulements et $L_{10}$}
+Des roulements suivent une loi de Weibull $\beta = 1{,}5$, $\eta = 8 \times 10^{6}$ cycles, $\gamma = 0$.
+\begin{enumerate}[label=\alph*)]
+  \item On note $L_{10}$ la durée de vie telle que $R(L_{10}) = 0{,}90$. Déterminer $L_{10}$.
+  \item Écrire les expressions de $R(t)$ et $F(t)$.
+\end{enumerate}
+\end{exo}
+
+\section{Disponibilité et maintenance \hfill {\normalsize\color{uimmred}[C01]\,[C05]}}
+
+\begin{exo}{Exercice 11 -- Disponibilité}
+Une machine a une MTBF de $30$\,h et une MTTR de $2$\,h.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la disponibilité.
+  \item Quelle MTTR viser pour atteindre une disponibilité de $98\,\%$ ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 12 -- Périodicité de remplacement}
+Un composant exponentiel a une MTBF de $200$\,h.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer la période $T$ de remplacement systématique pour garantir $R \geq 0{,}95$.
+  \item Même question pour $R \geq 0{,}90$. Commenter l'effet du seuil sur $T$.
+\end{enumerate}
+\end{exo}
+
+\vfill
+\begin{center}\color{uimmgray}\small
+\textit{Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}

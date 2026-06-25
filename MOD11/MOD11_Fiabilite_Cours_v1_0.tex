@@ -1,0 +1,560 @@
+% ============================================================
+% Cours : Fiabilité (FMD)
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathmorphing, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs,array}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\usepackage{titlesec}
+\titleformat{\section}
+  {\LARGE\bfseries\color{uimmblue}}{\thesection.}{0.5em}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.5pt]}]
+\titleformat{\subsection}{\Large\bfseries\color{uimmblue}}{\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}{\large\bfseries\color{uimmblue!80!black}}{\thesubsubsection.}{0.5em}{}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+\setlist[itemize,2]{label={\color{uimmblue}--}}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+
+\newtcolorbox{definition}[1][]{colback=uimmlightblue, colframe=uimmblue,
+  fonttitle=\bfseries\color{white}, title={\textsf{Définition}~#1}, coltitle=white,
+  boxrule=1pt, arc=3pt, left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+\newtcolorbox{theoreme}[1][]{colback=uimmlightblue!50, colframe=uimmblue!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Théorème / Propriété}~#1}, coltitle=white,
+  boxrule=1.2pt, arc=3pt, left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+\newtcolorbox{methode}[1][]{colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Méthode}~#1}, coltitle=white,
+  boxrule=1pt, arc=3pt, left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+\newtcolorbox{exemple}[1][]{colback=orange!5, colframe=orange!70!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Exemple}~#1}, coltitle=white,
+  boxrule=1pt, arc=3pt, left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+\newtcolorbox{remarque}[1][]{colback=uimmlightgray, colframe=uimmgray,
+  fonttitle=\bfseries, title={\textsf{Remarque}~#1}, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+\newtcolorbox{appliindus}[1][]{colback=uimmred!5, colframe=uimmred!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\triangleright$ Application industrielle}~#1}, coltitle=white,
+  boxrule=1.2pt, arc=4pt, left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD11}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[uimmblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  \node[anchor=north west] at ([xshift=2cm, yshift=-0.5cm]current page.north west)
+    {\includegraphics[height=3cm]{logo_uimm_placeholder.jpg}};
+  \node[anchor=north east, white, font=\large\bfseries] at ([xshift=-2cm, yshift=-1.5cm]current page.north east)
+    {Pôle Formation UIMM - CVDL};
+  \node[anchor=north east, white, font=\small, align=right] at ([xshift=-2cm, yshift=-2.2cm]current page.north east)
+    {BTS Industriel -- Mathématiques\\[2pt]S. Jaubert};
+  \fill[uimmred] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.4cm]current page.north east);
+  \node[anchor=center, text width=14cm, align=center] at ([yshift=-1cm]current page.center) {
+    {\fontsize{28}{34}\selectfont\bfseries\color{uimmblue} Fiabilité}\\[20pt]
+    {\Large\color{uimmgray} Module 11 -- F.M.D.}\\[12pt]
+    {\large\color{uimmgray}\textit{Fiabilité, Maintenabilité, Disponibilité : lois et applications}}
+  };
+  \fill[uimmblue] ([yshift=1.5cm]current page.south west) rectangle (current page.south east);
+  \node[anchor=center, white, font=\small] at ([yshift=0.75cm]current page.south) {
+    Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ La Fabrique de l'Avenir};
+\end{tikzpicture}
+\end{titlepage}
+
+\thispagestyle{fancy}
+\vspace*{0.5cm}
+\begin{center}
+{\LARGE\bfseries\color{uimmblue} MOD11 -- Fiabilité}\\[6pt]
+{\large\color{uimmgray} Support de cours et travaux dirigés}\\[4pt]
+{\normalsize\color{uimmgray} Auteur : S. JAUBERT \hspace{1cm} Formation : BTS Industriel}
+\end{center}
+\vspace{0.8cm}
+
+\begin{tcolorbox}[colback=uimmlightblue!30, colframe=uimmblue,
+  title={\textbf{\textsf{Fiche du Module}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1.2pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l @{\hspace{12pt}} p{12cm}@{}}
+Bloc / Période : & Semestre 4 \\
+Module :         & {[MOD11]} Fiabilité \\
+Thème :          & Concepts et lois de la fiabilité (FMD), lois exponentielle et de Weibull, systèmes série et parallèle, maintenance préventive \\
+\end{tabular}
+\end{tcolorbox}
+\vspace{0.5cm}
+
+\begin{tcolorbox}[colback=white, colframe=uimmblue!80!black,
+  title={\textbf{\textsf{Séquences et Compétences travaillées}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+\textbf{\color{uimmblue} [S01] -- Concepts et lois}
+\begin{itemize}[leftmargin=1.5cm]
+  \item[\textbf{\color{uimmblue}[C01]}] Connaître le vocabulaire de la fiabilité et sa traduction mathématique
+  \item[\textbf{\color{uimmblue}[C02]}] Représenter des temps de bon fonctionnement à l'aide d'un logiciel
+  \item[\textbf{\color{uimmblue}[C03]}] Utiliser la régression linéaire pour ajuster une distribution observée (exponentielle / Weibull)
+  \item[\textbf{\color{uimmblue}[C04]}] Calculer et interpréter des probabilités de panne et la MTBF
+  \item[\textbf{\color{uimmblue}[C05]}] Calculer la périodicité d'une intervention fondée sur une fiabilité déterminée
+\end{itemize}
+\end{tcolorbox}
+\vspace{0.5cm}
+
+\begin{remarque}[-- Positionnement du cours]
+Ce support couvre la séquence \textbf{S01} du module. Les prérequis sont les fonctions exponentielle et logarithme (MOD04), la régression linéaire et les statistiques (MOD07), ainsi que les probabilités (MOD08). Chaque partie est rattachée à ses compétences \textbf{[C0x]}.
+\end{remarque}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================================
+\section{Vocabulaire de la fiabilité \hfill {\normalsize\color{uimmred}[C01]}}
+
+\subsection{Définition et grandeurs}
+
+\begin{definition}
+La \textbf{fiabilité} est l'aptitude d'un dispositif à accomplir une fonction requise, dans des conditions données, pendant une durée donnée (norme NF X06-501). Mathématiquement, c'est la \textbf{probabilité de non-défaillance} sur une durée $t$.
+\end{definition}
+
+\begin{definition}
+On note $T$ la variable aléatoire ``temps de bon fonctionnement'' (TBF). La \textbf{fonction de fiabilité} est :
+\[
+\boxed{R(t) = P(T > t)}
+\]
+et la \textbf{fonction de défaillance} (ou de répartition) :
+\[
+F(t) = P(T \leq t) = 1 - R(t).
+\]
+\end{definition}
+
+\begin{definition}
+La \textbf{densité de défaillance} est $f(t) = F'(t) = -R'(t)$. Le \textbf{taux de défaillance instantané} est :
+\[
+\boxed{\lambda(t) = \frac{f(t)}{R(t)} = \frac{-R'(t)}{R(t)}}
+\]
+Il représente la proportion de dispositifs survivants qui défaillent par unité de temps. Son unité est l'inverse d'un temps (par exemple panne/heure).
+\end{definition}
+
+\begin{remarque}
+$\lambda(t)$ s'estime, sur un intervalle $[t\,;\,t+\Delta t]$, par :
+\[
+\lambda(t) \approx \frac{\text{nombre de défaillants pendant }\Delta t}{(\text{nombre de survivants au début})\times \Delta t}.
+\]
+\end{remarque}
+
+\subsection{Temps caractéristiques : MTBF, MTTF, MTTR}
+
+\begin{definition}
+\begin{itemize}
+  \item \textbf{MTBF} (\textit{Mean Time Between Failures}) : temps moyen \textbf{entre} deux défaillances d'un système \textbf{réparable}.
+  \[
+  \text{MTBF} = \frac{\text{durée totale de bon fonctionnement}}{\text{nombre de défaillances}} = \int_0^{+\infty} R(t)\,dt.
+  \]
+  \item \textbf{MTTF} (\textit{Mean Time To Failure}) : temps moyen \textbf{avant} la première défaillance d'un dispositif \textbf{non réparable}.
+  \item \textbf{MTTR} (\textit{Mean Time To Repair}) : temps moyen de réparation.
+\end{itemize}
+\end{definition}
+
+\begin{exemple}[-- Calcul de MTBF]
+Une ligne fonctionne $130$\,h par semaine avec $4$ pannes immobilisant respectivement $2, 2, 3, 3$ heures.
+\[
+\text{MTBF} = \frac{130 - (2+2+3+3)}{4} = \frac{120}{4} = 30\ \text{heures.}
+\]
+Le taux de défaillance moyen vaut $\lambda = \dfrac{1}{\text{MTBF}} = \dfrac{1}{30} \approx 0{,}033$ panne/h.
+\end{exemple}
+
+\subsection{Maintenabilité et disponibilité}
+
+\begin{definition}
+La \textbf{maintenabilité} $M(t)$ est la probabilité que la réparation soit achevée avant la durée $t$. La \textbf{disponibilité} $D$ (en régime permanent) est la proportion de temps pendant laquelle le système est opérationnel :
+\[
+\boxed{D = \frac{\text{MTBF}}{\text{MTBF} + \text{MTTR}}}
+\]
+\end{definition}
+
+\begin{exemple}
+Un équipement a une MTBF de $30$\,h et une MTTR de $2$\,h. Sa disponibilité est :
+\[
+D = \frac{30}{30 + 2} = \frac{30}{32} \approx 0{,}94 \;\; (94\,\%).
+\]
+\end{exemple}
+
+\begin{remarque}
+On parle de démarche \textbf{F.M.D.} : \textbf{F}iabilité (ne pas tomber en panne), \textbf{M}aintenabilité (être réparé vite), \textbf{D}isponibilité (être utilisable). La disponibilité résulte des deux premières.
+\end{remarque}
+
+\subsection{La courbe en baignoire}
+
+Le taux de défaillance d'un matériel évolue typiquement en trois phases.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=12cm, height=6cm,
+  xlabel={temps $t$}, ylabel={$\lambda(t)$},
+  xmin=0, xmax=10, ymin=0, ymax=3,
+  xtick=\empty, ytick=\empty,
+  axis lines=left, tick style={uimmgray},
+  every axis label/.style={uimmblue}, samples=200, domain=0.2:9.8
+]
+\addplot[uimmblue, very thick] {1.8*exp(-1.6*x) + 0.4 + 0.03*(x>6)*((x-6)^2)};
+\draw[uimmgray, dashed] (axis cs:3,0) -- (axis cs:3,3);
+\draw[uimmgray, dashed] (axis cs:6,0) -- (axis cs:6,3);
+\node[uimmred, font=\footnotesize, align=center] at (axis cs:1.4,2.4) {Jeunesse\\ (rodage)};
+\node[uimmgray, font=\footnotesize, align=center] at (axis cs:4.5,2.4) {Vie utile\\ ($\lambda$ constant)};
+\node[uimmred, font=\footnotesize, align=center] at (axis cs:8,2.4) {Vieillesse\\ (usure)};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{remarque}
+\begin{itemize}
+  \item \textbf{Jeunesse} : $\lambda$ décroissant (défauts de fabrication, déverminage).
+  \item \textbf{Vie utile} : $\lambda$ constant, défaillances aléatoires (loi exponentielle).
+  \item \textbf{Vieillesse} : $\lambda$ croissant (usure, fatigue).
+\end{itemize}
+\end{remarque}
+
+% ============================================================
+\newpage
+\section{Estimation à partir de données \hfill {\normalsize\color{uimmred}[C02]\,[C04]}}
+
+\subsection{Méthode des classes (grand échantillon)}
+
+\begin{methode}[-- Taux de défaillance empirique]
+Pour chaque intervalle $\Delta t$ :
+\[
+\lambda(t) = \frac{n(\Delta t)}{N_{\text{début}} \times \Delta t}
+\]
+où $n(\Delta t)$ est le nombre de défaillants et $N_{\text{début}}$ le nombre de survivants au début de l'intervalle. La fiabilité $R$ s'obtient par le rapport des survivants à l'effectif initial.
+\end{methode}
+
+\begin{exemple}[-- Doigts de préhension]
+Sur $14$ machines, on relève sur l'intervalle $0$--$150$\,h une défaillance :
+\[
+\lambda = \frac{1}{14 \times 150} \approx 4{,}8 \times 10^{-4}\ \text{panne/h.}
+\]
+On répète le calcul sur chaque classe pour tracer $\lambda(t)$ et reconnaître la phase de la courbe en baignoire.
+\end{exemple}
+
+\subsection{Rangs médians (petit échantillon)}
+
+\begin{methode}[-- Fonction de défaillance par les rangs médians]
+Pour un échantillon de $N$ durées de vie classées par ordre croissant (rang $i$), on estime :
+\[
+F(t_i) \approx \frac{i - 0{,}3}{N + 0{,}4} \qquad \text{(approximation de Bénard)}
+\]
+puis $R(t_i) = 1 - F(t_i)$.
+\end{methode}
+
+\begin{appliindus}[-- Durée de vie de roulements]
+Les fabricants notent $L_{10}$ la durée de vie nominale telle que $90\,\%$ des roulements l'atteignent, soit $R(L_{10}) = 0{,}90$. C'est un seuil de fiabilité contractuel utilisé pour le dimensionnement des paliers et la planification du remplacement préventif.
+\end{appliindus}
+
+% ============================================================
+\newpage
+\section{Loi exponentielle \hfill {\normalsize\color{uimmred}[C03]\,[C04]}}
+
+\begin{definition}
+Lorsque le taux de défaillance est \textbf{constant} ($\lambda(t) = \lambda$), la durée de vie suit une \textbf{loi exponentielle} :
+\[
+\boxed{R(t) = e^{-\lambda t}}, \qquad F(t) = 1 - e^{-\lambda t}, \qquad f(t) = \lambda\,e^{-\lambda t}.
+\]
+\end{definition}
+
+\begin{theoreme}[-- MTBF de la loi exponentielle]
+\[
+\text{MTBF} = \int_0^{+\infty} e^{-\lambda t}\,dt = \frac{1}{\lambda}.
+\]
+\end{theoreme}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=11cm, height=5.5cm,
+  xlabel={$t$}, ylabel={$R(t)$},
+  xmin=0, xmax=6, ymin=0, ymax=1.05,
+  grid=both, grid style={uimmlightblue},
+  axis lines=left, tick style={uimmgray},
+  every axis label/.style={uimmblue}, samples=100, domain=0:6
+]
+\addplot[uimmblue, very thick] {exp(-0.5*x)};
+\draw[uimmred, dashed] (axis cs:0,0.368) -- (axis cs:2,0.368) -- (axis cs:2,0);
+\node[uimmred, font=\footnotesize, anchor=west] at (axis cs:2.1,0.40) {$R(\text{MTBF}) \approx 0{,}37$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{remarque}
+La loi exponentielle est \textbf{sans mémoire} : un composant ``usagé'' a la même probabilité de survie qu'un composant neuf. Elle modélise la \textbf{vie utile} (fond de la baignoire). À $t = \text{MTBF}$, la fiabilité vaut toujours $e^{-1} \approx 0{,}37$.
+\end{remarque}
+
+\begin{exemple}[-- Redondance de chariots]
+Deux chariots en \textbf{redondance active} suivent $R(t) = e^{-\lambda t}$ avec MTBF $= 54$\,h, donc $\lambda = 1/54$. La fiabilité d'\textbf{un} chariot à $16$\,h vaut $e^{-16/54} \approx 0{,}745$. (Le système parallèle est traité en section 5.)
+\end{exemple}
+
+% ============================================================
+\newpage
+\section{Loi de Weibull \hfill {\normalsize\color{uimmred}[C03]\,[C04]}}
+
+\begin{definition}
+La \textbf{loi de Weibull} décrit une grande variété de durées de vie. Avec les paramètres $\beta$ (forme), $\eta$ (échelle, ou durée de vie caractéristique) et $\gamma$ (position) :
+\[
+\boxed{R(t) = e^{-\left(\frac{t - \gamma}{\eta}\right)^{\beta}}}, \qquad t \geq \gamma.
+\]
+\end{definition}
+
+\begin{theoreme}[-- Interprétation du paramètre de forme $\beta$]
+Le paramètre $\beta$ indique la phase de vie :
+\begin{itemize}
+  \item $\beta < 1$ : taux de défaillance \textbf{décroissant} (jeunesse) ;
+  \item $\beta = 1$ : taux \textbf{constant} ; on retrouve la loi exponentielle avec $\lambda = 1/\eta$ ;
+  \item $\beta > 1$ : taux \textbf{croissant} (vieillesse, usure) ; $\beta \approx 3{,}5$ approche la loi normale.
+\end{itemize}
+\end{theoreme}
+
+\begin{theoreme}[-- MTBF de la loi de Weibull]
+\[
+\text{MTBF} = \gamma + \eta\,\Gamma\!\left(1 + \frac{1}{\beta}\right)
+\]
+où $\Gamma$ est la fonction Gamma, lue dans une table. Quelques valeurs de $A = \Gamma(1 + 1/\beta)$ :
+\renewcommand{\arraystretch}{1.3}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|}
+\hline
+\rowcolor{uimmblue}
+\textcolor{white}{$\beta$} & \textcolor{white}{$1$} & \textcolor{white}{$1{,}5$} & \textcolor{white}{$2$} & \textcolor{white}{$2{,}5$} & \textcolor{white}{$3$} & \textcolor{white}{$3{,}5$} \\
+\hline
+$A$ & $1$ & $0{,}903$ & $0{,}886$ & $0{,}887$ & $0{,}893$ & $0{,}900$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{theoreme}
+
+\subsection{Ajustement par régression linéaire \hfill {\normalsize\color{uimmred}[C03]}}
+
+\begin{methode}[-- Linéarisation de Weibull (cas $\gamma = 0$)]
+À partir de $R(t) = e^{-(t/\eta)^{\beta}}$, on prend deux fois le logarithme :
+\[
+\ln\!\left(\ln\frac{1}{R(t)}\right) = \beta \ln(t) - \beta \ln(\eta).
+\]
+En posant $Y = \ln\!\left(\ln\frac{1}{R}\right)$ et $X = \ln(t)$, on obtient une \textbf{droite} $Y = \beta X - \beta\ln\eta$. La régression linéaire (ou le papier d'Allan-Plait) donne :
+\begin{itemize}
+  \item la pente $= \beta$ (paramètre de forme) ;
+  \item l'échelle $\eta = e^{-b/\beta}$ à partir de l'ordonnée à l'origine $b$.
+\end{itemize}
+Un bon alignement des points valide le modèle de Weibull.
+\end{methode}
+
+\begin{appliindus}[-- Analyse de Weibull d'un moteur]
+À partir des TBF relevés sur un parc de moteurs, on classe les durées, on calcule $F$ par les rangs médians, puis $X = \ln t$ et $Y = \ln(\ln(1/R))$. La régression linéaire fournit $\beta$ et $\eta$ : on en déduit la phase de vie, la MTBF et la fiabilité à un horizon donné. C'est la base de la planification de la maintenance et des stocks de pièces.
+\end{appliindus}
+
+% ============================================================
+\newpage
+\section{Fiabilité des systèmes \hfill {\normalsize\color{uimmred}[C04]}}
+
+\subsection{Système en série}
+
+\begin{theoreme}
+Un système est \textbf{en série} si la défaillance d'un seul composant entraîne la panne de l'ensemble. Les composants étant indépendants :
+\[
+\boxed{R_{S} = R_1 \times R_2 \times \dots \times R_n = \prod_{i=1}^{n} R_i}
+\]
+La fiabilité d'un système série est \textbf{inférieure} à celle de son plus faible composant.
+\end{theoreme}
+
+\begin{exemple}
+Quatre composants en série de fiabilités $0{,}98$ ; $0{,}97$ ; $0{,}95$ ; $0{,}99$ :
+\[
+R_S = 0{,}98 \times 0{,}97 \times 0{,}95 \times 0{,}99 \approx 0{,}894.
+\]
+\end{exemple}
+
+\subsection{Système en parallèle (redondance)}
+
+\begin{theoreme}
+Un système est \textbf{en parallèle} (redondance) s'il fonctionne tant qu'au moins un composant fonctionne. L'ensemble est défaillant seulement si \textbf{tous} le sont :
+\[
+\boxed{R_{P} = 1 - \prod_{i=1}^{n} (1 - R_i)}
+\]
+La redondance \textbf{augmente} la fiabilité au-dessus de celle du meilleur composant.
+\end{theoreme}
+
+\begin{exemple}
+Deux chariots identiques en redondance, chacun de fiabilité $0{,}745$ à $16$\,h :
+\[
+R_P = 1 - (1 - 0{,}745)^2 = 1 - 0{,}255^2 \approx 0{,}935.
+\]
+\end{exemple}
+
+\begin{center}
+\begin{tikzpicture}[every node/.style={draw, uimmblue, very thick, minimum width=1cm, minimum height=0.7cm, font=\small}, >=Stealth]
+% Série
+\node (s) at (-3,1.2) [draw=none, uimmgray] {Série :};
+\node (a) at (-1.5,1.2) {$R_1$};
+\node (b) at (0,1.2) {$R_2$};
+\node (c) at (1.5,1.2) {$R_3$};
+\draw[uimmgray, thick] (-2.4,1.2) -- (a); \draw[uimmgray, thick] (a)--(b); \draw[uimmgray,thick](b)--(c); \draw[uimmgray,thick](c)--(2.4,1.2);
+% Parallèle
+\node (p) at (-3,-0.6) [draw=none, uimmgray] {Parallèle :};
+\node (d) at (0,0) {$R_1$};
+\node (e) at (0,-1.2) {$R_2$};
+\draw[uimmgray,thick] (-2.4,-0.6) -- (-1.2,-0.6) -- (-1.2,0) -- (d);
+\draw[uimmgray,thick] (-1.2,-1.2) -- (e);
+\draw[uimmgray,thick] (d) -- (1.2,0) -- (1.2,-0.6) -- (2.4,-0.6);
+\draw[uimmgray,thick] (e) -- (1.2,-1.2);
+\end{tikzpicture}
+\end{center}
+
+\begin{appliindus}[-- Sécurité aéronautique]
+Le système de propulsion d'un avion quadrimoteur est étudié de deux façons : si l'avion s'écrase seulement quand les $4$ moteurs tombent en panne, c'est un montage \textbf{parallèle} (très fiable) ; si la perte d'un seul moteur est critique, c'est un montage \textbf{série} (fiabilité réduite). Le même parc de moteurs donne deux fiabilités très différentes selon l'architecture.
+\end{appliindus}
+
+% ============================================================
+\newpage
+\section{Périodicité d'une intervention préventive \hfill {\normalsize\color{uimmred}[C05]}}
+
+\begin{methode}[-- Période de remplacement systématique]
+Pour garantir une fiabilité minimale $R_0$ (par exemple $0{,}90$), on cherche la période $T$ telle que $R(T) = R_0$.
+\begin{itemize}
+  \item \textbf{Loi exponentielle :} $e^{-\lambda T} = R_0 \Rightarrow T = \dfrac{-\ln R_0}{\lambda}$.
+  \item \textbf{Loi de Weibull ($\gamma = 0$) :} $e^{-(T/\eta)^{\beta}} = R_0 \Rightarrow T = \eta\,\left(-\ln R_0\right)^{1/\beta}$.
+\end{itemize}
+On remplace alors le composant tous les $T$ avant qu'il n'atteigne une fiabilité trop basse.
+\end{methode}
+
+\begin{exemple}[-- Changement systématique à $90\,\%$]
+Un composant exponentiel de MTBF $200$\,h ($\lambda = 1/200$). Pour $R_0 = 0{,}90$ :
+\[
+T = \frac{-\ln(0{,}90)}{1/200} = 200 \times 0{,}105 \approx 21\ \text{heures.}
+\]
+On planifie le remplacement toutes les $21$\,heures pour conserver une fiabilité $\geq 90\,\%$.
+\end{exemple}
+
+\begin{appliindus}[-- Maintenance préventive systématique]
+La détermination de $T$ est la clé d'un plan de \textbf{maintenance préventive systématique} : remplacer trop tôt coûte cher en pièces et en arrêts, trop tard expose à la panne. L'arbitrage se fait souvent en comparant le coût d'une défaillance non planifiée à celui d'un remplacement préventif.
+\end{appliindus}
+
+% ============================================================
+\newpage
+\section{Exercices d'application}
+
+\subsection*{Exercice 1 -- Systèmes série et parallèle \hfill {\normalsize\color{uimmred}[C04]}}
+\begin{enumerate}[label=\alph*)]
+  \item Quatre composants en série ont pour fiabilités $0{,}96$ ; $0{,}93$ ; $0{,}90$ ; $0{,}99$. Calculer $R_S$.
+  \item Quelle fiabilité minimale du dernier composant donnerait $R_S \geq 0{,}88$ ?
+  \item Trois composants en parallèle ont pour fiabilités $0{,}80$ ; $0{,}75$ ; $0{,}70$. Calculer $R_P$.
+\end{enumerate}
+
+\subsection*{Exercice 2 -- Taux de défaillance empirique \hfill {\normalsize\color{uimmred}[C02]}}
+Sur $150$ capteurs neufs, on relève par intervalle de $100$\,h les nombres de défaillants : $12, 10, 5, 4, 7$.
+\begin{enumerate}[label=\alph*)]
+  \item Dresser le tableau des survivants en début de chaque intervalle.
+  \item Calculer le taux de défaillance empirique de chaque intervalle.
+  \item Le taux est-il plutôt décroissant, constant ou croissant ?
+\end{enumerate}
+
+\subsection*{Exercice 3 -- Loi exponentielle \hfill {\normalsize\color{uimmred}[C04]}}
+Un composant suit $R(t) = e^{-\lambda t}$ avec une MTBF de $400$\,h.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer $\lambda$.
+  \item Calculer la fiabilité à $100$\,h.
+  \item Calculer la probabilité de panne avant $50$\,h.
+\end{enumerate}
+
+\subsection*{Exercice 4 -- Vérification d'une loi \hfill {\normalsize\color{uimmred}[C03]}}
+On relève les TBF (jours) de $7$ pannes successives : $24, 27, 30, 33, 37, 43, 52$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $F$ et $R$ par les rangs médians, puis $Y = \ln(1/R)$.
+  \item La durée de vie suit-elle une loi exponentielle ? Justifier par un alignement.
+\end{enumerate}
+
+\subsection*{Exercice 5 -- Analyse de Weibull \hfill {\normalsize\color{uimmred}[C03]\,[C04]}}
+Un moteur est étudié par Weibull ; l'ajustement donne $\beta = 1{,}8$, $\eta = 1500$\,h, $\gamma = 0$.
+\begin{enumerate}[label=\alph*)]
+  \item À quelle phase de la courbe en baignoire correspond ce $\beta$ ?
+  \item Calculer la MTBF (utiliser $\Gamma(1 + 1/1{,}8) \approx 0{,}889$).
+  \item Calculer la fiabilité à $500$\,h.
+\end{enumerate}
+
+\subsection*{Exercice 6 -- Disponibilité \hfill {\normalsize\color{uimmred}[C01]}}
+Un équipement a une MTBF de $250$\,h et une MTTR de $6$\,h.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la disponibilité.
+  \item Quelle MTTR maximale faut-il viser pour une disponibilité de $99\,\%$ ?
+\end{enumerate}
+
+\subsection*{Exercice 7 -- Périodicité de maintenance \hfill {\normalsize\color{uimmred}[C05]}}
+Un roulement suit une loi de Weibull $\beta = 2$, $\eta = 3000$\,h, $\gamma = 0$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer la période $T$ de remplacement systématique pour garantir $R \geq 0{,}90$.
+  \item Comparer à la MTBF du roulement.
+\end{enumerate}
+
+% ============================================================
+\newpage
+\section*{Formulaire -- À retenir}
+\addcontentsline{toc}{section}{Formulaire}
+
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, title={\textbf{Formulaire de fiabilité}}, fonttitle=\large\bfseries\sffamily, coltitle=white, boxrule=1.5pt, arc=5pt]
+
+\textbf{Fonctions :} $R(t) = P(T>t)$, \; $F(t) = 1 - R(t)$, \; $f(t) = -R'(t)$, \; $\lambda(t) = \dfrac{f(t)}{R(t)}$.
+
+\vspace{5pt}
+\textbf{Moyennes :} $\text{MTBF} = \displaystyle\int_0^{+\infty} R(t)\,dt$, \; $D = \dfrac{\text{MTBF}}{\text{MTBF} + \text{MTTR}}$.
+
+\vspace{5pt}
+\textbf{Loi exponentielle :} $R(t) = e^{-\lambda t}$, \; $\text{MTBF} = \dfrac{1}{\lambda}$, \; $\lambda$ constant.
+
+\vspace{5pt}
+\textbf{Loi de Weibull :} $R(t) = e^{-\left(\frac{t-\gamma}{\eta}\right)^{\beta}}$, \; $\text{MTBF} = \gamma + \eta\,\Gamma\!\left(1 + \tfrac{1}{\beta}\right)$.
+
+\vspace{3pt}
+$\beta < 1$ jeunesse \; ; \; $\beta = 1$ vie utile (exponentielle) \; ; \; $\beta > 1$ vieillesse.
+
+\vspace{5pt}
+\textbf{Linéarisation Weibull :} $\ln\!\left(\ln\frac{1}{R}\right) = \beta\ln t - \beta\ln\eta$ \; (droite $Y = \beta X + b$).
+
+\vspace{5pt}
+\textbf{Systèmes :} série $R_S = \prod R_i$ \; ; \; parallèle $R_P = 1 - \prod (1 - R_i)$.
+
+\vspace{5pt}
+\textbf{Périodicité ($R(T) = R_0$) :} exponentielle $T = \dfrac{-\ln R_0}{\lambda}$ \; ; \; Weibull $T = \eta(-\ln R_0)^{1/\beta}$.
+\end{tcolorbox}
+
+\vfill
+\begin{center}
+\color{uimmgray}\small
+\textit{Document réalisé par le Pôle Formation UIMM -- Centre-Val de Loire}\\
+\textit{La Fabrique de l'Avenir -- S. JAUBERT}
+\end{center}
+
+\end{document}
