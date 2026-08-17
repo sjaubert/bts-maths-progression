@@ -1,0 +1,773 @@
+% ============================================================
+% Cours : La Loi Normale
+% Pôle Formation UIMM - CVDL
+% BTS Industriel - Mathématiques
+% Auteur : S. JAUBERT
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+
+% ----- Encodage et langue -----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ----- Polices sans-serif -----
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% ----- Mise en page -----
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+
+% ----- Mathématiques -----
+\usepackage{amsmath,amssymb,amsfonts}
+
+% ----- Graphiques et couleurs -----
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathmorphing, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ----- Boîtes colorées -----
+\usepackage[most]{tcolorbox}
+
+% ----- Code / algorithmes -----
+\usepackage{listings}
+
+% ----- En-tête et pied de page -----
+\usepackage{fancyhdr}
+
+% ----- Hyperliens -----
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+% ----- Enumération personnalisée -----
+\usepackage{enumitem}
+
+% ----- Tableaux -----
+\usepackage{booktabs,array}
+
+% ============================================================
+% CHARTE GRAPHIQUE UIMM
+% ============================================================
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+
+% ----- Styles des sections -----
+\usepackage{titlesec}
+\titleformat{\section}
+  {\LARGE\bfseries\color{uimmblue}}
+  {\thesection.}{0.5em}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.5pt]}]
+\titleformat{\subsection}
+  {\Large\bfseries\color{uimmblue}}
+  {\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}
+  {\large\bfseries\color{uimmblue!80!black}}
+  {\thesubsubsection.}{0.5em}{}
+
+% ----- Puces personnalisées -----
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+\setlist[itemize,2]{label={\color{uimmblue}--}}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+
+% ----- Style listings -----
+\lstdefinestyle{uimmpython}{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{uimmblue}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{uimmred},
+  numbers=left,
+  numberstyle=\tiny\color{uimmgray},
+  numbersep=8pt,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{uimmblue},
+  backgroundcolor=\color{uimmlightgray},
+  language=Python
+}
+
+% ============================================================
+% BOÎTES TCOLORBOX
+% ============================================================
+\newtcolorbox{definition}[1][]{%
+  colback=uimmlightblue, colframe=uimmblue,
+  fonttitle=\bfseries\color{white}, title={\textsf{Définition}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{theoreme}[1][]{%
+  colback=uimmlightblue!50, colframe=uimmblue!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Théorème / Propriété}~#1},
+  coltitle=white, boxrule=1.2pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{methode}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Méthode}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{exemple}[1][]{%
+  colback=orange!5, colframe=orange!70!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Exemple}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{remarque}[1][]{%
+  colback=uimmlightgray, colframe=uimmgray,
+  fonttitle=\bfseries, title={\textsf{Remarque}~#1},
+  boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{appliindus}[1][]{%
+  colback=uimmred!5, colframe=uimmred!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\triangleright$ Application industrielle}~#1},
+  coltitle=white, boxrule=1.2pt, arc=4pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{calculatrice}[1][]{%
+  colback=uimmblue!3, colframe=uimmblue!70!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\square$ À la calculatrice}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+% ============================================================
+% COMMANDE : petite courbe de Gauss avec aire hachurée
+% ============================================================
+\newcommand{\gaussN}[1]{1/sqrt(2*pi)*exp(-((#1)^2)/2)}
+
+% ============================================================
+% EN-TÊTE / PIED DE PAGE
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{%
+  \begin{minipage}{8cm}\centering
+    {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+    {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}
+  \end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08}}}
+\fancyfoot[C]{%
+  {\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+% ============================================================
+% PAGE DE TITRE
+% ============================================================
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[uimmblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  \node[anchor=north west] at ([xshift=2cm, yshift=-0.5cm]current page.north west)
+    {\includegraphics[height=3cm]{logo_uimm_placeholder.jpg}};
+  \node[anchor=north east, white, font=\large\bfseries] at ([xshift=-2cm, yshift=-1.5cm]current page.north east)
+    {Pôle Formation UIMM - CVDL};
+  \node[anchor=north east, white, font=\small, align=right] at ([xshift=-2cm, yshift=-2.2cm]current page.north east)
+    {BTS Industriel -- Mathématiques\\[2pt]S. Jaubert};
+  \fill[uimmred] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.4cm]current page.north east);
+  \node[anchor=center, text width=14cm, align=center] at ([yshift=-1cm]current page.center) {
+    {\fontsize{28}{34}\selectfont\bfseries\color{uimmblue} La Loi Normale}\\[20pt]
+    {\Large\color{uimmgray} Module 08 -- Calcul des probabilités}\\[12pt]
+    {\large\color{uimmgray}\textit{Lois à densité, calculs de probabilités et applications industrielles}}
+  };
+  % Petite courbe de Gauss décorative
+  \node[anchor=center] at ([yshift=-5.2cm]current page.center) {
+    \begin{tikzpicture}
+      \begin{axis}[hide axis, width=9cm, height=4cm, domain=-3.6:3.6, samples=80,
+        xmin=-3.8, xmax=3.8, ymin=0, ymax=0.45]
+        \addplot[uimmred!25, fill=uimmred!12, draw=none, domain=-3.6:3.6] {\gaussN{x}} \closedcycle;
+        \addplot[uimmblue, very thick, domain=-3.6:3.6] {\gaussN{x}};
+      \end{axis}
+    \end{tikzpicture}};
+  \fill[uimmblue] ([yshift=1.5cm]current page.south west) rectangle (current page.south east);
+  \node[anchor=center, white, font=\small] at ([yshift=0.75cm]current page.south) {
+    Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ La Fabrique de l'Avenir};
+\end{tikzpicture}
+\end{titlepage}
+
+% ============================================================
+% FICHE MODULE
+% ============================================================
+\thispagestyle{fancy}
+\vspace*{0.5cm}
+\begin{center}
+{\LARGE\bfseries\color{uimmblue} MOD08 -- La Loi Normale}\\[6pt]
+{\large\color{uimmgray} Support de cours}\\[4pt]
+{\normalsize\color{uimmgray} Auteur : S. JAUBERT \hspace{1cm} Formation : BTS Industriel (ATI / CPRP / CRSA)}
+\end{center}
+\vspace{0.8cm}
+
+\begin{tcolorbox}[colback=uimmlightblue!30, colframe=uimmblue,
+  title={\textbf{\textsf{Fiche du Module}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1.2pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l @{\hspace{12pt}} p{12cm}@{}}
+Bloc / Période : & Semestres 1 \& 2 \\
+Module :         & {[MOD08]} Calcul des probabilités \\
+Séquence :       & {[S02]} Variables aléatoires et lois usuelles \\
+Thème :          & Lois à densité, loi normale, calcul de probabilités, approximation de la loi binomiale et théorème de la limite centrée \\
+\end{tabular}
+\end{tcolorbox}
+\vspace{0.4cm}
+
+\begin{tcolorbox}[colback=white, colframe=uimmblue!80!black,
+  title={\textbf{\textsf{Compétences travaillées}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+
+\textbf{\color{uimmblue} [S02] -- Variables aléatoires et lois usuelles}
+\begin{itemize}[leftmargin=1.5cm]
+  \item[\textbf{\color{uimmblue}[C04]}] Calculer une probabilité dans le cadre de la loi normale
+  \item[\textbf{\color{uimmblue}[C05]}] Interpréter l'espérance et l'écart-type d'une loi
+  \item[\textbf{\color{uimmblue}[+]}] Approcher une loi binomiale par une loi normale ; mobiliser le théorème de la limite centrée
+\end{itemize}
+\end{tcolorbox}
+\vspace{0.3cm}
+
+\begin{remarque}[-- Positionnement du cours]
+Ce support prolonge l'étude des variables aléatoires (loi de Bernoulli, loi binomiale). On passe ici du \textbf{discret} au \textbf{continu} : la loi normale décrit une grandeur qui varie de façon continue autour d'une valeur centrale, situation très fréquente en production (cotes, durées, masses). Prérequis : notion de variable aléatoire, espérance et écart-type (MOD08 S01), statistique descriptive (MOD07). Les calculs de probabilités se font à la \textbf{calculatrice} ; les résultats sont arrondis à $10^{-4}$.
+\end{remarque}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================================
+% SECTION 1 : DU DISCRET AU CONTINU
+% ============================================================
+\section{Du discret au continu : les lois à densité \hfill {\normalsize\color{uimmred}[S02]}}
+
+\subsection{Variable aléatoire continue}
+
+En production, beaucoup de grandeurs ne prennent pas des valeurs isolées mais un \textbf{continuum} de valeurs : la longueur d'un axe usiné, la durée de vie d'un composant, la masse d'une pièce. On parle alors de \textbf{variable aléatoire continue}.
+
+\begin{definition}
+Une variable aléatoire $X$ est \textbf{continue} si elle peut prendre toutes les valeurs d'un intervalle de $\mathbb{R}$. Pour une telle variable, la probabilité d'une valeur isolée est nulle :
+\[
+P(X = a) = 0.
+\]
+On ne s'intéresse donc qu'à des probabilités d'\textbf{intervalles} : $P(a \leq X \leq b)$.
+\end{definition}
+
+\begin{remarque}
+Conséquence pratique : pour une variable continue, les inégalités strictes et larges donnent la même probabilité.
+\[
+P(X \leq a) = P(X < a) \qquad\text{et}\qquad P(a \leq X \leq b) = P(a < X < b).
+\]
+\end{remarque}
+
+\subsection{Fonction de densité}
+
+\begin{definition}[-- Densité de probabilité]
+La loi d'une variable aléatoire continue $X$ est décrite par une fonction $f$, appelée \textbf{densité de probabilité}, positive, telle que la probabilité $P(a \leq X \leq b)$ soit égale à l'\textbf{aire} sous la courbe de $f$ entre $a$ et $b$ :
+\[
+P(a \leq X \leq b) = \int_a^b f(x)\,\mathrm{d}x.
+\]
+L'aire totale sous la courbe vaut $1$ (probabilité de l'événement certain).
+\end{definition}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=12cm, height=5.5cm,
+  xlabel={$x$}, ylabel={$f(x)$},
+  xmin=-4, xmax=4, ymin=0, ymax=0.48,
+  axis lines=left, tick style={uimmgray},
+  every axis label/.style={uimmblue},
+  xtick={-1,1.5}, xticklabels={$a$,$b$},
+  ytick=\empty, samples=100
+]
+\addplot[uimmblue!60, fill=uimmlightblue, draw=none, domain=-1:1.5] {\gaussN{x}} \closedcycle;
+\addplot[uimmblue, very thick, domain=-4:4] {\gaussN{x}};
+\node[uimmred] at (axis cs:0.25,0.14) {\small Aire $= P(a\leq X\leq b)$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{remarque}
+La probabilité se lit comme une \textbf{aire}, pas comme une hauteur. C'est le point de rupture avec les lois discrètes (binomiale), où l'on additionnait des probabilités ponctuelles.
+\end{remarque}
+
+% ============================================================
+% SECTION 2 : LOI NORMALE CENTREE REDUITE
+% ============================================================
+\newpage
+\section{La loi normale centrée réduite \texorpdfstring{$\mathcal{N}(0\,;1)$}{N(0;1)} \hfill {\normalsize\color{uimmred}[C04]}}
+
+\subsection{Définition}
+
+\begin{definition}
+La variable aléatoire $Z$ suit la \textbf{loi normale centrée réduite}, notée $\mathcal{N}(0\,;1)$, si sa densité est :
+\[
+f(z) = \frac{1}{\sqrt{2\pi}}\; e^{-\frac{z^2}{2}}, \qquad z \in \mathbb{R}.
+\]
+Son espérance est $E(Z) = 0$ (\textbf{centrée}) et son écart-type est $\sigma(Z) = 1$ (\textbf{réduite}).
+\end{definition}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=12cm, height=6cm,
+  xlabel={$z$}, ylabel={$f(z)$},
+  xmin=-4, xmax=4, ymin=0, ymax=0.46,
+  axis lines=left, tick style={uimmgray},
+  every axis label/.style={uimmblue},
+  xtick={-3,-2,-1,0,1,2,3}, samples=120,
+  grid=major, grid style={uimmlightblue}
+]
+\addplot[uimmblue!40, fill=uimmlightblue, draw=none, domain=-4:4] {\gaussN{x}} \closedcycle;
+\addplot[uimmblue, very thick, domain=-4:4] {\gaussN{x}};
+\draw[uimmred, dashed, thick] (axis cs:0,0) -- (axis cs:0,0.3989);
+\node[uimmred] at (axis cs:1.4,0.36) {\small axe de symétrie};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{theoreme}[-- Propriétés de symétrie]
+La courbe est une \textbf{cloche} symétrique par rapport à l'axe des ordonnées ($z=0$). On en déduit :
+\begin{itemize}
+  \item $P(Z \leq 0) = P(Z \geq 0) = 0{,}5$ ;
+  \item $P(Z \leq -a) = P(Z \geq a)$ pour tout réel $a$ ;
+  \item $P(Z \geq a) = 1 - P(Z \leq a)$.
+\end{itemize}
+\end{theoreme}
+
+\subsection{Calcul d'une probabilité \hfill {\normalsize\color{uimmred}[C04]}}
+
+Il n'existe pas de formule simple donnant l'aire sous la courbe : on utilise la \textbf{calculatrice} (fonction de répartition), qui renvoie directement $P(a \leq Z \leq b)$.
+
+\begin{calculatrice}[-- Calcul de $P(a \leq Z \leq b)$]
+\begin{itemize}
+  \item \textbf{TI (82/83/84)} : \texttt{normalFRép(a, b)} \; (menu \texttt{distrib}, aussi noté \texttt{normalcdf}).
+  Pour une borne infinie, saisir $-10^{99}$ ou $10^{99}$.
+  \item \textbf{Casio (Graph)} : menu \texttt{STAT} $\rightarrow$ \texttt{DIST} $\rightarrow$ \texttt{NORM} $\rightarrow$ \texttt{Ncd}, avec \texttt{Lower}$=a$, \texttt{Upper}$=b$, $\sigma=1$, $\mu=0$.
+\end{itemize}
+\end{calculatrice}
+
+\begin{exemple}[-- Lectures directes]
+Pour $Z \sim \mathcal{N}(0\,;1)$ :
+\begin{itemize}
+  \item $P(Z \leq 1) = 0{,}8413$ ;
+  \item $P(-1{,}05 \leq Z \leq -0{,}05) = 0{,}3332$ ;
+  \item $P(Z > 2) = 1 - P(Z \leq 2) = 1 - 0{,}9772 = 0{,}0228$.
+\end{itemize}
+\end{exemple}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=12cm, height=5cm,
+  xlabel={$z$}, xmin=-4, xmax=4, ymin=0, ymax=0.46,
+  axis lines=left, tick style={uimmgray}, every axis label/.style={uimmblue},
+  xtick={-1.96,0,1.96}, xticklabels={$-1{,}96$,$0$,$1{,}96$},
+  ytick=\empty, samples=120
+]
+\addplot[uimmblue!40, fill=uimmlightblue, draw=none, domain=-1.96:1.96] {\gaussN{x}} \closedcycle;
+\addplot[uimmblue, very thick, domain=-4:4] {\gaussN{x}};
+\node[uimmred] at (axis cs:0,0.13) {\small $0{,}95$};
+\node[uimmgray] at (axis cs:-2.7,0.06) {\scriptsize $0{,}025$};
+\node[uimmgray] at (axis cs:2.7,0.06) {\scriptsize $0{,}025$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{remarque}[-- Valeur à connaître]
+$P(-1{,}96 \leq Z \leq 1{,}96) = 0{,}95$. Cette valeur, très utilisée en contrôle qualité et en statistique inférentielle (intervalles de confiance à $95\,\%$), est à mémoriser.
+\end{remarque}
+
+\subsection{Problème inverse : trouver un seuil \hfill {\normalsize\color{uimmred}[C04]}}
+
+On cherche parfois le réel $z$ correspondant à une probabilité donnée : c'est l'opération réciproque.
+
+\begin{calculatrice}[-- Trouver $z$ tel que $P(Z \leq z) = p$]
+\begin{itemize}
+  \item \textbf{TI} : \texttt{FracNormale(p)} (aussi noté \texttt{invNorm(p)}).
+  \item \textbf{Casio} : \texttt{DIST} $\rightarrow$ \texttt{NORM} $\rightarrow$ \texttt{InvN}, avec \texttt{Area}$=p$, $\sigma=1$, $\mu=0$.
+\end{itemize}
+\end{calculatrice}
+
+\begin{exemple}[-- Recherche de seuils sur $\mathcal{N}(0\,;1)$]
+\begin{itemize}
+  \item Déterminer $a$ tel que $P(Z > a) = 0{,}95$. \\
+  $P(Z > a) = 0{,}95 \iff P(Z \leq a) = 0{,}05$, donc $a = \texttt{FracNormale}(0{,}05) \approx -1{,}6449$.
+  \item Déterminer $b > 0$ tel que $P(-b \leq Z \leq b) = 0{,}96$. \\
+  Par symétrie, il reste $0{,}04$ réparti sur les deux queues, soit $0{,}02$ à droite. Donc $P(Z \leq b) = 0{,}98$ et $b = \texttt{FracNormale}(0{,}98) \approx 2{,}0537$.
+\end{itemize}
+\end{exemple}
+
+% ============================================================
+% SECTION 3 : LOI NORMALE GENERALE
+% ============================================================
+\newpage
+\section{La loi normale générale \texorpdfstring{$\mathcal{N}(\mu\,;\sigma)$}{N(mu;sigma)} \hfill {\normalsize\color{uimmred}[C04]\,[C05]}}
+
+\subsection{Définition et rôle des paramètres}
+
+\begin{definition}
+La variable aléatoire $X$ suit la \textbf{loi normale} de paramètres $\mu$ et $\sigma$, notée $\mathcal{N}(\mu\,;\sigma)$, si :
+\[
+E(X) = \mu \quad (\text{espérance, position du centre}), \qquad \sigma(X) = \sigma \quad (\text{écart-type, dispersion}).
+\]
+Sa densité reste une cloche, centrée sur $\mu$ et d'autant plus large que $\sigma$ est grand.
+\end{definition}
+
+\begin{remarque}[-- Convention de notation]
+Dans ce cours, le second paramètre de $\mathcal{N}(\mu\,;\sigma)$ est l'\textbf{écart-type} $\sigma$, pas la variance. Vérifie toujours ce que demande ta calculatrice : TI et Casio attendent $\sigma$.
+\end{remarque}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=13cm, height=6cm,
+  xlabel={$x$}, xmin=-6, xmax=6, ymin=0, ymax=0.42,
+  axis lines=left, tick style={uimmgray}, every axis label/.style={uimmblue},
+  ytick=\empty, xtick={0}, xticklabel={$\mu$}, samples=120,
+  legend style={draw=none, at={(0.98,0.98)}, anchor=north east, font=\small}
+]
+\addplot[uimmblue, very thick, domain=-6:6] {1/(1*sqrt(2*pi))*exp(-(x^2)/(2*1^2))};
+\addlegendentry{$\sigma$ petit}
+\addplot[uimmred, very thick, domain=-6:6] {1/(2*sqrt(2*pi))*exp(-(x^2)/(2*2^2))};
+\addlegendentry{$\sigma$ grand}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{remarque}
+Plus $\sigma$ est petit, plus la cloche est \textbf{haute et resserrée} : la production est régulière, la grandeur est peu dispersée autour de $\mu$. En qualité, réduire $\sigma$ revient à réduire la variabilité du procédé.
+\end{remarque}
+
+\subsection{Calcul d'une probabilité \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{calculatrice}[-- Calcul de $P(a \leq X \leq b)$ pour $\mathcal{N}(\mu\,;\sigma)$]
+\begin{itemize}
+  \item \textbf{TI} : \texttt{normalFRép(a, b, $\mu$, $\sigma$)}.
+  \item \textbf{Casio} : \texttt{DIST} $\rightarrow$ \texttt{NORM} $\rightarrow$ \texttt{Ncd}, \texttt{Lower}$=a$, \texttt{Upper}$=b$, puis renseigner $\sigma$ et $\mu$.
+\end{itemize}
+\end{calculatrice}
+
+\begin{exemple}[-- Masse d'une pièce moulée]
+La masse $X$ d'une pièce (en g) suit $\mathcal{N}(500\,;20)$.
+\begin{itemize}
+  \item $P(X \leq 530) = \texttt{normalFRép}(-10^{99}, 530, 500, 20) = 0{,}9332$ ;
+  \item $P(470 \leq X \leq 530) = 0{,}8664$ ;
+  \item $P(X > 540) = 0{,}0228$.
+\end{itemize}
+\end{exemple}
+
+\subsection{Standardisation \hfill {\normalsize\color{uimmred}[C04]}}
+
+Toute loi normale se ramène à la loi centrée réduite par un changement de variable. C'est le principe historique des tables, et il reste utile pour raisonner.
+
+\begin{theoreme}[-- Variable centrée réduite associée]
+Si $X \sim \mathcal{N}(\mu\,;\sigma)$, alors la variable
+\[
+\boxed{Z = \frac{X - \mu}{\sigma}}
+\]
+suit la loi $\mathcal{N}(0\,;1)$. On dit que l'on a \textbf{standardisé} $X$. La quantité $z = \dfrac{x-\mu}{\sigma}$ mesure l'écart à la moyenne \emph{en nombre d'écarts-types}.
+\end{theoreme}
+
+\begin{exemple}[-- Interprétation d'un $z$]
+Pour $X \sim \mathcal{N}(500\,;20)$, la valeur $x = 530$ correspond à $z = \dfrac{530 - 500}{20} = 1{,}5$ : la pièce pèse $1{,}5$ écart-type au-dessus de la moyenne. On retrouve alors $P(X \leq 530) = P(Z \leq 1{,}5) = 0{,}9332$.
+\end{exemple}
+
+\subsection{La règle des 68 -- 95 -- 99,7 \hfill {\normalsize\color{uimmred}[C05]}}
+
+\begin{theoreme}[-- Intervalles remarquables]
+Pour toute loi normale $\mathcal{N}(\mu\,;\sigma)$ :
+\[
+P(\mu - \sigma \leq X \leq \mu + \sigma) \approx 0{,}6827 \quad(\approx 68\,\%),
+\]
+\[
+P(\mu - 2\sigma \leq X \leq \mu + 2\sigma) \approx 0{,}9545 \quad(\approx 95\,\%),
+\]
+\[
+P(\mu - 3\sigma \leq X \leq \mu + 3\sigma) \approx 0{,}9973 \quad(\approx 99{,}7\,\%).
+\]
+\end{theoreme}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=13cm, height=6cm,
+  xlabel={$x$}, xmin=-4, xmax=4, ymin=0, ymax=0.46,
+  axis lines=left, tick style={uimmgray}, every axis label/.style={uimmblue},
+  ytick=\empty, samples=140,
+  xtick={-3,-2,-1,0,1,2,3},
+  xticklabels={$\mu\!-\!3\sigma$,$\mu\!-\!2\sigma$,$\mu\!-\!\sigma$,$\mu$,$\mu\!+\!\sigma$,$\mu\!+\!2\sigma$,$\mu\!+\!3\sigma$},
+  xticklabel style={font=\scriptsize}
+]
+\addplot[uimmblue!55, fill=uimmblue!30, draw=none, domain=-1:1] {\gaussN{x}} \closedcycle;
+\addplot[uimmblue!35, fill=uimmblue!16, draw=none, domain=-2:-1] {\gaussN{x}} \closedcycle;
+\addplot[uimmblue!35, fill=uimmblue!16, draw=none, domain=1:2] {\gaussN{x}} \closedcycle;
+\addplot[uimmred!30, fill=uimmred!10, draw=none, domain=-3:-2] {\gaussN{x}} \closedcycle;
+\addplot[uimmred!30, fill=uimmred!10, draw=none, domain=2:3] {\gaussN{x}} \closedcycle;
+\addplot[uimmblue, very thick, domain=-4:4] {\gaussN{x}};
+\node[uimmblue] at (axis cs:0,0.15) {\small $68\,\%$};
+\node[uimmgray] at (axis cs:0,0.045) {\scriptsize $95\,\%$};
+\draw[<->,uimmred] (axis cs:-3,0.005) -- (axis cs:3,0.005);
+\node[uimmred, fill=white, inner sep=1pt] at (axis cs:0,0.005) {\scriptsize $99{,}7\,\%$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{appliindus}[-- Contrôle qualité et cartes de contrôle]
+Sur une cote maîtrisée, presque toute la production ($99{,}7\,\%$) tient dans l'intervalle $[\mu - 3\sigma\,;\,\mu + 3\sigma]$. C'est le fondement des \textbf{cartes de contrôle} : les limites sont placées à $\pm 3\sigma$. Un point qui sort de ces limites signale un procédé probablement déréglé, car un tel écart est très improbable si tout va bien (moins de $3$ chances sur $1000$).
+\end{appliindus}
+
+% ============================================================
+% SECTION 4 : PROBLEMES INVERSES
+% ============================================================
+\newpage
+\section{Problèmes inverses : seuils et paramètres \hfill {\normalsize\color{uimmred}[C04]}}
+
+\subsection{Trouver un seuil sur \texorpdfstring{$X$}{X}}
+
+On connaît la loi et une probabilité, on cherche la valeur $x$ correspondante.
+
+\begin{calculatrice}[-- Trouver $x$ tel que $P(X \leq x) = p$ pour $\mathcal{N}(\mu\,;\sigma)$]
+\begin{itemize}
+  \item \textbf{TI} : \texttt{FracNormale(p, $\mu$, $\sigma$)}.
+  \item \textbf{Casio} : \texttt{DIST} $\rightarrow$ \texttt{NORM} $\rightarrow$ \texttt{InvN}, \texttt{Area}$=p$, puis $\sigma$ et $\mu$.
+\end{itemize}
+Si l'énoncé donne $P(X \geq x) = p$, se ramener à $P(X \leq x) = 1 - p$.
+\end{calculatrice}
+
+\begin{appliindus}[-- Durée de garantie]
+La durée de vie $T$ (en heures) d'un servomoteur suit $\mathcal{N}(12\,000\,;800)$. Le constructeur veut fixer une garantie $t_0$ telle que seulement $1{,}5\,\%$ des moteurs tombent en panne avant. On cherche $t_0$ tel que $P(T < t_0) = 0{,}015$ :
+\[
+t_0 = \texttt{FracNormale}(0{,}015,\ 12000,\ 800) \approx 10\,264 \text{ h.}
+\]
+Le constructeur peut annoncer une garantie d'environ $10\,264$ heures.
+\end{appliindus}
+
+\subsection{Retrouver un paramètre \texorpdfstring{$\mu$}{mu} ou \texorpdfstring{$\sigma$}{sigma}}
+
+Quand c'est un paramètre de la loi qui est inconnu, on repasse par la variable centrée réduite $Z$.
+
+\begin{methode}[-- Retrouver $\mu$ ou $\sigma$]
+\begin{enumerate}
+  \item Traduire la donnée en probabilité sur $X$, par exemple $P(X < x_0) = p$.
+  \item Standardiser : $P\!\left(Z < \dfrac{x_0 - \mu}{\sigma}\right) = p$, avec $Z \sim \mathcal{N}(0\,;1)$.
+  \item Lire $z_p = \texttt{FracNormale}(p)$ sur la loi centrée réduite.
+  \item Résoudre l'équation $\dfrac{x_0 - \mu}{\sigma} = z_p$ d'inconnue $\mu$ ou $\sigma$.
+\end{enumerate}
+\end{methode}
+
+\begin{exemple}[-- Recherche de l'écart-type]
+Une cote $X$ suit $\mathcal{N}(120\,;\sigma)$ avec $\sigma$ inconnu, et $P(X < 115) = 0{,}15$.
+\begin{itemize}
+  \item Standardisation : $\dfrac{115 - 120}{\sigma} = \texttt{FracNormale}(0{,}15) \approx -1{,}0364$.
+  \item Donc $\dfrac{-5}{\sigma} = -1{,}0364$, d'où $\sigma = \dfrac{-5}{-1{,}0364} \approx 4{,}82$.
+\end{itemize}
+\end{exemple}
+
+\begin{exemple}[-- Recherche de l'espérance]
+Une variable $X$ suit $\mathcal{N}(\mu\,;2{,}5)$ et $P(X > 85) = 0{,}02$.
+\begin{itemize}
+  \item $P(X > 85) = 0{,}02 \iff P(X < 85) = 0{,}98$.
+  \item Standardisation : $\dfrac{85 - \mu}{2{,}5} = \texttt{FracNormale}(0{,}98) \approx 2{,}0537$.
+  \item Donc $85 - \mu = 2{,}5 \times 2{,}0537$, d'où $\mu \approx 85 - 5{,}13 = 79{,}87$.
+\end{itemize}
+\end{exemple}
+
+% ============================================================
+% SECTION 5 : APPROXIMATION BINOMIALE PAR NORMALE
+% ============================================================
+\newpage
+\section{Approximation d'une loi binomiale par une loi normale \hfill {\normalsize\color{uimmred}[C04]}}
+
+\subsection{Principe}
+
+Pour une loi binomiale $\mathcal{B}(n\,;p)$ avec $n$ grand, le calcul direct des probabilités devient lourd. Or l'histogramme de la binomiale prend une forme de cloche : on peut alors l'approcher par une loi normale de mêmes espérance et écart-type.
+
+\begin{theoreme}[-- Approximation normale de la binomiale]
+Si $X \sim \mathcal{B}(n\,;p)$ avec $n$ suffisamment grand, on peut approcher $X$ par la loi normale de mêmes paramètres :
+\[
+\mu = np, \qquad \sigma = \sqrt{np(1-p)}.
+\]
+L'approximation est jugée acceptable lorsque $n \geq 30$, $np \geq 5$ et $n(1-p) \geq 5$.
+\end{theoreme}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=13cm, height=6cm,
+  xlabel={$k$}, xmin=22, xmax=58, ymin=0, ymax=0.09,
+  axis lines=left, tick style={uimmgray}, every axis label/.style={uimmblue},
+  ytick=\empty, xtick={25,30,35,40,45,50,55}, xticklabel style={font=\scriptsize}
+]
+\addplot[ybar interval, draw=uimmblue!60, fill=uimmlightblue] coordinates {
+(30,0.0031)(31,0.0054)(32,0.0089)(33,0.0138)(34,0.0202)(35,0.0281)(36,0.0371)
+(37,0.0464)(38,0.0551)(39,0.0621)(40,0.0666)(41,0.0679)(42,0.0659)(43,0.0609)
+(44,0.0535)(45,0.0448)(46,0.0357)(47,0.0271)(48,0.0196)(49,0.0136)(50,0.0089)(51,0)};
+\addplot[uimmred, very thick, samples=120, domain=24:56]
+  {1/(4.899*sqrt(2*pi))*exp(-((x-40)^2)/(2*4.899^2))};
+\end{axis}
+\end{tikzpicture}\\
+{\footnotesize\color{uimmgray} Histogramme de $\mathcal{B}(100\,;0{,}4)$ et courbe de $\mathcal{N}(40\,;4{,}899)$.}
+\end{center}
+
+\subsection{Correction de continuité}
+
+On approche une loi \textbf{discrète} (valeurs entières) par une loi \textbf{continue}. Pour compenser, on élargit chaque valeur entière $k$ à l'intervalle $[k-0{,}5\,;\,k+0{,}5]$ : c'est la \textbf{correction de continuité}.
+
+\begin{methode}[-- Traduire avec la correction de continuité]
+\begin{itemize}
+  \item $P(X = k) \approx P(k - 0{,}5 \leq Y \leq k + 0{,}5)$ ;
+  \item $P(X \leq k) \approx P(Y \leq k + 0{,}5)$ ;
+  \item $P(X \geq k) \approx P(Y \geq k - 0{,}5)$ ;
+\end{itemize}
+où $Y \sim \mathcal{N}(np\,;\sqrt{np(1-p)})$.
+\end{methode}
+
+\begin{exemple}[-- Contrôle d'un lot]
+Un lot de $n = 100$ pièces contient en moyenne $p = 40\,\%$ de pièces d'un certain type. Soit $X \sim \mathcal{B}(100\,;0{,}4)$. On a $\mu = 40$ et $\sigma = \sqrt{100 \times 0{,}4 \times 0{,}6} \approx 4{,}899$.
+\begin{itemize}
+  \item Valeur exacte : $P(X \leq 45) = 0{,}8689$.
+  \item Approximation avec correction : $P(Y \leq 45{,}5) = 0{,}8692$.
+\end{itemize}
+L'écart est inférieur à $10^{-3}$ : l'approximation est excellente.
+\end{exemple}
+
+\begin{remarque}
+Sans correction de continuité, on obtiendrait $P(Y \leq 45) = 0{,}8463$, nettement moins précis. La correction n'est pas un détail.
+\end{remarque}
+
+% ============================================================
+% SECTION 6 : THEOREME DE LA LIMITE CENTREE
+% ============================================================
+\newpage
+\section{Le théorème de la limite centrée \hfill {\normalsize\color{uimmred}[S02]}}
+
+\subsection{Énoncé}
+
+La loi normale occupe une place centrale en probabilités : elle apparaît dès que l'on \textbf{additionne} ou que l'on \textbf{moyenne} un grand nombre de facteurs indépendants. C'est le sens du théorème de la limite centrée.
+
+\begin{theoreme}[-- Théorème de la limite centrée (TLC)]
+Soit $X_1, X_2, \dots, X_n$ des variables aléatoires indépendantes, de même loi, d'espérance $\mu$ et d'écart-type $\sigma$. Lorsque $n$ est grand, la moyenne
+\[
+\overline{X} = \frac{X_1 + X_2 + \dots + X_n}{n}
+\]
+suit approximativement la loi normale $\mathcal{N}\!\left(\mu\,;\,\dfrac{\sigma}{\sqrt{n}}\right)$, \emph{quelle que soit la loi initiale des $X_i$}.
+\end{theoreme}
+
+\begin{remarque}
+Deux idées à retenir : la loi de la moyenne devient \textbf{normale} même si les $X_i$ ne le sont pas ; et sa dispersion $\dfrac{\sigma}{\sqrt{n}}$ \textbf{diminue} quand $n$ augmente. Moyenner, c'est stabiliser.
+\end{remarque}
+
+\subsection{Illustration par simulation}
+
+Le TLC explique pourquoi tant de grandeurs industrielles sont normales : une cote finale résulte de la somme de nombreux petits écarts (jeu machine, température, usure, matière). On peut le visualiser en moyennant des tirages issus d'une loi non normale.
+
+\begin{lstlisting}[style=uimmpython, caption={Illustration du TLC : moyennes de tirages uniformes}]
+import numpy as np
+import matplotlib.pyplot as plt
+
+n = 30          # taille de chaque echantillon
+N = 10000       # nombre de moyennes simulees
+moyennes = [np.mean(np.random.uniform(0, 1, n)) for _ in range(N)]
+
+plt.hist(moyennes, bins=40, density=True, edgecolor="black")
+plt.title("Distribution des moyennes : une cloche apparait")
+plt.show()
+\end{lstlisting}
+
+\begin{appliindus}[-- Pourquoi la loi normale est partout]
+La masse d'un composant, la cote d'une pièce, le temps de cycle d'un poste : ce sont des sommes de multiples causes de variation, petites et indépendantes. Le TLC garantit que le résultat suit, en très bonne approximation, une loi normale. C'est ce qui justifie l'usage massif de cette loi en maîtrise statistique des procédés (MSP/SPC).
+\end{appliindus}
+
+% ============================================================
+% SECTION 7 : EXERCICES
+% ============================================================
+\newpage
+\section{Exercices d'application}
+
+\subsection*{Exercice 1 -- Loi centrée réduite \hfill {\normalsize\color{uimmred}[C04]}}
+Soit $Z \sim \mathcal{N}(0\,;1)$. Calculer, en arrondissant à $10^{-4}$ :
+\begin{enumerate}[label=\alph*)]
+  \item $P(Z \leq 1{,}2)$ ;
+  \item $P(-0{,}8 \leq Z \leq 1{,}5)$ ;
+  \item $P(Z > 0{,}7)$.
+\end{enumerate}
+
+\subsection*{Exercice 2 -- Recherche de seuil sur $\mathcal{N}(0\,;1)$ \hfill {\normalsize\color{uimmred}[C04]}}
+Soit $Z \sim \mathcal{N}(0\,;1)$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer $a$ tel que $P(Z \leq a) = 0{,}90$.
+  \item Déterminer $b > 0$ tel que $P(-b \leq Z \leq b) = 0{,}99$.
+\end{enumerate}
+
+\subsection*{Exercice 3 -- Usinage \hfill {\normalsize\color{uimmred}[C04]\,[C05]}}
+La longueur $L$ (en mm) d'un axe usiné suit $\mathcal{N}(250\,;0{,}3)$. Un axe est conforme si $249{,}4 \leq L \leq 250{,}6$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité qu'un axe soit conforme.
+  \item En déduire le pourcentage prévisionnel de rebut.
+  \item Interpréter le résultat à l'aide de la règle des 68 -- 95 -- 99,7.
+\end{enumerate}
+
+\subsection*{Exercice 4 -- Recherche de paramètre \hfill {\normalsize\color{uimmred}[C04]}}
+Une masse $X$ (en g) suit $\mathcal{N}(\mu\,;5)$. On observe $P(X > 210) = 0{,}10$.
+\begin{enumerate}[label=\alph*)]
+  \item Traduire cette donnée par une équation portant sur la variable centrée réduite.
+  \item En déduire l'espérance $\mu$.
+\end{enumerate}
+
+\subsection*{Exercice 5 -- Approximation binomiale \hfill {\normalsize\color{uimmred}[C04]}}
+Une machine produit $2\,\%$ de pièces défectueuses. On prélève un lot de $n = 400$ pièces. Soit $X$ le nombre de pièces défectueuses.
+\begin{enumerate}[label=\alph*)]
+  \item Justifier que $X$ suit une loi binomiale et donner ses paramètres.
+  \item Vérifier que l'approximation normale est justifiée, puis donner $\mu$ et $\sigma$.
+  \item À l'aide de l'approximation normale (avec correction de continuité), estimer $P(X \leq 10)$.
+\end{enumerate}
+
+\subsection*{Exercice 6 -- Synthèse : fiabilité \hfill {\normalsize\color{uimmred}[C04]\,[C05]}}
+La durée de vie $T$ (en heures) d'un roulement suit $\mathcal{N}(20\,000\,;2\,500)$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $P(T \geq 18\,000)$.
+  \item Déterminer la durée $t_0$ telle que $90\,\%$ des roulements la dépassent.
+  \item Le plan de maintenance impose de remplacer les roulements avant que $5\,\%$ soient tombés en panne. Déterminer la périodicité de remplacement correspondante.
+\end{enumerate}
+
+% ============================================================
+% FORMULAIRE
+% ============================================================
+\newpage
+\section*{Formulaire -- À retenir}
+\addcontentsline{toc}{section}{Formulaire}
+
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, title={\textbf{Formulaire de la loi normale}}, fonttitle=\large\bfseries\sffamily, coltitle=white, boxrule=1.5pt, arc=5pt]
+
+\renewcommand{\arraystretch}{1.7}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}p{4.2cm} p{11cm}@{}}
+Densité de $\mathcal{N}(0\,;1)$ & $f(z) = \dfrac{1}{\sqrt{2\pi}}\,e^{-z^2/2}$ \\
+Paramètres de $\mathcal{N}(\mu\,;\sigma)$ & $\mu$ : espérance (centre) \quad ; \quad $\sigma$ : écart-type (dispersion) \\
+Standardisation & $Z = \dfrac{X - \mu}{\sigma} \sim \mathcal{N}(0\,;1)$ \\
+Symétrie & $P(Z \leq -a) = P(Z \geq a) = 1 - P(Z \leq a)$ \\
+Règle empirique & $68\,\%$ dans $[\mu \pm \sigma]$, \; $95\,\%$ dans $[\mu \pm 2\sigma]$, \; $99{,}7\,\%$ dans $[\mu \pm 3\sigma]$ \\
+Valeur clé & $P(-1{,}96 \leq Z \leq 1{,}96) = 0{,}95$ \\
+Approx. binomiale & $\mathcal{B}(n\,;p) \approx \mathcal{N}\!\left(np\,;\sqrt{np(1-p)}\right)$ si $n \geq 30$, $np \geq 5$, $n(1-p) \geq 5$ \\
+Correction de continuité & $P(X \leq k) \approx P(Y \leq k + 0{,}5)$ \\
+TLC & $\overline{X} \approx \mathcal{N}\!\left(\mu\,;\,\dfrac{\sigma}{\sqrt{n}}\right)$ pour $n$ grand \\
+\end{tabular}
+
+\vspace{8pt}
+\textbf{Calculatrice.} \; TI : \texttt{normalFRép(a,b,$\mu$,$\sigma$)} et \texttt{FracNormale(p,$\mu$,$\sigma$)}. \; Casio : \texttt{Ncd} et \texttt{InvN} (menu \texttt{DIST}$\rightarrow$\texttt{NORM}).
+\end{tcolorbox}
+
+\vfill
+\begin{center}
+\color{uimmgray}\small
+\textit{Document réalisé par le Pôle Formation UIMM -- Centre-Val de Loire}\\
+\textit{La Fabrique de l'Avenir -- S. JAUBERT}
+\end{center}
+
+\end{document}

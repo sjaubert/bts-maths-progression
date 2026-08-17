@@ -1,0 +1,224 @@
+% ============================================================
+% TD : La Loi Normale
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Travaux dirigés (sans corrigés)
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{consigne}{%
+  colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08 -- TD}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Travaux Dirigés -- MOD08}\\[4pt]
+{\color{white}\large La Loi Normale}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Séquence : & [S02] Variables aléatoires et lois usuelles \\
+Compétences : & [C04] calcul de probabilités (loi normale) \quad [C05] espérance / écart-type \quad approximation binomiale \& TLC \\
+\end{tabular}
+
+\begin{consigne}
+\textbf{Consignes.} Les probabilités sont arrondies à $10^{-4}$, les autres résultats à $10^{-2}$ (sauf mention contraire). Toute grandeur $X$ est supposée suivre une loi normale $\mathcal{N}(\mu\,;\sigma)$ où $\sigma$ désigne l'\textbf{écart-type}. Détailler la traduction en langage probabiliste avant tout calcul. Calculatrice autorisée : penser à \texttt{normalFRép} / \texttt{Ncd} pour les probabilités et \texttt{FracNormale} / \texttt{InvN} pour les seuils.
+\end{consigne}
+
+% ============================================================
+\section{Maîtrise technique \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{exo}{Exercice 1 -- Loi normale centrée réduite}
+Soit $Z \sim \mathcal{N}(0\,;1)$. Calculer :
+\begin{enumerate}[label=\alph*)]
+  \item $P(Z \leq 0{,}85)$ ;
+  \item $P(Z \geq 1{,}3)$ ;
+  \item $P(-1{,}2 \leq Z \leq 0{,}6)$ ;
+  \item $P(|Z| \leq 1{,}5)$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 2 -- Recherche de seuils sur $\mathcal{N}(0\,;1)$}
+Soit $Z \sim \mathcal{N}(0\,;1)$. Déterminer, à $10^{-3}$ près :
+\begin{enumerate}[label=\alph*)]
+  \item le réel $a$ tel que $P(Z \leq a) = 0{,}975$ ;
+  \item le réel $c$ tel que $P(Z \geq c) = 0{,}10$ ;
+  \item le réel positif $b$ tel que $P(-b \leq Z \leq b) = 0{,}90$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 3 -- Loi normale générale}
+Une grandeur $X$ suit $\mathcal{N}(60\,;4)$. Calculer :
+\begin{enumerate}[label=\alph*)]
+  \item $P(X \leq 65)$ ;
+  \item $P(56 \leq X \leq 68)$ ;
+  \item la valeur $z$ centrée réduite associée à $x = 68$, et interpréter.
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{Usinage et contrôle qualité \hfill {\normalsize\color{uimmred}[C04]\,[C05]}}
+
+\begin{exo}{Exercice 4 -- Cote d'usinage}
+Un tour à commande numérique usine des pions dont le diamètre $D$ (en mm) suit $\mathcal{N}(12\,;0{,}05)$. Le plan impose une tolérance $12 \pm 0{,}1$ mm.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité qu'un pion soit conforme.
+  \item En déduire le taux de rebut prévisionnel, en ppm (pièces par million).
+  \item Retrouver l'ordre de grandeur du résultat à l'aide de la règle des 68 -- 95 -- 99,7.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 5 -- Dosage de remplissage}
+Une ligne de conditionnement remplit des flacons. La masse nette $M$ (en g) suit $\mathcal{N}(250\,;1{,}8)$. Un flacon est refusé si sa masse est inférieure à $247$ g.
+\begin{enumerate}[label=\alph*)]
+  \item Quelle proportion de flacons est refusée ?
+  \item Sur une production de $20\,000$ flacons par jour, combien de flacons refusés attend-on en moyenne ?
+  \item Quelle masse dépassent $99\,\%$ des flacons ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 6 -- Réglage de la dispersion}
+Un service qualité veut qu'au moins $99\,\%$ des axes d'un lot aient une longueur dans l'intervalle de tolérance $[149{,}5\,;150{,}5]$ mm. La machine est centrée sur $\mu = 150$ mm.
+\begin{enumerate}[label=\alph*)]
+  \item Traduire l'exigence par une condition probabiliste portant sur la longueur $L$.
+  \item Déterminer la valeur maximale de l'écart-type $\sigma$ que le procédé doit respecter.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 7 -- Dérive d'un procédé}
+Sur une presse, l'épaisseur $E$ (en mm) des tôles suit une loi normale d'écart-type $\sigma = 0{,}08$ mm. Après une période de production, le contrôle constate que $3\,\%$ des tôles ont une épaisseur inférieure à $2{,}00$ mm.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer l'espérance $\mu$ actuelle du procédé.
+  \item La cible est $\mu = 2{,}20$ mm. Le procédé est-il bien réglé ? Justifier.
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{Maintenance, fiabilité et robotique \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{exo}{Exercice 8 -- Durée de vie et garantie}
+La durée de vie $T$ (en heures) d'un moteur électrique suit $\mathcal{N}(15\,000\,;1\,200)$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité qu'un moteur dépasse $16\,000$ heures.
+  \item Calculer $P(13\,500 \leq T \leq 16\,500)$.
+  \item Le constructeur veut garantir une durée telle que $2\,\%$ seulement des moteurs tombent en panne avant. Déterminer cette durée de garantie.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 9 -- Maintenance préventive}
+L'usure $U$ (en mm) d'un outil de coupe après $500$ pièces suit $\mathcal{N}(0{,}30\,;0{,}04)$. L'outil doit être remplacé dès que l'usure dépasse $0{,}40$ mm.
+\begin{enumerate}[label=\alph*)]
+  \item Quelle est la probabilité que l'outil doive déjà être remplacé après $500$ pièces ?
+  \item Le service maintenance planifie l'intervention de sorte que la probabilité de dépassement reste inférieure à $5\,\%$. Déterminer l'usure seuil correspondant à ce risque de $5\,\%$, et conclure sur le réglage retenu.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 10 -- Temps de cycle en robotique}
+Le temps de cycle $C$ (en secondes) d'un bras robotisé de palettisation suit $\mathcal{N}(8{,}5\,;0{,}3)$. La cadence cible impose un cycle inférieur à $9$ s.
+\begin{enumerate}[label=\alph*)]
+  \item Quelle proportion de cycles respecte la cadence ?
+  \item Déterminer le temps $t$ tel que $95\,\%$ des cycles soient réalisés en moins de $t$ secondes.
+  \item Un cycle supérieur à $9{,}4$ s déclenche une alarme. Quelle est la probabilité d'alarme sur un cycle ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 11 -- Fiabilité d'un roulement}
+La durée de vie $T$ (en heures) d'un roulement à billes suit $\mathcal{N}(22\,000\,;3\,000)$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité qu'un roulement fonctionne au moins $20\,000$ heures.
+  \item Déterminer la durée $t_0$ que dépassent $90\,\%$ des roulements.
+  \item Deux roulements identiques et indépendants équipent un même arbre ; l'arbre fonctionne tant que les deux roulements tiennent. Estimer la probabilité que l'arbre atteigne $20\,000$ heures.
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{Approximation binomiale et limite centrée \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{exo}{Exercice 12 -- Contrôle de réception}
+Un lot de $n = 500$ composants contient une proportion $p = 3\,\%$ de composants défectueux. Soit $X$ le nombre de défectueux dans le lot.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la loi exacte de $X$ et ses paramètres.
+  \item Vérifier que les conditions d'approximation par une loi normale sont réunies, puis donner $\mu$ et $\sigma$.
+  \item À l'aide de l'approximation normale avec correction de continuité, estimer $P(X \leq 12)$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 13 -- Assemblage électronique}
+Une carte électronique comporte $n = 800$ soudures. Chaque soudure est défaillante avec une probabilité $p = 0{,}5\,\%$, indépendamment des autres. Soit $X$ le nombre de soudures défaillantes sur une carte.
+\begin{enumerate}[label=\alph*)]
+  \item Justifier le choix d'un modèle binomial, puis calculer $\mu$ et $\sigma$.
+  \item L'approximation normale est-elle ici pertinente ? Discuter au regard des conditions usuelles.
+  \item En admettant l'approximation, estimer la probabilité qu'une carte présente au plus $6$ soudures défaillantes.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 14 -- Moyenne d'un échantillon (TLC)}
+La masse $X$ d'une pièce brute suit une loi d'espérance $\mu = 480$ g et d'écart-type $\sigma = 30$ g (loi non précisée). On prélève un échantillon de $n = 36$ pièces et on note $\overline{X}$ la masse moyenne de l'échantillon.
+\begin{enumerate}[label=\alph*)]
+  \item Justifier que $\overline{X}$ suit approximativement une loi normale et donner ses paramètres.
+  \item Calculer $P(\overline{X} \geq 490)$.
+  \item Comparer avec la probabilité $P(X \geq 490)$ pour une pièce isolée (en supposant $X$ normale). Commenter l'effet du moyennage.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 15 -- Étude de capabilité (synthèse)}
+Une entreprise usine des pistons dont le diamètre $D$ (en mm) suit $\mathcal{N}(80\,;0{,}02)$. Le bureau d'études fixe les limites de tolérance à $80 \pm 0{,}05$ mm.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité qu'un piston soit conforme, puis le taux de rebut en ppm.
+  \item Le client exige désormais un taux de rebut inférieur à $100$ ppm, la cible restant $\mu = 80$ mm. Déterminer l'écart-type maximal admissible.
+  \item Un déréglage porte l'espérance à $\mu' = 80{,}03$ mm (écart-type inchangé $\sigma = 0{,}02$ mm). Recalculer le taux de rebut et conclure sur l'importance du centrage du procédé.
+\end{enumerate}
+\end{exo}
+
+\vfill
+\begin{center}\color{uimmgray}\small
+\textit{Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}

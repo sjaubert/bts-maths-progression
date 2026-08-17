@@ -1,0 +1,1004 @@
+% ============================================================
+% Cours : La Statistique Inférentielle
+% Pôle Formation UIMM - CVDL
+% BTS Industriel - Mathématiques
+% Auteur : S. JAUBERT
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+
+% ----- Encodage et langue -----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ----- Polices sans-serif -----
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% ----- Mise en page -----
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+
+% ----- Mathématiques -----
+\usepackage{amsmath,amssymb,amsfonts}
+
+% ----- Graphiques et couleurs -----
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathmorphing, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ----- Boîtes colorées -----
+\usepackage[most]{tcolorbox}
+
+% ----- Code / algorithmes -----
+\usepackage{listings}
+
+% ----- En-tête et pied de page -----
+\usepackage{fancyhdr}
+
+% ----- Hyperliens -----
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+% ----- Enumération personnalisée -----
+\usepackage{enumitem}
+
+% ----- Tableaux -----
+\usepackage{booktabs,array}
+
+% ============================================================
+% CHARTE GRAPHIQUE UIMM
+% ============================================================
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+
+% ----- Styles des sections -----
+\usepackage{titlesec}
+\titleformat{\section}
+  {\LARGE\bfseries\color{uimmblue}}
+  {\thesection.}{0.5em}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.5pt]}]
+\titleformat{\subsection}
+  {\Large\bfseries\color{uimmblue}}
+  {\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}
+  {\large\bfseries\color{uimmblue!80!black}}
+  {\thesubsubsection.}{0.5em}{}
+
+% ----- Puces personnalisées -----
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+\setlist[itemize,2]{label={\color{uimmblue}--}}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+
+% ----- Style listings -----
+\lstdefinestyle{uimmpython}{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{uimmblue}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{uimmred},
+  numbers=left,
+  numberstyle=\tiny\color{uimmgray},
+  numbersep=8pt,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{uimmblue},
+  backgroundcolor=\color{uimmlightgray},
+  language=Python
+}
+
+% ============================================================
+% BOÎTES TCOLORBOX
+% ============================================================
+\newtcolorbox{definition}[1][]{%
+  colback=uimmlightblue, colframe=uimmblue,
+  fonttitle=\bfseries\color{white}, title={\textsf{Définition}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{theoreme}[1][]{%
+  colback=uimmlightblue!50, colframe=uimmblue!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Propriété / Résultat}~#1},
+  coltitle=white, boxrule=1.2pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{methode}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Méthode}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{exemple}[1][]{%
+  colback=orange!5, colframe=orange!70!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Exemple}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{remarque}[1][]{%
+  colback=uimmlightgray, colframe=uimmgray,
+  fonttitle=\bfseries, title={\textsf{Remarque}~#1},
+  boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{appliindus}[1][]{%
+  colback=uimmred!5, colframe=uimmred!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\triangleright$ Application industrielle}~#1},
+  coltitle=white, boxrule=1.2pt, arc=4pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{calculatrice}[1][]{%
+  colback=uimmblue!3, colframe=uimmblue!70!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\square$ À la calculatrice}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{attention}[1][]{%
+  colback=uimmred!8, colframe=uimmred,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\triangle$ Attention}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+% ============================================================
+% COMMANDE : petite courbe de Gauss
+% ============================================================
+\newcommand{\gaussN}[1]{1/sqrt(2*pi)*exp(-((#1)^2)/2)}
+
+% ============================================================
+% EN-TÊTE / PIED DE PAGE
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{%
+  \begin{minipage}{8cm}\centering
+    {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+    {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}
+  \end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD09}}}
+\fancyfoot[C]{%
+  {\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+% ============================================================
+% PAGE DE TITRE
+% ============================================================
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[uimmblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  \node[anchor=north west] at ([xshift=2cm, yshift=-0.5cm]current page.north west)
+    {\includegraphics[height=3cm]{logo_uimm_placeholder.jpg}};
+  \node[anchor=north east, white, font=\large\bfseries] at ([xshift=-2cm, yshift=-1.5cm]current page.north east)
+    {Pôle Formation UIMM - CVDL};
+  \node[anchor=north east, white, font=\small, align=right] at ([xshift=-2cm, yshift=-2.2cm]current page.north east)
+    {BTS Industriel -- Mathématiques\\[2pt]S. Jaubert};
+  \fill[uimmred] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.4cm]current page.north east);
+  \node[anchor=center, text width=14cm, align=center] at ([yshift=-1cm]current page.center) {
+    {\fontsize{28}{34}\selectfont\bfseries\color{uimmblue} La Statistique Inférentielle}\\[20pt]
+    {\Large\color{uimmgray} Module 09 -- Estimation et tests d'hypothèses}\\[12pt]
+    {\large\color{uimmgray}\textit{De l'échantillon à la population : décider sous incertitude}}
+  };
+  % Illustration : deux cloches (H0 / H1) et zone de rejet
+  \node[anchor=center] at ([yshift=-5.4cm]current page.center) {
+    \begin{tikzpicture}
+      \begin{axis}[hide axis, width=10cm, height=4.2cm, domain=-4.5:6.5, samples=90,
+        xmin=-4.7, xmax=6.7, ymin=0, ymax=0.45]
+        \addplot[uimmblue, very thick] {\gaussN{x}};
+        \addplot[uimmblue!12, draw=none, domain=-4.5:4.5] {\gaussN{x}} \closedcycle;
+        \addplot[uimmred, very thick] {\gaussN{x-2.2}};
+        \addplot[uimmred!45, draw=none, domain=1.645:6.5] {\gaussN{x}} \closedcycle;
+      \end{axis}
+    \end{tikzpicture}};
+  \fill[uimmblue] ([yshift=1.5cm]current page.south west) rectangle (current page.south east);
+  \node[anchor=center, white, font=\small] at ([yshift=0.75cm]current page.south) {
+    Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ La Fabrique de l'Avenir};
+\end{tikzpicture}
+\end{titlepage}
+
+% ============================================================
+% FICHE MODULE
+% ============================================================
+\thispagestyle{fancy}
+\vspace*{0.5cm}
+\begin{center}
+{\LARGE\bfseries\color{uimmblue} MOD09 -- La Statistique Inférentielle}\\[6pt]
+{\large\color{uimmgray} Support de cours}\\[4pt]
+{\normalsize\color{uimmgray} Auteur : S. JAUBERT \hspace{1cm} Formation : BTS Industriel (ATI / CPRP / CRSA)}
+\end{center}
+\vspace{0.6cm}
+
+\begin{tcolorbox}[colback=uimmlightblue!30, colframe=uimmblue,
+  title={\textbf{\textsf{Fiche du Module}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1.2pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l @{\hspace{12pt}} p{12cm}@{}}
+Bloc / Période : & Semestre 3 \\
+Module :         & {[MOD09]} Statistique inférentielle \\
+Séquences :      & {[S01]} Estimation par intervalle de confiance \quad ; \quad {[S02]} Tests d'hypothèses \\
+Thème :          & Passer d'un échantillon à la population : estimer un paramètre, l'encadrer, et décider si une hypothèse est acceptable face aux données \\
+\end{tabular}
+\end{tcolorbox}
+\vspace{0.35cm}
+
+\begin{tcolorbox}[colback=white, colframe=uimmblue!80!black,
+  title={\textbf{\textsf{Compétences travaillées}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+
+\textbf{\color{uimmblue} [S01] -- Estimation par intervalle de confiance}
+\begin{itemize}[leftmargin=1.5cm]
+  \item[\textbf{\color{uimmblue}[C01]}] Estimer ponctuellement une proportion, une moyenne ou un écart-type
+  \item[\textbf{\color{uimmblue}[C02]}] Déterminer un intervalle de confiance pour une proportion ou une moyenne
+  \item[\textbf{\color{uimmblue}[C03]}] Exploiter un intervalle de confiance
+  \item[\textbf{\color{uimmblue}[C04]}] Déterminer la taille nécessaire d'un échantillon pour une précision donnée
+\end{itemize}
+
+\vspace{4pt}
+\textbf{\color{uimmblue} [S02] -- Tests d'hypothèses}
+\begin{itemize}[leftmargin=1.5cm]
+  \item[\textbf{\color{uimmblue}[C01]}] Déterminer la région de rejet de l'hypothèse nulle et énoncer la règle de décision
+  \item[\textbf{\color{uimmblue}[C02]}] Utiliser les tests bilatéraux et unilatéraux (comparaison de proportions ou de moyennes)
+  \item[\textbf{\color{uimmblue}[C03]}] Analyser les risques d'erreur de première et de seconde espèce
+\end{itemize}
+\end{tcolorbox}
+\vspace{0.25cm}
+
+\begin{remarque}[-- Positionnement du cours]
+Ce module est l'aboutissement du bloc « données et probabilités ». La statistique descriptive (MOD07) résume ce que l'on a \emph{observé} ; le calcul des probabilités (MOD08) modélise ce que l'on \emph{pourrait observer}. La statistique inférentielle fait le pont entre les deux : à partir d'un échantillon limité, elle permet de tirer des conclusions sur toute une production, en \textbf{quantifiant le risque d'erreur}. Prérequis : loi normale, standardisation $Z = \frac{X-\mu}{\sigma}$, théorème de la limite centrée (MOD08). Les calculs de probabilités et de seuils se font à la \textbf{calculatrice}. Sauf indication contraire, les résultats sont arrondis à $10^{-4}$.
+\end{remarque}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================================
+% SECTION 1 : ECHANTILLONNAGE ET INFERENCE
+% ============================================================
+\section{Échantillonnage et inférence \hfill {\normalsize\color{uimmred}[S01]}}
+
+\subsection{Le problème : connaître une population sans la mesurer entièrement}
+
+En production, on ne peut presque jamais mesurer \textbf{toutes} les pièces : le contrôle serait trop long, trop coûteux, parfois destructif (essai de rupture). On mesure donc un \textbf{échantillon} et on cherche à en déduire une information sur l'ensemble de la production. C'est le cœur de la statistique inférentielle : \emph{inférer}, c'est conclure du particulier au général.
+
+\begin{definition}
+La \textbf{population} est l'ensemble de tous les individus étudiés (par exemple toutes les pièces d'une production). Un \textbf{échantillon} est une partie de la population, de taille $n$, prélevée pour être mesurée.
+
+Une grandeur qui décrit la population est un \textbf{paramètre} : il est \emph{inconnu} et \emph{fixe}. On le note en général avec une lettre grecque :
+\[
+\mu \ (\text{moyenne}), \qquad \sigma \ (\text{écart-type}), \qquad p \ (\text{proportion}).
+\]
+La même grandeur calculée sur l'échantillon est une \textbf{statistique} : elle est \emph{connue} mais \emph{varie} d'un échantillon à l'autre. On la note :
+\[
+\overline{x} \ (\text{moyenne}), \qquad s \ (\text{écart-type}), \qquad f \ (\text{fréquence}).
+\]
+\end{definition}
+
+\begin{remarque}[-- Deux logiques opposées]
+En probabilités (MOD08), on connaissait la loi (donc les paramètres) et on calculait la probabilité d'un échantillon. En statistique inférentielle, c'est l'inverse : on \textbf{observe} un échantillon et on cherche à \textbf{remonter} aux paramètres inconnus.
+\end{remarque}
+
+\subsection{La fluctuation d'échantillonnage}
+
+Deux échantillons différents, prélevés sur la même production, ne donnent pas la même moyenne ni la même fréquence. Cette variation naturelle porte un nom.
+
+\begin{definition}[-- Fluctuation d'échantillonnage]
+La \textbf{fluctuation d'échantillonnage} est la variation d'une statistique (moyenne, fréquence) lorsque l'on change d'échantillon. C'est elle qui rend l'inférence incertaine : toute conclusion tirée d'un échantillon devra être assortie d'un \textbf{niveau de confiance} ou d'un \textbf{risque d'erreur}.
+\end{definition}
+
+\subsection{Lois de la moyenne et de la fréquence \hfill {\normalsize\color{uimmred}[MOD08]}}
+
+Pour maîtriser cette fluctuation, on a besoin de connaître la loi suivie par $\overline{X}$ et par $F$ quand l'échantillon est prélevé au hasard. Ces résultats viennent du théorème de la limite centrée.
+
+\begin{theoreme}[-- Loi de la moyenne d'un échantillon]
+On prélève au hasard un échantillon de taille $n$ dans une population où la grandeur mesurée a pour moyenne $\mu$ et pour écart-type $\sigma$. La \textbf{moyenne de l'échantillon} $\overline{X}$ est une variable aléatoire telle que :
+\[
+E(\overline{X}) = \mu, \qquad \sigma(\overline{X}) = \frac{\sigma}{\sqrt{n}}.
+\]
+Si la population est normale, ou si $n$ est grand ($n \geq 30$), alors :
+\[
+\boxed{\overline{X} \sim \mathcal{N}\!\left(\mu\,;\,\frac{\sigma}{\sqrt{n}}\right).}
+\]
+\end{theoreme}
+
+\begin{theoreme}[-- Loi de la fréquence d'un échantillon]
+On s'intéresse à un caractère présent dans la population avec la proportion $p$. La \textbf{fréquence} $F$ de ce caractère dans un échantillon de taille $n$ vérifie :
+\[
+E(F) = p, \qquad \sigma(F) = \sqrt{\frac{p(1-p)}{n}}.
+\]
+Pour $n$ grand ($n \geq 30$, $np \geq 5$ et $n(1-p) \geq 5$) :
+\[
+\boxed{F \sim \mathcal{N}\!\left(p\,;\,\sqrt{\frac{p(1-p)}{n}}\right).}
+\]
+\end{theoreme}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=13cm, height=6cm,
+  xlabel={valeur de la moyenne $\overline{x}$}, ymin=0, ymax=0.75,
+  xmin=-4, xmax=4, axis lines=left, tick style={uimmgray},
+  every axis label/.style={uimmblue}, ytick=\empty, xtick={0}, xticklabel={$\mu$},
+  samples=120, legend style={draw=none, at={(0.98,0.98)}, anchor=north east, font=\footnotesize}
+]
+\addplot[uimmgray!60, thick, domain=-4:4] {\gaussN{x}};
+\addlegendentry{$n$ petit}
+\addplot[uimmblue, thick, domain=-4:4] {1/(0.6*sqrt(2*pi))*exp(-(x^2)/(2*0.6^2))};
+\addlegendentry{$n$ moyen}
+\addplot[uimmred, very thick, domain=-4:4] {1/(0.35*sqrt(2*pi))*exp(-(x^2)/(2*0.35^2))};
+\addlegendentry{$n$ grand}
+\end{axis}
+\end{tikzpicture}\\
+{\footnotesize\color{uimmgray} Plus $n$ augmente, plus la loi de $\overline{X}$ se resserre autour de $\mu$ : la fluctuation diminue en $\sigma/\sqrt{n}$.}
+\end{center}
+
+\begin{remarque}[-- L'idée maîtresse du module]
+$\sigma(\overline{X}) = \dfrac{\sigma}{\sqrt{n}}$ décroît quand $n$ grandit, mais lentement (racine carrée). Pour diviser l'incertitude par $2$, il faut multiplier la taille de l'échantillon par $4$. Cette formule gouverne à la fois la largeur des intervalles de confiance (section 3) et la sensibilité des tests (section 9).
+\end{remarque}
+
+% ============================================================
+% SECTION 2 : ESTIMATION PONCTUELLE
+% ============================================================
+\newpage
+\section{Estimation ponctuelle \hfill {\normalsize\color{uimmred}[C01]}}
+
+\subsection{Estimateur et estimation}
+
+La façon la plus directe d'approcher un paramètre inconnu est d'utiliser la valeur correspondante calculée sur l'échantillon.
+
+\begin{definition}[-- Estimation ponctuelle]
+Une \textbf{estimation ponctuelle} d'un paramètre est une valeur unique, calculée sur l'échantillon, proposée comme approximation du paramètre inconnu.
+\begin{itemize}
+  \item La moyenne inconnue $\mu$ est estimée par la moyenne de l'échantillon $\overline{x}$.
+  \item La proportion inconnue $p$ est estimée par la fréquence observée $f$.
+\end{itemize}
+\end{definition}
+
+\subsection{Estimation d'un écart-type : l'estimateur corrigé}
+
+Pour l'écart-type, l'estimation demande une précaution. L'écart-type « brut » de l'échantillon sous-estime en moyenne l'écart-type de la population. On le corrige en divisant par $n-1$ au lieu de $n$.
+
+\begin{theoreme}[-- Estimateur sans biais de l'écart-type]
+Une estimation ponctuelle de l'écart-type $\sigma$ de la population est donnée par l'\textbf{écart-type corrigé} de l'échantillon :
+\[
+s = \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}\left(x_i - \overline{x}\right)^2}.
+\]
+Cet estimateur est dit \textbf{sans biais} : en moyenne sur tous les échantillons possibles, il ne surestime ni ne sous-estime $\sigma$.
+\end{theoreme}
+
+\begin{calculatrice}[-- Les deux écarts-types]
+En mode statistique, la calculatrice affiche deux valeurs :
+\begin{itemize}
+  \item $\sigma_x$ (ou \texttt{$\sigma$x}) : écart-type de l'échantillon, division par $n$ ;
+  \item $s_x$ (ou \texttt{sx}) : écart-type \textbf{corrigé}, division par $n-1$.
+\end{itemize}
+Pour \textbf{estimer} l'écart-type de la population, on retient $\boxed{s_x}$.
+\end{calculatrice}
+
+\begin{exemple}[-- Contrôle d'un diamètre d'axe (fichier \texttt{diameter.csv})]
+On a mesuré le diamètre (en mm) de $n = 30$ axes prélevés en production. La calculatrice, ou un tableur, donne :
+\[
+\overline{x} \approx 11{,}8867 \text{ mm}, \qquad s \approx 0{,}0264 \text{ mm}.
+\]
+Estimations ponctuelles : le diamètre moyen de la production est estimé à $11{,}8867$ mm, et l'écart-type de production à $0{,}0264$ mm. Ces valeurs uniques ne disent rien de leur précision : c'est l'objet de l'intervalle de confiance.
+\end{exemple}
+
+\begin{attention}[-- Une estimation ponctuelle est presque sûrement fausse]
+La probabilité que $\overline{x}$ soit \emph{exactement} égal à $\mu$ est nulle. Donner une seule valeur, sans marge, est trompeur. On lui préfère un intervalle qui indique jusqu'où le vrai paramètre peut raisonnablement se trouver.
+\end{attention}
+
+% ============================================================
+% SECTION 3 : INTERVALLE DE CONFIANCE
+% ============================================================
+\newpage
+\section{Estimation par intervalle de confiance \hfill {\normalsize\color{uimmred}[C02]\,[C03]}}
+
+\subsection{Principe}
+
+Plutôt qu'une valeur unique, on propose une \textbf{fourchette} qui a de bonnes chances de contenir le paramètre inconnu.
+
+\begin{definition}[-- Intervalle de confiance]
+Un \textbf{intervalle de confiance} au niveau de confiance $1-\alpha$ pour un paramètre est un intervalle, calculé à partir de l'échantillon, qui contient le vrai paramètre avec la probabilité $1-\alpha$. Le réel $\alpha$ est le \textbf{risque} ; les valeurs usuelles sont :
+\[
+1-\alpha = 0{,}95 \ (\alpha = 5\,\%) \qquad\text{ou}\qquad 1-\alpha = 0{,}99 \ (\alpha = 1\,\%).
+\]
+\end{definition}
+
+Toutes les formules qui suivent reposent sur le \textbf{coefficient} $t_\alpha$ lu sur la loi normale centrée réduite, tel que $P(-t_\alpha \leq Z \leq t_\alpha) = 1-\alpha$.
+
+\begin{theoreme}[-- Coefficients usuels (loi normale centrée réduite)]
+\renewcommand{\arraystretch}{1.3}
+\begin{center}
+\begin{tabular}{@{}c c c@{}}
+\toprule
+\textbf{Niveau de confiance $1-\alpha$} & \textbf{Risque $\alpha$} & \textbf{Coefficient $t_\alpha$} \\
+\midrule
+$90\,\%$ & $10\,\%$ & $1{,}6449$ \\
+$95\,\%$ & $5\,\%$  & $1{,}9600$ \\
+$98\,\%$ & $2\,\%$  & $2{,}3263$ \\
+$99\,\%$ & $1\,\%$  & $2{,}5758$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+On obtient $t_\alpha$ à la calculatrice par $t_\alpha = \texttt{FracNormale}\!\left(1 - \frac{\alpha}{2}\right)$. La valeur la plus utilisée est $t_{0{,}05} = 1{,}96$.
+\end{theoreme}
+
+\subsection{Intervalle de confiance d'une moyenne}
+
+\begin{theoreme}[-- IC d'une moyenne]
+On dispose d'un échantillon de taille $n$, de moyenne observée $\overline{x}$, prélevé dans une population d'écart-type $\sigma$. Un intervalle de confiance de la moyenne $\mu$ au niveau $1-\alpha$ est :
+\[
+\boxed{\left[\;\overline{x} - t_\alpha\,\frac{\sigma}{\sqrt{n}}\;;\;\overline{x} + t_\alpha\,\frac{\sigma}{\sqrt{n}}\;\right].}
+\]
+Si l'écart-type $\sigma$ de la population est inconnu, on le remplace par l'écart-type corrigé $s$ de l'échantillon (valable pour $n \geq 30$).
+\end{theoreme}
+
+\begin{exemple}[-- Masse de sacs de ciment ($\sigma$ connu)]
+Une ensacheuse remplit des sacs de ciment. L'écart-type du procédé est connu et stable : $\sigma = 0{,}15$ kg. On prélève $n = 50$ sacs, de masse moyenne $\overline{x} = 25{,}02$ kg. Intervalle de confiance de la masse moyenne au niveau $95\,\%$ :
+\[
+25{,}02 \pm 1{,}96 \times \frac{0{,}15}{\sqrt{50}} = 25{,}02 \pm 0{,}0416,
+\]
+soit $[\,24{,}9784\;;\;25{,}0616\,]$ kg. On est confiant à $95\,\%$ que la masse moyenne réelle de la production se situe dans cette fourchette.
+\end{exemple}
+
+\begin{exemple}[-- Diamètre d'axe ($\sigma$ inconnu, $n = 30$)]
+Reprenons les $30$ axes : $\overline{x} = 11{,}8867$ mm, $s = 0{,}0264$ mm. L'écart-type de production étant inconnu, on utilise $s$. IC de la moyenne au niveau $95\,\%$ :
+\[
+11{,}8867 \pm 1{,}96 \times \frac{0{,}0264}{\sqrt{30}} = 11{,}8867 \pm 0{,}0095,
+\]
+soit environ $[\,11{,}8772\;;\;11{,}8961\,]$ mm.
+\end{exemple}
+
+\begin{remarque}[-- Honnêteté sur le modèle]
+Remplacer $\sigma$ par $s$ et garder les coefficients de la loi normale n'est légitime que pour $n$ assez grand (usuellement $n \geq 30$). Pour un petit échantillon, la théorie exacte utilise la loi de Student, hors programme de BTS. On se limite donc ici à $n \geq 30$, ce qui couvre les situations courantes de contrôle.
+\end{remarque}
+
+\subsection{Intervalle de confiance d'une proportion}
+
+\begin{theoreme}[-- IC d'une proportion]
+On observe une fréquence $f$ sur un échantillon de taille $n$. Un intervalle de confiance de la proportion $p$ au niveau $1-\alpha$ est :
+\[
+\boxed{\left[\;f - t_\alpha\,\sqrt{\frac{f(1-f)}{n}}\;;\;f + t_\alpha\,\sqrt{\frac{f(1-f)}{n}}\;\right],}
+\]
+valable pour $n \geq 30$, $nf \geq 5$ et $n(1-f) \geq 5$.
+\end{theoreme}
+
+\begin{exemple}[-- Taux de défauts en fin de ligne]
+Un contrôle porte sur $n = 300$ pièces prélevées en fin de ligne ; $18$ présentent un défaut d'aspect. La fréquence observée est $f = \frac{18}{300} = 0{,}06$. Les conditions sont vérifiées ($nf = 18 \geq 5$, $n(1-f) = 282 \geq 5$). IC de la proportion de défauts au niveau $95\,\%$ :
+\[
+0{,}06 \pm 1{,}96 \times \sqrt{\frac{0{,}06 \times 0{,}94}{300}} = 0{,}06 \pm 0{,}0269,
+\]
+soit $[\,0{,}0331\;;\;0{,}0869\,]$, c'est-à-dire de $3{,}3\,\%$ à $8{,}7\,\%$ de défauts dans la production.
+\end{exemple}
+
+\subsection{Exploiter un intervalle de confiance \hfill {\normalsize\color{uimmred}[C03]}}
+
+\begin{methode}[-- Lire et utiliser un intervalle de confiance]
+\begin{enumerate}
+  \item \textbf{Interprétation.} Un IC à $95\,\%$ signifie : si l'on répétait le prélèvement un grand nombre de fois, environ $95\,\%$ des intervalles ainsi construits contiendraient le vrai paramètre. Ce n'est \emph{pas} « $95\,\%$ des pièces sont dans l'intervalle ».
+  \item \textbf{Décision.} Une valeur cible (norme, engagement) située \emph{hors} de l'IC est jugée incompatible avec les données au risque $\alpha$.
+  \item \textbf{Précision.} La demi-largeur $E = t_\alpha\,\frac{\sigma}{\sqrt{n}}$ (ou $t_\alpha\sqrt{f(1-f)/n}$) mesure la précision. Plus $n$ est grand, plus l'intervalle est étroit.
+\end{enumerate}
+\end{methode}
+
+\begin{attention}[-- Le paramètre n'est pas aléatoire]
+La proportion réelle $p$ est un nombre fixe (inconnu). Ce n'est pas $p$ qui « a $95\,\%$ de chances d'être dans l'intervalle » ; c'est l'\textbf{intervalle}, aléatoire car construit sur un échantillon aléatoire, qui a $95\,\%$ de chances de contenir $p$. La nuance est subtile mais elle est le cœur du raisonnement.
+\end{attention}
+
+\begin{appliindus}[-- Contrôle de réception]
+À la réception d'un lot, l'IC d'une proportion de défauts permet de trancher sans tout contrôler. Si l'exigence client est « au plus $5\,\%$ de défauts » et que l'IC calculé est $[\,3{,}3\,\%\;;\;8{,}7\,\%\,]$, la valeur $5\,\%$ est \emph{dans} l'intervalle : les données ne permettent pas d'affirmer que le lot dépasse le seuil, mais ne le garantissent pas non plus. Pour conclure fermement, il faudra un test (section 7) ou un échantillon plus grand.
+\end{appliindus}
+
+% ============================================================
+% SECTION 4 : TAILLE D'ECHANTILLON
+% ============================================================
+\newpage
+\section{Taille d'un échantillon pour une précision donnée \hfill {\normalsize\color{uimmred}[C04]}}
+
+Question inverse de la précédente : combien de pièces mesurer pour atteindre une précision fixée ? On part de la demi-largeur $E$ de l'intervalle de confiance et on résout en $n$.
+
+\subsection{Cas d'une moyenne}
+
+\begin{theoreme}[-- Taille d'échantillon pour une moyenne]
+Pour estimer une moyenne avec une demi-largeur d'intervalle au plus égale à $E$, au niveau $1-\alpha$ :
+\[
+E = t_\alpha\,\frac{\sigma}{\sqrt{n}} \;\Longrightarrow\; \boxed{n \geq \left(\frac{t_\alpha\,\sigma}{E}\right)^2.}
+\]
+On arrondit toujours à l'entier \textbf{supérieur}.
+\end{theoreme}
+
+\begin{exemple}[-- Dimensionner un contrôle de longueur]
+On veut estimer la longueur moyenne de tiges à $\pm 0{,}5$ mm près, au niveau $95\,\%$. L'écart-type du procédé est $\sigma = 2{,}0$ mm.
+\[
+n \geq \left(\frac{1{,}96 \times 2{,}0}{0{,}5}\right)^2 = 61{,}46 \;\Longrightarrow\; n = 62 \text{ tiges.}
+\]
+\end{exemple}
+
+\subsection{Cas d'une proportion}
+
+\begin{theoreme}[-- Taille d'échantillon pour une proportion]
+Pour estimer une proportion avec une demi-largeur au plus égale à $E$ :
+\[
+\boxed{n \geq \frac{t_\alpha^{\,2}\, f(1-f)}{E^2}.}
+\]
+Si aucune estimation préalable $f$ n'est disponible, on se place dans le \textbf{cas le plus défavorable} $f = 0{,}5$, qui maximise $f(1-f) = 0{,}25$ :
+\[
+n \geq \frac{t_\alpha^{\,2} \times 0{,}25}{E^2}.
+\]
+\end{theoreme}
+
+\begin{exemple}[-- Dimensionner un contrôle de taux de défauts]
+On veut estimer le taux de défauts à $\pm 3$ points ($E = 0{,}03$) près, au niveau $95\,\%$.
+\begin{itemize}
+  \item Sans information préalable (cas le plus défavorable) :
+  \[
+  n \geq \frac{1{,}96^2 \times 0{,}25}{0{,}03^2} = 1067{,}1 \;\Longrightarrow\; n = 1068.
+  \]
+  \item Si un contrôle antérieur donnait $f \approx 0{,}05$ :
+  \[
+  n \geq \frac{1{,}96^2 \times 0{,}05 \times 0{,}95}{0{,}03^2} = 202{,}7 \;\Longrightarrow\; n = 203.
+  \]
+\end{itemize}
+Une information préalable, même approximative, réduit fortement l'effort de contrôle.
+\end{exemple}
+
+\begin{remarque}
+La taille varie comme $1/E^2$ : pour deux fois plus de précision (diviser $E$ par $2$), il faut quatre fois plus de mesures. C'est la même contrainte en racine que pour $\sigma(\overline{X})$.
+\end{remarque}
+
+% ============================================================
+% SECTION 5 : PRINCIPE D'UN TEST
+% ============================================================
+\newpage
+\section{Principe d'un test d'hypothèses \hfill {\normalsize\color{uimmred}[S02]\,[C01]}}
+
+\subsection{L'idée : mettre une affirmation à l'épreuve des données}
+
+Un \textbf{test d'hypothèses} sert à décider, à partir d'un échantillon, si une affirmation sur la population est acceptable ou doit être rejetée. Exemple : « la machine est bien réglée sur $12{,}0$ N$\cdot$m ». On confronte cette affirmation aux mesures, en acceptant un risque de se tromper.
+
+\begin{definition}[-- Hypothèses nulle et alternative]
+On oppose deux hypothèses :
+\begin{itemize}
+  \item l'\textbf{hypothèse nulle} $H_0$ : l'affirmation de référence, le « statu quo » (le procédé est conforme, rien n'a changé) ;
+  \item l'\textbf{hypothèse alternative} $H_1$ : ce que l'on cherche à mettre en évidence (le procédé est déréglé, la moyenne a changé).
+\end{itemize}
+Le test ne traite pas $H_0$ et $H_1$ de façon symétrique : on ne rejette $H_0$ que si les données la contredisent nettement.
+\end{definition}
+
+\subsection{Statistique de test, région de rejet, règle de décision}
+
+\begin{definition}[-- Éléments d'un test]
+\begin{itemize}
+  \item La \textbf{statistique de test} est la grandeur calculée sur l'échantillon (souvent $\overline{X}$ ou $F$) dont on connaît la loi \emph{sous $H_0$}.
+  \item La \textbf{région de rejet} (ou région critique) est l'ensemble des valeurs de la statistique qui conduisent à rejeter $H_0$. Son complémentaire est la \textbf{région d'acceptation}.
+  \item La \textbf{règle de décision} énonce : « si la valeur observée tombe dans la région de rejet, on rejette $H_0$ ; sinon on ne la rejette pas. »
+\end{itemize}
+\end{definition}
+
+\begin{definition}[-- Risque de première espèce $\alpha$]
+Le \textbf{seuil de risque} $\alpha$ est la probabilité de rejeter $H_0$ \emph{alors qu'elle est vraie} (fausse alarme). C'est ce risque, fixé à l'avance (souvent $5\,\%$), qui détermine la taille de la région de rejet.
+\end{definition}
+
+\subsection{Tests bilatéral et unilatéraux}
+
+La forme de $H_1$ fixe la position de la région de rejet.
+
+\begin{theoreme}[-- Les trois formes de test]
+\renewcommand{\arraystretch}{1.4}
+\begin{center}
+\begin{tabular}{@{}l l l@{}}
+\toprule
+\textbf{Type de test} & \textbf{Hypothèse alternative $H_1$} & \textbf{Région de rejet} \\
+\midrule
+Bilatéral         & $\mu \neq \mu_0$ & deux côtés (queues gauche \emph{et} droite) \\
+Unilatéral à droite & $\mu > \mu_0$   & queue de droite \\
+Unilatéral à gauche & $\mu < \mu_0$   & queue de gauche \\
+\bottomrule
+\end{tabular}
+\end{center}
+Pour un test bilatéral au risque $\alpha$, chaque queue reçoit $\frac{\alpha}{2}$ ; pour un test unilatéral, la totalité de $\alpha$ est d'un seul côté.
+\end{theoreme}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=15cm, height=4.6cm, hide axis,
+  xmin=-4, xmax=4, ymin=0, ymax=0.46, samples=120,
+  xshift=0cm
+]
+% Bilatéral
+\end{axis}
+\end{tikzpicture}\\[-0.2cm]
+\begin{tabular}{@{}ccc@{}}
+% --- Bilatéral ---
+\begin{tikzpicture}
+\begin{axis}[width=5.5cm,height=3.6cm,axis lines=left,xtick={-1.96,1.96},
+  xticklabels={},ytick=\empty,xmin=-4,xmax=4,ymin=0,ymax=0.46,samples=100,
+  tick style={uimmgray},title={\footnotesize\color{uimmblue}Bilatéral},title style={yshift=-4pt}]
+\addplot[uimmred!35,draw=none,domain=-4:-1.96]{\gaussN{x}}\closedcycle;
+\addplot[uimmred!35,draw=none,domain=1.96:4]{\gaussN{x}}\closedcycle;
+\addplot[uimmblue,very thick,domain=-4:4]{\gaussN{x}};
+\node[uimmred,font=\tiny] at (axis cs:-2.9,0.07){$\frac{\alpha}{2}$};
+\node[uimmred,font=\tiny] at (axis cs:2.9,0.07){$\frac{\alpha}{2}$};
+\end{axis}
+\end{tikzpicture}
+&
+% --- Unilatéral droite ---
+\begin{tikzpicture}
+\begin{axis}[width=5.5cm,height=3.6cm,axis lines=left,ytick=\empty,xtick={1.6449},
+  xticklabels={},xmin=-4,xmax=4,ymin=0,ymax=0.46,samples=100,
+  tick style={uimmgray},title={\footnotesize\color{uimmblue}Unilatéral droite},title style={yshift=-4pt}]
+\addplot[uimmred!35,draw=none,domain=1.6449:4]{\gaussN{x}}\closedcycle;
+\addplot[uimmblue,very thick,domain=-4:4]{\gaussN{x}};
+\node[uimmred,font=\tiny] at (axis cs:2.7,0.07){$\alpha$};
+\end{axis}
+\end{tikzpicture}
+&
+% --- Unilatéral gauche ---
+\begin{tikzpicture}
+\begin{axis}[width=5.5cm,height=3.6cm,axis lines=left,ytick=\empty,xtick={-1.6449},
+  xticklabels={},xmin=-4,xmax=4,ymin=0,ymax=0.46,samples=100,
+  tick style={uimmgray},title={\footnotesize\color{uimmblue}Unilatéral gauche},title style={yshift=-4pt}]
+\addplot[uimmred!35,draw=none,domain=-4:-1.6449]{\gaussN{x}}\closedcycle;
+\addplot[uimmblue,very thick,domain=-4:4]{\gaussN{x}};
+\node[uimmred,font=\tiny] at (axis cs:-2.7,0.07){$\alpha$};
+\end{axis}
+\end{tikzpicture}
+\end{tabular}\\
+{\footnotesize\color{uimmgray} En rouge : la région de rejet de $H_0$. Sa position dépend de $H_1$, son aire vaut $\alpha$.}
+\end{center}
+
+\begin{methode}[-- Choisir la forme du test à partir de la question]
+\begin{itemize}
+  \item « Le procédé est-il déréglé, dans un sens ou dans l'autre ? » $\rightarrow$ \textbf{bilatéral} ($\neq$).
+  \item « La durée de vie a-t-elle augmenté ? », « la résistance dépasse-t-elle le minimum ? » $\rightarrow$ \textbf{unilatéral à droite} ($>$).
+  \item « La résistance est-elle trop faible ? », « la puissance a-t-elle baissé ? » $\rightarrow$ \textbf{unilatéral à gauche} ($<$).
+\end{itemize}
+\end{methode}
+
+\subsection{Démarche générale}
+
+\begin{methode}[-- Les six étapes d'un test]
+\begin{enumerate}
+  \item \textbf{Hypothèses.} Énoncer $H_0$ (égalité) et $H_1$ ($\neq$, $>$ ou $<$).
+  \item \textbf{Loi sous $H_0$.} Donner la loi de la statistique de test ($\overline{X}$ ou $F$) en supposant $H_0$ vraie.
+  \item \textbf{Risque.} Fixer $\alpha$ (souvent $5\,\%$).
+  \item \textbf{Région de rejet.} Déterminer les valeurs critiques à la calculatrice.
+  \item \textbf{Calcul.} Placer la valeur observée par rapport à la région de rejet.
+  \item \textbf{Décision et conclusion.} Rejeter ou non $H_0$, puis rédiger la conclusion \emph{en langage industriel}.
+\end{enumerate}
+\end{methode}
+
+\begin{remarque}[-- « Ne pas rejeter » n'est pas « prouver »]
+Ne pas rejeter $H_0$ ne démontre pas que $H_0$ est vraie : cela signifie seulement que les données ne la contredisent pas assez. On dit « on ne rejette pas $H_0$ », jamais « on accepte $H_0$ » au sens de prouvée.
+\end{remarque}
+
+% ============================================================
+% SECTION 6 : TEST SUR UNE MOYENNE
+% ============================================================
+\newpage
+\section{Test sur une moyenne \hfill {\normalsize\color{uimmred}[C02]}}
+
+On suppose l'écart-type $\sigma$ du procédé connu et la population normale (ou $n \geq 30$). Sous $H_0 : \mu = \mu_0$, la statistique $\overline{X}$ suit $\mathcal{N}\!\left(\mu_0\,;\,\frac{\sigma}{\sqrt{n}}\right)$.
+
+\subsection{Deux façons équivalentes de conclure}
+
+\begin{methode}[-- Intervalle d'acceptation ou statistique centrée réduite]
+\textbf{Méthode 1 (intervalle d'acceptation sur $\overline{x}$).} On construit l'intervalle
+\[
+\left[\mu_0 - t_\alpha\,\frac{\sigma}{\sqrt{n}}\;;\;\mu_0 + t_\alpha\,\frac{\sigma}{\sqrt{n}}\right]
+\]
+et on regarde si $\overline{x}$ y appartient.
+
+\textbf{Méthode 2 (statistique centrée réduite).} On calcule
+\[
+z_{\text{obs}} = \frac{\overline{x} - \mu_0}{\sigma/\sqrt{n}}
+\]
+et on la compare à la valeur critique ($t_\alpha$ en bilatéral, $t'_\alpha$ en unilatéral).
+
+Les deux méthodes donnent toujours la même conclusion.
+\end{methode}
+
+\subsection{Test bilatéral}
+
+\begin{exemple}[-- Réglage d'un couple de serrage (bilatéral)]
+Une visseuse automatique doit appliquer un couple moyen de $\mu_0 = 12{,}0$ N$\cdot$m. L'écart-type du procédé est connu : $\sigma = 0{,}4$ N$\cdot$m. On prélève $n = 25$ vissages, de moyenne $\overline{x} = 12{,}18$ N$\cdot$m. Le réglage est-il correct au risque $\alpha = 5\,\%$ ?
+\begin{enumerate}
+  \item $H_0 : \mu = 12{,}0$ \quad contre \quad $H_1 : \mu \neq 12{,}0$ (test bilatéral, on cherche tout déréglage).
+  \item Sous $H_0$ : $\overline{X} \sim \mathcal{N}\!\left(12{,}0\,;\,\frac{0{,}4}{\sqrt{25}}\right) = \mathcal{N}(12{,}0\,;\,0{,}08)$.
+  \item Intervalle d'acceptation à $95\,\%$ : $12{,}0 \pm 1{,}96 \times 0{,}08 = [\,11{,}843\;;\;12{,}157\,]$.
+  \item $\overline{x} = 12{,}18 \notin [\,11{,}843\;;\;12{,}157\,]$. De façon équivalente, $z_{\text{obs}} = \frac{12{,}18 - 12{,}0}{0{,}08} = 2{,}25 > 1{,}96$.
+  \item \textbf{Décision} : on rejette $H_0$. La visseuse est déréglée au risque $5\,\%$ ; une intervention de réglage est justifiée.
+\end{enumerate}
+\end{exemple}
+
+\subsection{Test unilatéral}
+
+\begin{exemple}[-- Durée de vie d'un outil coupant (unilatéral à droite)]
+La durée de vie moyenne historique d'un outil est $\mu_0 = 150$ min, avec $\sigma = 18$ min. Le service Méthodes teste un nouveau revêtement censé \textbf{augmenter} cette durée. Sur $n = 40$ essais, $\overline{x} = 156$ min. Au risque $\alpha = 5\,\%$, l'amélioration est-elle démontrée ?
+\begin{enumerate}
+  \item $H_0 : \mu = 150$ \quad contre \quad $H_1 : \mu > 150$ (unilatéral à droite : on veut prouver une hausse).
+  \item Sous $H_0$ : $\overline{X} \sim \mathcal{N}\!\left(150\,;\,\frac{18}{\sqrt{40}}\right) = \mathcal{N}(150\,;\,2{,}846)$.
+  \item Valeur critique (tout le risque à droite) : $K = 150 + 1{,}6449 \times 2{,}846 \approx 154{,}68$ min.
+  \item $\overline{x} = 156 > 154{,}68$. De façon équivalente, $z_{\text{obs}} = \frac{156 - 150}{2{,}846} = 2{,}11 > 1{,}6449$.
+  \item \textbf{Décision} : on rejette $H_0$. Au risque $5\,\%$, le nouveau revêtement augmente significativement la durée de vie de l'outil.
+\end{enumerate}
+\end{exemple}
+
+\begin{attention}[-- Le coefficient change avec la forme du test]
+Au risque $5\,\%$, on utilise $t_\alpha = 1{,}96$ en \textbf{bilatéral} (car $2{,}5\,\%$ par queue), mais $1{,}6449$ en \textbf{unilatéral} (tout le risque d'un seul côté). Se tromper de coefficient est l'erreur la plus fréquente.
+\end{attention}
+
+% ============================================================
+% SECTION 7 : TEST SUR UNE PROPORTION
+% ============================================================
+\newpage
+\section{Test sur une proportion \hfill {\normalsize\color{uimmred}[C02]}}
+
+Sous $H_0 : p = p_0$, la fréquence $F$ suit approximativement $\mathcal{N}\!\left(p_0\,;\,\sqrt{\frac{p_0(1-p_0)}{n}}\right)$ (mêmes conditions de validité que pour l'IC). On note bien que l'écart-type de référence se calcule avec $p_0$, la valeur \emph{testée}, et non avec $f$.
+
+\begin{exemple}[-- Contrôle de réception d'un taux de rebuts (unilatéral à droite)]
+Un fournisseur s'engage sur un taux de pièces défectueuses \emph{au plus} égal à $p_0 = 3\,\%$. À la réception, sur $n = 200$ composants, on relève $9$ défectueux. Peut-on refuser le lot au risque $\alpha = 5\,\%$ ?
+\begin{enumerate}
+  \item Fréquence observée : $f = \frac{9}{200} = 0{,}045$.
+  \item Hypothèses : $H_0 : p = 0{,}03$ contre $H_1 : p > 0{,}03$ (on veut prouver un dépassement).
+  \item Sous $H_0$ : $\sigma_F = \sqrt{\frac{0{,}03 \times 0{,}97}{200}} \approx 0{,}01206$.
+  \item Valeur critique à $5\,\%$ (queue de droite) : $c = 0{,}03 + 1{,}6449 \times 0{,}01206 \approx 0{,}0498$.
+  \item $f = 0{,}045 < c = 0{,}0498$. De façon équivalente, $z_{\text{obs}} = \frac{0{,}045 - 0{,}03}{0{,}01206} \approx 1{,}24 < 1{,}6449$.
+  \item \textbf{Décision} : on ne rejette pas $H_0$. Au risque $5\,\%$, les données ne permettent pas d'affirmer que le fournisseur dépasse son engagement de $3\,\%$. On ne peut pas refuser le lot sur cette seule base.
+\end{enumerate}
+\end{exemple}
+
+\begin{remarque}[-- Le résultat dépend du risque choisi]
+Ici $z_{\text{obs}} = 1{,}24$ : la fréquence observée est plus élevée que $3\,\%$, mais l'écart reste dans la fluctuation d'échantillonnage plausible. Avec un échantillon plus grand, ce même écart relatif pourrait devenir significatif.
+\end{remarque}
+
+% ============================================================
+% SECTION 8 : COMPARAISON DE DEUX ECHANTILLONS
+% ============================================================
+\newpage
+\section{Comparaison de deux échantillons \hfill {\normalsize\color{uimmred}[C02]}}
+
+On compare ici deux productions (deux machines, deux lignes, avant/après réglage). L'hypothèse nulle est toujours l'\textbf{égalité} : « il n'y a pas de différence ».
+
+\subsection{Comparaison de deux moyennes}
+
+\begin{theoreme}[-- Test de comparaison de deux moyennes]
+Deux échantillons indépendants de tailles $n_1$, $n_2$, de moyennes $\overline{x}_1$, $\overline{x}_2$, issus de populations d'écarts-types $\sigma_1$, $\sigma_2$. Sous $H_0 : \mu_1 = \mu_2$, la différence $\overline{X}_1 - \overline{X}_2$ suit une loi normale centrée d'écart-type
+\[
+\sigma_D = \sqrt{\frac{\sigma_1^{\,2}}{n_1} + \frac{\sigma_2^{\,2}}{n_2}}, \qquad\text{et}\qquad
+z_{\text{obs}} = \frac{\overline{x}_1 - \overline{x}_2}{\sigma_D}.
+\]
+\end{theoreme}
+
+\begin{exemple}[-- Deux machines produisent-elles la même cote ?]
+Deux tours produisent le même arbre. Machine A : $n_1 = 50$, $\overline{x}_1 = 250{,}4$ mm, $\sigma_1 = 1{,}2$ mm. Machine B : $n_2 = 40$, $\overline{x}_2 = 249{,}8$ mm, $\sigma_2 = 1{,}5$ mm. Y a-t-il une différence de réglage au risque $5\,\%$ (test bilatéral) ?
+\begin{enumerate}
+  \item $H_0 : \mu_1 = \mu_2$ contre $H_1 : \mu_1 \neq \mu_2$.
+  \item $\sigma_D = \sqrt{\frac{1{,}2^2}{50} + \frac{1{,}5^2}{40}} \approx 0{,}2916$ mm.
+  \item $z_{\text{obs}} = \frac{250{,}4 - 249{,}8}{0{,}2916} \approx 2{,}06$.
+  \item $|z_{\text{obs}}| = 2{,}06 > 1{,}96$ : on rejette $H_0$. Au risque $5\,\%$, les deux machines ne sont pas réglées à la même cote moyenne.
+\end{enumerate}
+\end{exemple}
+
+\subsection{Comparaison de deux proportions}
+
+\begin{theoreme}[-- Test de comparaison de deux proportions]
+Deux échantillons de tailles $n_1$, $n_2$, de fréquences $f_1$, $f_2$. Sous $H_0 : p_1 = p_2$, on estime la proportion commune par
+\[
+f = \frac{n_1 f_1 + n_2 f_2}{n_1 + n_2}, \qquad
+\sigma_D = \sqrt{f(1-f)\left(\frac{1}{n_1} + \frac{1}{n_2}\right)}, \qquad
+z_{\text{obs}} = \frac{f_1 - f_2}{\sigma_D}.
+\]
+\end{theoreme}
+
+\begin{exemple}[-- Deux lignes ont-elles le même taux de défauts ?]
+Ligne 1 : $n_1 = 300$, $15$ défauts, soit $f_1 = 0{,}05$. Ligne 2 : $n_2 = 250$, $8$ défauts, soit $f_2 = 0{,}032$. Différence significative au risque $5\,\%$ ?
+\begin{enumerate}
+  \item $H_0 : p_1 = p_2$ contre $H_1 : p_1 \neq p_2$.
+  \item Proportion commune : $f = \frac{15 + 8}{300 + 250} = \frac{23}{550} \approx 0{,}0418$.
+  \item $\sigma_D = \sqrt{0{,}0418 \times 0{,}9582 \times \left(\frac{1}{300} + \frac{1}{250}\right)} \approx 0{,}01714$.
+  \item $z_{\text{obs}} = \frac{0{,}05 - 0{,}032}{0{,}01714} \approx 1{,}05 < 1{,}96$ : on ne rejette pas $H_0$. Au risque $5\,\%$, rien ne prouve que les deux lignes diffèrent en taux de défauts.
+\end{enumerate}
+\end{exemple}
+
+% ============================================================
+% SECTION 9 : RISQUES ET PUISSANCE
+% ============================================================
+\newpage
+\section{Risques d'erreur et puissance d'un test \hfill {\normalsize\color{uimmred}[C03]}}
+
+\subsection{Deux erreurs possibles}
+
+Un test peut se tromper de deux façons opposées, selon la réalité inconnue.
+
+\begin{definition}[-- Erreurs de première et de seconde espèce]
+\begin{itemize}
+  \item \textbf{Erreur de première espèce} : rejeter $H_0$ alors qu'elle est vraie. Sa probabilité est $\alpha$ (\emph{fausse alarme}).
+  \item \textbf{Erreur de seconde espèce} : ne pas rejeter $H_0$ alors qu'elle est fausse. Sa probabilité est notée $\beta$ (\emph{non-détection}).
+\end{itemize}
+\end{definition}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{@{}c|c|c@{}}
+\multicolumn{1}{c}{} & \multicolumn{1}{c}{\textbf{$H_0$ vraie}} & \multicolumn{1}{c}{\textbf{$H_0$ fausse}} \\
+\cline{2-3}
+\textbf{On rejette $H_0$}       & \cellcolor{uimmred!15} Erreur 1\textsuperscript{re} espèce ($\alpha$) & \cellcolor{green!12} Décision correcte ($1-\beta$) \\
+\cline{2-3}
+\textbf{On ne rejette pas $H_0$} & \cellcolor{green!12} Décision correcte ($1-\alpha$) & \cellcolor{uimmred!15} Erreur 2\textsuperscript{e} espèce ($\beta$) \\
+\cline{2-3}
+\end{tabular}
+\end{center}
+
+\begin{definition}[-- Puissance d'un test]
+La \textbf{puissance} d'un test est la probabilité de rejeter $H_0$ quand elle est effectivement fausse :
+\[
+\text{puissance} = 1 - \beta.
+\]
+C'est la capacité du test à \textbf{détecter} un vrai déréglage. Un bon test a $\alpha$ petit \emph{et} une puissance élevée.
+\end{definition}
+
+\begin{attention}[-- Les deux risques sont antagonistes]
+À taille d'échantillon fixée, réduire $\alpha$ (déplacer la valeur critique pour rejeter moins souvent) \textbf{augmente} $\beta$, et inversement. Le seul moyen de réduire les deux à la fois est d'\textbf{augmenter $n$}. On calcule $\alpha$ sous $H_0$ ; on ne peut calculer $\beta$ que si l'on fixe une valeur précise sous $H_1$.
+\end{attention}
+
+\subsection{Calcul du risque $\beta$ et de la puissance}
+
+\begin{exemple}[-- Robot de soudure : détecter une baisse de puissance]
+Un robot de soudure par points doit garantir une résistance moyenne à l'arrachement de $\mu_0 = 400$ daN, avec $\sigma = 20$ daN. La maintenance soupçonne une baisse et teste $n = 16$ points. Hypothèses : $H_0 : \mu = 400$ contre $H_1 : \mu < 400$ (unilatéral à gauche), au risque $\alpha = 5\,\%$.
+
+\vspace{4pt}
+\textbf{1. Valeur critique (sous $H_0$).} $\overline{X} \sim \mathcal{N}\!\left(400\,;\,\frac{20}{\sqrt{16}}\right) = \mathcal{N}(400\,;\,5)$. On cherche $K$ tel que $P(\overline{X} < K) = 0{,}05$ :
+\[
+K = 400 - 1{,}6449 \times 5 \approx 391{,}78 \text{ daN.}
+\]
+Règle : on rejette $H_0$ si $\overline{x} < 391{,}78$.
+
+\vspace{4pt}
+\textbf{2. Risque $\beta$ pour une baisse réelle à $\mu_{\text{réel}} = 385$ daN.} Sous cette réalité, $\overline{X} \sim \mathcal{N}(385\,;\,5)$. Le risque de non-détection est la probabilité de \emph{ne pas} rejeter $H_0$, c'est-à-dire $\overline{X} \geq K$ :
+\[
+\beta = P(\overline{X} \geq 391{,}78 \mid \mu = 385) = P\!\left(Z \geq \frac{391{,}78 - 385}{5}\right) = P(Z \geq 1{,}356) \approx 0{,}0877.
+\]
+
+\vspace{4pt}
+\textbf{3. Puissance.} $1 - \beta \approx 0{,}9123$, soit environ $91\,\%$. Le test détecte une chute de $15$ daN avec une bonne probabilité : il est performant pour cet écart.
+\end{exemple}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=14cm, height=6.2cm,
+  xlabel={$\overline{x}$ (daN)}, ymin=0, ymax=0.095,
+  xmin=372, xmax=415, axis lines=left, tick style={uimmgray},
+  every axis label/.style={uimmblue}, ytick=\empty,
+  xtick={385,391.78,400}, xticklabels={$385$,$K\!\approx\!391{,}8$,$400$},
+  xticklabel style={font=\scriptsize}, samples=140,
+  legend style={draw=none, at={(0.02,0.98)}, anchor=north west, font=\scriptsize}
+]
+% loi sous H1 (mu=385)
+\addplot[uimmred, very thick, domain=372:405] {1/(5*sqrt(2*pi))*exp(-((x-385)^2)/(2*25))};
+\addlegendentry{sous $H_1$ ($\mu=385$)}
+% loi sous H0 (mu=400)
+\addplot[uimmblue, very thick, domain=384:415] {1/(5*sqrt(2*pi))*exp(-((x-400)^2)/(2*25))};
+\addlegendentry{sous $H_0$ ($\mu=400$)}
+% zone alpha (rejet, sous H0 : x<K)
+\addplot[uimmblue!35, draw=none, domain=384:391.78] {1/(5*sqrt(2*pi))*exp(-((x-400)^2)/(2*25))} \closedcycle;
+% zone beta (non-rejet, sous H1 : x>K)
+\addplot[uimmred!30, draw=none, domain=391.78:405] {1/(5*sqrt(2*pi))*exp(-((x-385)^2)/(2*25))} \closedcycle;
+\draw[dashed, uimmgray] (axis cs:391.78,0) -- (axis cs:391.78,0.09);
+\node[uimmblue, font=\scriptsize] at (axis cs:388,0.012) {$\alpha$};
+\node[uimmred!80!black, font=\scriptsize] at (axis cs:395,0.02) {$\beta$};
+\end{axis}
+\end{tikzpicture}\\
+{\footnotesize\color{uimmgray} $\alpha$ : aire sous $H_0$ à gauche de $K$. $\beta$ : aire sous $H_1$ à droite de $K$. Déplacer $K$ échange l'un contre l'autre.}
+\end{center}
+
+\begin{appliindus}[-- Choisir $n$ pour une détection garantie]
+Fixer seulement $\alpha$ ne suffit pas : un test trop peu puissant laisse passer de vrais défauts (risque $\beta$ élevé). En pratique, on dimensionne l'échantillon pour détecter un écart jugé critique (ici $15$ daN) avec une puissance visée (par exemple $90\,\%$). C'est le lien direct entre qualité, coût du contrôle et taille d'échantillon.
+\end{appliindus}
+
+% ============================================================
+% SECTION 10 : EXERCICES
+% ============================================================
+\newpage
+\section{Exercices d'application}
+
+\subsection*{Exercice 1 -- Estimation ponctuelle \hfill {\normalsize\color{uimmred}[C01]}}
+Sur $n = 40$ ressorts, on mesure une raideur moyenne $\overline{x} = 48{,}6$ N/mm et un écart-type corrigé $s = 2{,}1$ N/mm.
+\begin{enumerate}[label=\alph*)]
+  \item Donner une estimation ponctuelle de la raideur moyenne et de l'écart-type de la production.
+  \item Pourquoi la calculatrice propose-t-elle deux écarts-types ? Lequel retient-on ici et pourquoi ?
+\end{enumerate}
+
+\subsection*{Exercice 2 -- Intervalle de confiance d'une moyenne \hfill {\normalsize\color{uimmred}[C02]\,[C03]}}
+Une machine remplit des flacons. L'écart-type est connu : $\sigma = 1{,}8$ mL. Sur $n = 64$ flacons, $\overline{x} = 249{,}5$ mL.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer l'intervalle de confiance du volume moyen au niveau $95\,\%$.
+  \item Même question au niveau $99\,\%$. Comment évolue la largeur ? Expliquer.
+  \item Le volume cible est $250$ mL. Que peut-on en dire à partir de l'IC à $95\,\%$ ?
+\end{enumerate}
+
+\subsection*{Exercice 3 -- Intervalle de confiance d'une proportion \hfill {\normalsize\color{uimmred}[C02]\,[C03]}}
+Sur $n = 250$ soudures contrôlées, $22$ sont non conformes.
+\begin{enumerate}[label=\alph*)]
+  \item Vérifier les conditions de validité, puis déterminer l'IC de la proportion de non-conformes au niveau $95\,\%$.
+  \item L'objectif interne est « moins de $5\,\%$ de non-conformes ». L'IC permet-il de conclure ?
+\end{enumerate}
+
+\subsection*{Exercice 4 -- Taille d'échantillon \hfill {\normalsize\color{uimmred}[C04]}}
+\begin{enumerate}[label=\alph*)]
+  \item On veut estimer une longueur moyenne à $\pm 0{,}2$ mm près au niveau $95\,\%$, sachant $\sigma = 1{,}5$ mm. Combien de pièces mesurer ?
+  \item On veut estimer un taux de défauts à $\pm 2$ points près au niveau $95\,\%$, sans information préalable. Quelle taille d'échantillon ?
+\end{enumerate}
+
+\subsection*{Exercice 5 -- Test bilatéral sur une moyenne \hfill {\normalsize\color{uimmred}[C01]\,[C02]}}
+Une presse à injecter vise une épaisseur $\mu_0 = 2{,}5$ mm, avec $\sigma = 0{,}05$ mm. Sur $n = 30$ pièces, $\overline{x} = 2{,}52$ mm. Au risque $5\,\%$ :
+\begin{enumerate}[label=\alph*)]
+  \item Formuler $H_0$ et $H_1$ et justifier le caractère bilatéral.
+  \item Donner la loi de $\overline{X}$ sous $H_0$ et l'intervalle d'acceptation à $95\,\%$.
+  \item Énoncer la règle de décision et conclure : faut-il régler la presse ?
+\end{enumerate}
+
+\subsection*{Exercice 6 -- Test unilatéral sur une proportion \hfill {\normalsize\color{uimmred}[C01]\,[C02]}}
+Un procédé garantit au plus $2\,\%$ de pièces hors cote. Un audit sur $n = 400$ pièces en trouve $12$ hors cote.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $f$, puis poser les hypothèses pour démontrer un éventuel dépassement.
+  \item Déterminer la valeur critique au risque $5\,\%$ et conclure.
+\end{enumerate}
+
+\subsection*{Exercice 7 -- Comparaison de deux moyennes \hfill {\normalsize\color{uimmred}[C02]}}
+Avant réglage : $n_1 = 36$, $\overline{x}_1 = 100{,}5$ mm, $\sigma_1 = 0{,}8$ mm. Après réglage : $n_2 = 36$, $\overline{x}_2 = 100{,}1$ mm, $\sigma_2 = 0{,}7$ mm. Le réglage a-t-il modifié la cote moyenne au risque $5\,\%$ (test bilatéral) ?
+
+\subsection*{Exercice 8 -- Risques $\alpha$, $\beta$ et puissance \hfill {\normalsize\color{uimmred}[C03]}}
+Un procédé vise $\mu_0 = 500$ g, avec $\sigma = 8$ g. On teste $n = 25$ unités, $H_0 : \mu = 500$ contre $H_1 : \mu < 500$, au risque $\alpha = 5\,\%$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer la valeur critique $K$ telle que $P(\overline{X} < K) = 0{,}05$ sous $H_0$.
+  \item La moyenne réelle est en fait $\mu_{\text{réel}} = 495$ g. Calculer $\beta$, puis la puissance du test.
+  \item Comment améliorer la puissance sans augmenter $\alpha$ ?
+\end{enumerate}
+
+% ============================================================
+% FORMULAIRE
+% ============================================================
+\newpage
+\section*{Formulaire -- À retenir}
+\addcontentsline{toc}{section}{Formulaire}
+
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, title={\textbf{Formulaire de statistique inférentielle}}, fonttitle=\large\bfseries\sffamily, coltitle=white, boxrule=1.5pt, arc=5pt]
+
+\renewcommand{\arraystretch}{1.8}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}p{4.6cm} p{10.6cm}@{}}
+Loi de la moyenne & $\overline{X} \sim \mathcal{N}\!\left(\mu\,;\,\dfrac{\sigma}{\sqrt{n}}\right)$ \\
+Loi de la fréquence & $F \sim \mathcal{N}\!\left(p\,;\,\sqrt{\dfrac{p(1-p)}{n}}\right)$ \\
+Écart-type estimé & $s = \sqrt{\dfrac{1}{n-1}\sum (x_i - \overline{x})^2}$ \quad (touche $s_x$) \\
+IC d'une moyenne & $\left[\overline{x} \pm t_\alpha\,\dfrac{\sigma}{\sqrt{n}}\right]$ \quad ($\sigma$ inconnu, $n\geq 30$ : remplacer par $s$) \\
+IC d'une proportion & $\left[f \pm t_\alpha\,\sqrt{\dfrac{f(1-f)}{n}}\right]$ \\
+Coefficients $t_\alpha$ & $90\,\%: 1{,}6449$ \; ; \; $95\,\%: 1{,}96$ \; ; \; $99\,\%: 2{,}5758$ \\
+Taille (moyenne) & $n \geq \left(\dfrac{t_\alpha\,\sigma}{E}\right)^2$ \\
+Taille (proportion) & $n \geq \dfrac{t_\alpha^{\,2}\,f(1-f)}{E^2}$ \quad (pire cas $f(1-f)=0{,}25$) \\
+Statistique de test & $z_{\text{obs}} = \dfrac{\overline{x} - \mu_0}{\sigma/\sqrt{n}}$ \quad ou \quad $z_{\text{obs}} = \dfrac{f - p_0}{\sqrt{p_0(1-p_0)/n}}$ \\
+Valeur critique & bilatéral : $t_\alpha$ \; ; \; unilatéral : $t'_\alpha$ (au risque $5\,\%$ : $1{,}96$ / $1{,}6449$) \\
+Deux moyennes & $\sigma_D = \sqrt{\dfrac{\sigma_1^2}{n_1}+\dfrac{\sigma_2^2}{n_2}}$, \; $z_{\text{obs}}=\dfrac{\overline{x}_1-\overline{x}_2}{\sigma_D}$ \\
+Deux proportions & $f=\dfrac{n_1 f_1+n_2 f_2}{n_1+n_2}$, \; $\sigma_D=\sqrt{f(1-f)\!\left(\tfrac{1}{n_1}+\tfrac{1}{n_2}\right)}$ \\
+Risques & $\alpha$ : rejeter $H_0$ vraie \; ; \; $\beta$ : ne pas rejeter $H_0$ fausse \; ; \; puissance $= 1-\beta$ \\
+\end{tabular}
+
+\vspace{8pt}
+\textbf{Calculatrice.} \; Coefficient : $t_\alpha = \texttt{FracNormale}(1-\frac{\alpha}{2})$. \; Seuils : \texttt{FracNormale} / \texttt{InvN}. \; Probabilités : \texttt{normalFRép} / \texttt{Ncd}. \; Écart-type corrigé : touche $s_x$.
+\end{tcolorbox}
+
+\vfill
+\begin{center}
+\color{uimmgray}\small
+\textit{Document réalisé par le Pôle Formation UIMM -- Centre-Val de Loire}\\
+\textit{La Fabrique de l'Avenir -- S. JAUBERT}
+\end{center}
+
+\end{document}

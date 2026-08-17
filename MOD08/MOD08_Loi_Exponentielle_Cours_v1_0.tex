@@ -1,0 +1,575 @@
+% ============================================================
+% Cours : La Loi Exponentielle
+% Pôle Formation UIMM - CVDL
+% BTS Industriel - Mathématiques
+% Auteur : S. JAUBERT
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+
+% ----- Encodage et langue -----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ----- Polices sans-serif -----
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% ----- Mise en page -----
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+
+% ----- Mathématiques -----
+\usepackage{amsmath,amssymb,amsfonts}
+
+% ----- Graphiques et couleurs -----
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathmorphing, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ----- Boîtes colorées -----
+\usepackage[most]{tcolorbox}
+
+% ----- Code / algorithmes -----
+\usepackage{listings}
+
+% ----- En-tête et pied de page -----
+\usepackage{fancyhdr}
+
+% ----- Hyperliens -----
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+% ----- Enumération personnalisée -----
+\usepackage{enumitem}
+
+% ----- Tableaux -----
+\usepackage{booktabs,array}
+
+% ============================================================
+% CHARTE GRAPHIQUE UIMM
+% ============================================================
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+
+% ----- Styles des sections -----
+\usepackage{titlesec}
+\titleformat{\section}
+  {\LARGE\bfseries\color{uimmblue}}
+  {\thesection.}{0.5em}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.5pt]}]
+\titleformat{\subsection}
+  {\Large\bfseries\color{uimmblue}}
+  {\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}
+  {\large\bfseries\color{uimmblue!80!black}}
+  {\thesubsubsection.}{0.5em}{}
+
+% ----- Puces personnalisées -----
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+\setlist[itemize,2]{label={\color{uimmblue}--}}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+
+% ----- Style listings -----
+\lstdefinestyle{uimmpython}{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{uimmblue}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{uimmred},
+  numbers=left,
+  numberstyle=\tiny\color{uimmgray},
+  numbersep=8pt,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{uimmblue},
+  backgroundcolor=\color{uimmlightgray},
+  language=Python
+}
+
+% ============================================================
+% BOÎTES TCOLORBOX
+% ============================================================
+\newtcolorbox{definition}[1][]{%
+  colback=uimmlightblue, colframe=uimmblue,
+  fonttitle=\bfseries\color{white}, title={\textsf{Définition}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{theoreme}[1][]{%
+  colback=uimmlightblue!50, colframe=uimmblue!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Théorème / Propriété}~#1},
+  coltitle=white, boxrule=1.2pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{methode}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Méthode}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{exemple}[1][]{%
+  colback=orange!5, colframe=orange!70!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Exemple}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{remarque}[1][]{%
+  colback=uimmlightgray, colframe=uimmgray,
+  fonttitle=\bfseries, title={\textsf{Remarque}~#1},
+  boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{appliindus}[1][]{%
+  colback=uimmred!5, colframe=uimmred!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\triangleright$ Application industrielle}~#1},
+  coltitle=white, boxrule=1.2pt, arc=4pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{calculatrice}[1][]{%
+  colback=uimmblue!3, colframe=uimmblue!70!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\square$ À la calculatrice}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+% ============================================================
+% EN-TÊTE / PIED DE PAGE
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{%
+  \begin{minipage}{8cm}\centering
+    {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+    {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}
+  \end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08}}}
+\fancyfoot[C]{%
+  {\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+% ============================================================
+% PAGE DE TITRE
+% ============================================================
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[uimmblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  \node[anchor=north west] at ([xshift=2cm, yshift=-0.5cm]current page.north west)
+    {\includegraphics[height=3cm]{logo_uimm_placeholder.jpg}};
+  \node[anchor=north east, white, font=\large\bfseries] at ([xshift=-2cm, yshift=-1.5cm]current page.north east)
+    {Pôle Formation UIMM - CVDL};
+  \node[anchor=north east, white, font=\small, align=right] at ([xshift=-2cm, yshift=-2.2cm]current page.north east)
+    {BTS Industriel -- Mathématiques\\[2pt]S. Jaubert};
+  \fill[uimmred] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.4cm]current page.north east);
+  \node[anchor=center, text width=14cm, align=center] at ([yshift=-1cm]current page.center) {
+    {\fontsize{28}{34}\selectfont\bfseries\color{uimmblue} La Loi Exponentielle}\\[20pt]
+    {\Large\color{uimmgray} Module 08 -- Calcul des probabilités}\\[12pt]
+    {\large\color{uimmgray}\textit{Temps continu, lois de survie et introduction à la fiabilité}}
+  };
+  % Courbe exponentielle décroissante décorative
+  \node[anchor=center] at ([yshift=-5.2cm]current page.center) {
+    \begin{tikzpicture}
+      \begin{axis}[hide axis, width=9cm, height=4cm, domain=0:5, samples=80,
+        xmin=0, xmax=5.2, ymin=0, ymax=1.05]
+        \addplot[uimmred!25, fill=uimmred!12, draw=none, domain=0:5] {exp(-x)} \closedcycle;
+        \addplot[uimmblue, very thick, domain=0:5] {exp(-x)};
+      \end{axis}
+    \end{tikzpicture}};
+  \fill[uimmblue] ([yshift=1.5cm]current page.south west) rectangle (current page.south east);
+  \node[anchor=center, white, font=\small] at ([yshift=0.75cm]current page.south) {
+    Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ La Fabrique de l'Avenir};
+\end{tikzpicture}
+\end{titlepage}
+
+% ============================================================
+% FICHE MODULE
+% ============================================================
+\thispagestyle{fancy}
+\vspace*{0.5cm}
+\begin{center}
+{\LARGE\bfseries\color{uimmblue} MOD08 -- La Loi Exponentielle}\\[6pt]
+{\large\color{uimmgray} Support de cours}\\[4pt]
+{\normalsize\color{uimmgray} Auteur : S. JAUBERT \hspace{1cm} Formation : BTS Industriel (ATI / CPRP / CRSA)}
+\end{center}
+\vspace{0.8cm}
+
+\begin{tcolorbox}[colback=uimmlightblue!30, colframe=uimmblue,
+  title={\textbf{\textsf{Fiche du Module}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1.2pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l @{\hspace{12pt}} p{12cm}@{}}
+Bloc / Période : & Semestres 1 \& 2 \\
+Module :         & {[MOD08]} Calcul des probabilités \\
+Séquence :       & {[S02]} Variables aléatoires et lois usuelles \\
+Thème :          & Processus aléatoires à temps continu, loi exponentielle, loi de survie et introduction à la fiabilité \\
+\end{tabular}
+\end{tcolorbox}
+\vspace{0.4cm}
+
+\begin{tcolorbox}[colback=white, colframe=uimmblue!80!black,
+  title={\textbf{\textsf{Capacités attendues (programme)}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+
+\textbf{\color{uimmblue} Loi exponentielle}
+\begin{itemize}[leftmargin=1.2cm]
+  \item Représenter graphiquement la loi exponentielle
+  \item Calculer une probabilité dans le cadre de la loi exponentielle
+  \item Interpréter l'espérance et l'écart-type d'une variable suivant une loi exponentielle
+  \item Exploiter une simulation dans le cadre de la loi exponentielle
+\end{itemize}
+\end{tcolorbox}
+\vspace{0.3cm}
+
+\begin{remarque}[-- Positionnement du cours]
+Ce support prolonge les lois à densité (loi normale) et sert de \textbf{pont vers le module MOD11 Fiabilité}. On y étudie la loi d'un \textbf{temps d'attente} continu : durée avant la première panne, temps entre deux événements. C'est le pendant continu de la loi de Poisson. Prérequis : lois à densité et notion de densité (loi normale), fonction exponentielle (MOD04). Les probabilités sont arrondies à $10^{-4}$.
+\end{remarque}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================================
+% SECTION 1 : PROCESSUS A TEMPS CONTINU
+% ============================================================
+\section{Processus aléatoires à temps continu \hfill {\normalsize\color{uimmred}[S02]}}
+
+\subsection{Compter les événements, ou mesurer le temps qui les sépare}
+
+Sur un équipement, les pannes surviennent à des instants imprévisibles. On peut regarder la situation de deux façons complémentaires :
+\begin{itemize}
+  \item \textbf{compter} le nombre de pannes sur une durée fixée : c'est une variable \textbf{discrète}, décrite par la loi de \textbf{Poisson} ;
+  \item \textbf{mesurer} le temps d'attente jusqu'à la prochaine panne : c'est une variable \textbf{continue}, décrite par la loi \textbf{exponentielle}.
+\end{itemize}
+
+\begin{definition}[-- Temps d'attente]
+Le \textbf{temps d'attente} $T$ est la durée qui s'écoule avant la survenue d'un événement (première panne, première défaillance). C'est une variable aléatoire \textbf{continue positive} : $T \geq 0$.
+\end{definition}
+
+\begin{theoreme}[-- Lien Poisson $\leftrightarrow$ exponentielle]
+Si le nombre d'événements sur une durée donnée suit une loi de \textbf{Poisson} de moyenne $\lambda$ par unité de temps, alors le \textbf{temps d'attente} entre deux événements suit une loi \textbf{exponentielle} de paramètre $\lambda$. Le paramètre $\lambda$ représente le \textbf{taux d'apparition} des événements (nombre moyen par unité de temps).
+\end{theoreme}
+
+\begin{remarque}
+Même paramètre $\lambda$, deux points de vue. Poisson répond à « combien d'événements en un mois ? », l'exponentielle à « combien de temps avant le prochain ? ». C'est la clé du passage du discret au continu.
+\end{remarque}
+
+% ============================================================
+% SECTION 2 : LOI EXPONENTIELLE
+% ============================================================
+\newpage
+\section{La loi exponentielle \hfill {\normalsize\color{uimmred}[C04]}}
+
+\subsection{Définition}
+
+\begin{definition}
+Une variable aléatoire $T$ suit la \textbf{loi exponentielle} de paramètre $\lambda > 0$, notée $\mathcal{E}(\lambda)$, si sa densité de probabilité est :
+\[
+f(t) = \begin{cases} \lambda\, e^{-\lambda t} & \text{si } t \geq 0, \\[2pt] 0 & \text{si } t < 0. \end{cases}
+\]
+Le paramètre $\lambda$ est le \textbf{taux} (par unité de temps) ; $t$ est un temps.
+\end{definition}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=12cm, height=5.8cm,
+  xlabel={$t$}, ylabel={$f(t)$},
+  xmin=-0.3, xmax=5, ymin=0, ymax=1.1,
+  axis lines=left, tick style={uimmgray},
+  every axis label/.style={uimmblue},
+  ytick={0,1}, yticklabels={$0$,$\lambda$}, xtick={0}, samples=120
+]
+\addplot[uimmblue!40, fill=uimmlightblue, draw=none, domain=0:5] {exp(-x)} \closedcycle;
+\addplot[uimmblue, very thick, domain=0:5] {exp(-x)};
+\addplot[uimmblue, very thick] coordinates {(-0.3,0)(0,0)};
+\node[uimmred] at (axis cs:2.4,0.35) {\small aire totale $=1$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{remarque}
+La densité \textbf{décroît} depuis $\lambda$ en $t=0$ : les temps d'attente courts sont les plus probables, les longs de plus en plus rares. La courbe ne franchit jamais l'axe : $T$ peut être arbitrairement grand, mais avec une probabilité qui s'effondre.
+\end{remarque}
+
+\subsection{Fonction de répartition et fonction de survie \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{theoreme}[-- Probabilités de base]
+Pour $T \sim \mathcal{E}(\lambda)$ et $t \geq 0$ :
+\[
+\boxed{P(T \leq t) = F(t) = 1 - e^{-\lambda t}} \qquad\text{et}\qquad \boxed{P(T > t) = R(t) = e^{-\lambda t}}.
+\]
+$F$ est la \textbf{fonction de répartition} (probabilité que l'événement soit déjà arrivé avant $t$) ; $R = 1 - F$ est la \textbf{fonction de survie} (probabilité de « tenir » au-delà de $t$).
+\end{theoreme}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=12cm, height=5.6cm,
+  xlabel={$t$}, xmin=0, xmax=5, ymin=0, ymax=1.08,
+  axis lines=left, tick style={uimmgray}, every axis label/.style={uimmblue},
+  ytick={0,0.5,1}, samples=120,
+  legend style={draw=none, at={(0.98,0.9)}, anchor=east, font=\small}
+]
+\addplot[uimmblue, very thick, domain=0:5] {exp(-x)};
+\addlegendentry{$R(t)=e^{-\lambda t}$ (survie)}
+\addplot[uimmred, very thick, domain=0:5] {1-exp(-x)};
+\addlegendentry{$F(t)=1-e^{-\lambda t}$ (défaillance)}
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+\begin{theoreme}[-- Probabilité d'un intervalle]
+Pour $0 \leq a \leq b$ :
+\[
+P(a \leq T \leq b) = F(b) - F(a) = e^{-\lambda a} - e^{-\lambda b}.
+\]
+\end{theoreme}
+
+\begin{calculatrice}[-- Un simple calcul avec la touche $e^{x}$]
+La loi exponentielle n'a \textbf{pas de menu dédié} sur les calculatrices (contrairement à la loi normale ou binomiale) : les probabilités se calculent \textbf{directement} avec la formule et la touche \texttt{$e^x$}.
+\begin{itemize}
+  \item $P(T > t) = e^{-\lambda t}$ : saisir \texttt{$e\hat{\ }(-\lambda \times t)$} ;
+  \item $P(T \leq t) = 1 - e^{-\lambda t}$.
+\end{itemize}
+\end{calculatrice}
+
+\begin{exemple}[-- Composant électronique]
+La durée de vie $T$ (en heures) d'un composant suit $\mathcal{E}(\lambda)$ avec $\lambda = 0{,}0002$ h$^{-1}$.
+\begin{itemize}
+  \item $P(T > 1000) = e^{-0{,}0002 \times 1000} = e^{-0{,}2} \approx 0{,}8187$ ;
+  \item $P(T \leq 1000) = 1 - 0{,}8187 = 0{,}1813$ ;
+  \item $P(2000 \leq T \leq 4000) = e^{-0{,}4} - e^{-0{,}8} \approx 0{,}6703 - 0{,}4493 = 0{,}2210$.
+\end{itemize}
+\end{exemple}
+
+% ============================================================
+% SECTION 3 : ESPERANCE
+% ============================================================
+\newpage
+\section{Espérance, variance, écart-type \hfill {\normalsize\color{uimmred}[C05]}}
+
+\begin{theoreme}
+Pour $T \sim \mathcal{E}(\lambda)$ :
+\[
+E(T) = \frac{1}{\lambda}, \qquad V(T) = \frac{1}{\lambda^{2}}, \qquad \sigma(T) = \frac{1}{\lambda}.
+\]
+\end{theoreme}
+
+\begin{remarque}[-- Deux faits marquants]
+D'abord, l'espérance est l'\textbf{inverse du taux} : plus les événements sont fréquents ($\lambda$ grand), plus le temps d'attente moyen est court. Ensuite, \textbf{espérance et écart-type sont égaux} ($1/\lambda$) : la loi exponentielle est très dispersée, signe de temps d'attente peu réguliers.
+\end{remarque}
+
+\begin{exemple}[-- Temps d'attente moyen]
+Pour le composant précédent ($\lambda = 0{,}0002$ h$^{-1}$) :
+\[
+E(T) = \frac{1}{0{,}0002} = 5000 \text{ h}.
+\]
+La durée de vie moyenne est de $5000$ heures, avec un écart-type également de $5000$ heures.
+\end{exemple}
+
+\begin{appliindus}[-- La MTBF]
+En fiabilité, $E(T) = \dfrac{1}{\lambda}$ porte un nom : la \textbf{MTBF} (\textit{Mean Time Between Failures}), c'est-à-dire le temps moyen de bon fonctionnement. Un taux de défaillance $\lambda = 0{,}0002$ h$^{-1}$ correspond à une MTBF de $5000$ heures. C'est l'indicateur central du dimensionnement de la maintenance.
+\end{appliindus}
+
+% ============================================================
+% SECTION 4 : ABSENCE DE MEMOIRE
+% ============================================================
+\newpage
+\section{Durée de vie sans vieillissement \hfill {\normalsize\color{uimmred}[C05]}}
+
+\subsection{La propriété d'absence de mémoire}
+
+\begin{theoreme}[-- Absence de mémoire]
+Pour $T \sim \mathcal{E}(\lambda)$ et pour tous $s, t \geq 0$ :
+\[
+\boxed{P(T > t + s \mid T > t) = P(T > s)}.
+\]
+Autrement dit : sachant que le composant a déjà fonctionné $t$ heures, la probabilité qu'il tienne $s$ heures de plus est la \textbf{même} que celle d'un composant neuf.
+\end{theoreme}
+
+\begin{remarque}[-- « Sans vieillissement »]
+Le composant ne « garde pas la mémoire » de son âge : il ne s'use pas. Ce modèle décrit bien les défaillances \textbf{accidentelles} (pannes dues au hasard, court-circuit, choc), mais pas l'\textbf{usure} mécanique progressive, qui, elle, dépend de l'âge. C'est pourquoi la loi exponentielle correspond à la partie centrale de la « courbe en baignoire » de la fiabilité, à taux de défaillance constant.
+\end{remarque}
+
+\begin{exemple}[-- Vérification sur un cas]
+Composant $\lambda = 0{,}0002$ h$^{-1}$, déjà en service depuis $2000$ h. Probabilité qu'il atteigne $3000$ h :
+\[
+P(T > 3000 \mid T > 2000) = P(T > 1000) = e^{-0{,}2} \approx 0{,}8187.
+\]
+La même valeur que pour un composant neuf devant tenir $1000$ h. L'histoire passée ne change rien.
+\end{exemple}
+
+\subsection{Taux de défaillance constant}
+
+\begin{theoreme}
+Pour une durée de vie exponentielle, le \textbf{taux de défaillance} (probabilité de tomber en panne dans l'instant qui suit, sachant que l'on fonctionne encore) est \textbf{constant} et vaut exactement $\lambda$. Réciproquement, un taux de défaillance constant caractérise la loi exponentielle.
+\end{theoreme}
+
+% ============================================================
+% SECTION 5 : APPLICATION FIABILITE
+% ============================================================
+\newpage
+\section{Application aux lois de survie et à la fiabilité \hfill {\normalsize\color{uimmred}[C05]}}
+
+\subsection{Vocabulaire de la fiabilité}
+
+\begin{definition}
+Pour un équipement dont la durée de vie $T$ suit $\mathcal{E}(\lambda)$ :
+\begin{itemize}
+  \item $R(t) = P(T > t) = e^{-\lambda t}$ : \textbf{fiabilité} (probabilité de fonctionner encore à l'instant $t$) ;
+  \item $F(t) = P(T \leq t) = 1 - e^{-\lambda t}$ : \textbf{défaillance} (probabilité d'être déjà tombé en panne) ;
+  \item $\lambda$ : \textbf{taux de défaillance} (constant) ;
+  \item $\text{MTBF} = E(T) = \dfrac{1}{\lambda}$ : temps moyen de bon fonctionnement.
+\end{itemize}
+\end{definition}
+
+\begin{appliindus}[-- Choix d'une périodicité de maintenance]
+On veut garantir une fiabilité minimale $R(t) \geq 0{,}90$ sur un composant de taux $\lambda = 0{,}0002$ h$^{-1}$. On cherche la durée $t$ telle que $e^{-\lambda t} = 0{,}90$ :
+\[
+-\lambda t = \ln(0{,}90) \;\Rightarrow\; t = \frac{-\ln(0{,}90)}{0{,}0002} \approx 527 \text{ h}.
+\]
+Au-delà de $527$ h de fonctionnement, la fiabilité passe sous $90\,\%$ : c'est un repère pour fixer la périodicité de remplacement préventif.
+\end{appliindus}
+
+\begin{exemple}[-- Lien avec la loi de Poisson]
+Une machine tombe en panne en moyenne $2$ fois par an ; le nombre de pannes annuelles suit $\mathcal{P}(2)$. Le \textbf{temps d'attente} entre deux pannes suit alors $\mathcal{E}(2)$ (années), de moyenne $1/2 = 0{,}5$ an. La probabilité de tenir une année entière sans panne est
+\[
+P(T > 1) = e^{-2} \approx 0{,}1353,
+\]
+ce qui coïncide avec $P(X = 0)$ pour $X \sim \mathcal{P}(2)$ : les deux points de vue se rejoignent.
+\end{exemple}
+
+\begin{remarque}[-- Ouverture vers le module MOD11]
+La loi exponentielle est la loi de survie \textbf{la plus simple}, à taux de défaillance constant. Lorsque le taux évolue avec l'âge (rodage puis usure, la « courbe en baignoire »), on lui préfère la loi de \textbf{Weibull}, plus générale, étudiée dans le module Fiabilité. On y verra aussi la fiabilité des systèmes en série et en parallèle.
+\end{remarque}
+
+% ============================================================
+% SECTION 6 : SIMULATION
+% ============================================================
+\newpage
+\section{Simuler une loi exponentielle \hfill {\normalsize\color{uimmred}[simulation]}}
+
+Le programme demande de savoir simuler la loi exponentielle. On l'obtient à partir d'un simple tirage \textbf{uniforme} sur $[0\,;1]$ (le générateur aléatoire de base).
+
+\begin{methode}[-- De l'uniforme à l'exponentielle]
+Si $U$ suit la loi uniforme sur $[0\,;1]$, alors
+\[
+T = \frac{-\ln(1 - U)}{\lambda}
+\]
+suit la loi exponentielle $\mathcal{E}(\lambda)$. Cette formule inverse la relation $U = F(T) = 1 - e^{-\lambda T}$.
+\end{methode}
+
+\begin{lstlisting}[style=uimmpython, caption={Simulation de durées de vie exponentielles et MTBF empirique}]
+import random
+import math
+
+lam = 0.0002          # taux de defaillance (1/h)
+N = 10000             # nombre de composants simules
+durees = [-math.log(1 - random.random()) / lam for _ in range(N)]
+
+mtbf_empirique = sum(durees) / N
+print("MTBF theorique :", 1 / lam)
+print("MTBF empirique :", round(mtbf_empirique, 1))
+\end{lstlisting}
+
+\begin{remarque}
+En augmentant $N$, la MTBF empirique se rapproche de la valeur théorique $1/\lambda = 5000$ h. La simulation permet d'estimer des durées de vie et de tester des politiques de maintenance avant de les appliquer.
+\end{remarque}
+
+% ============================================================
+% SECTION 7 : EXERCICES
+% ============================================================
+\newpage
+\section{Exercices d'application}
+
+\subsection*{Exercice 1 -- Calculs de base \hfill {\normalsize\color{uimmred}[C04]}}
+La durée de vie $T$ (en heures) d'un relais suit $\mathcal{E}(\lambda)$ avec $\lambda = 0{,}0005$ h$^{-1}$.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la fonction de survie $R(t)$.
+  \item Calculer $P(T > 2000)$ et $P(T \leq 1000)$.
+  \item Calculer $P(1000 \leq T \leq 3000)$.
+\end{enumerate}
+
+\subsection*{Exercice 2 -- MTBF \hfill {\normalsize\color{uimmred}[C05]}}
+Un moteur a une durée de vie exponentielle de taux $\lambda = 0{,}00025$ h$^{-1}$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la MTBF.
+  \item Calculer la probabilité que le moteur dépasse sa MTBF.
+  \item Commenter : est-ce surprenant que cette probabilité ne vaille pas $0{,}5$ ?
+\end{enumerate}
+
+\subsection*{Exercice 3 -- Absence de mémoire \hfill {\normalsize\color{uimmred}[C05]}}
+La durée de vie $T$ d'un capteur suit $\mathcal{E}(0{,}0004)$ (en heures). Le capteur fonctionne déjà depuis $3000$ h.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité qu'il tienne encore au moins $1000$ h.
+  \item Comparer avec la probabilité qu'un capteur neuf tienne $1000$ h. Conclure.
+\end{enumerate}
+
+\subsection*{Exercice 4 -- Périodicité de maintenance \hfill {\normalsize\color{uimmred}[C04]}}
+Un composant a un taux de défaillance $\lambda = 0{,}0003$ h$^{-1}$.
+\begin{enumerate}[label=\alph*)]
+  \item Exprimer sa fiabilité $R(t)$.
+  \item Déterminer la durée $t$ au bout de laquelle la fiabilité tombe à $0{,}95$.
+  \item Ce seuil sert de base à un remplacement préventif : commenter.
+\end{enumerate}
+
+\subsection*{Exercice 5 -- Lien avec Poisson \hfill {\normalsize\color{uimmred}[C04]}}
+Un capteur de comptage détecte en moyenne $3$ pièces par minute, selon un processus de Poisson.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la loi du temps d'attente $T$ (en minutes) entre deux pièces, et sa moyenne.
+  \item Calculer la probabilité d'attendre plus de $30$ secondes entre deux pièces.
+\end{enumerate}
+
+\subsection*{Exercice 6 -- Synthèse : fiabilité d'un composant \hfill {\normalsize\color{uimmred}[C04]\,[C05]}}
+La durée de vie $T$ (en heures) d'une carte électronique suit $\mathcal{E}(\lambda)$ de MTBF $8000$ h.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer le taux de défaillance $\lambda$.
+  \item Calculer la fiabilité à $t = 4000$ h, puis à $t = 8000$ h.
+  \item Déterminer la durée de garantie $t_0$ telle que $95\,\%$ des cartes fonctionnent encore.
+  \item La carte est garantie $500$ h. Quelle est la probabilité qu'elle tombe en panne pendant la garantie ?
+\end{enumerate}
+
+% ============================================================
+% FORMULAIRE
+% ============================================================
+\newpage
+\section*{Formulaire -- À retenir}
+\addcontentsline{toc}{section}{Formulaire}
+
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, title={\textbf{Formulaire de la loi exponentielle}}, fonttitle=\large\bfseries\sffamily, coltitle=white, boxrule=1.5pt, arc=5pt]
+
+\renewcommand{\arraystretch}{1.8}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}p{4.6cm} p{10.6cm}@{}}
+Densité ($t \geq 0$) & $f(t) = \lambda\, e^{-\lambda t}$ \\
+Répartition (défaillance) & $F(t) = P(T \leq t) = 1 - e^{-\lambda t}$ \\
+Survie (fiabilité) & $R(t) = P(T > t) = e^{-\lambda t}$ \\
+Intervalle & $P(a \leq T \leq b) = e^{-\lambda a} - e^{-\lambda b}$ \\
+Espérance / écart-type & $E(T) = \sigma(T) = \dfrac{1}{\lambda}$ \; ($=$ MTBF) \\
+Variance & $V(T) = \dfrac{1}{\lambda^{2}}$ \\
+Absence de mémoire & $P(T > t + s \mid T > t) = P(T > s)$ \\
+Taux de défaillance & constant, égal à $\lambda$ \\
+Lien Poisson & si les événements suivent $\mathcal{P}(\lambda)$ par unité de temps, le temps d'attente suit $\mathcal{E}(\lambda)$ \\
+Simulation & $T = \dfrac{-\ln(1 - U)}{\lambda}$ avec $U$ uniforme sur $[0\,;1]$ \\
+\end{tabular}
+
+\vspace{6pt}
+\textbf{Calculatrice.} \; Pas de menu dédié : calcul direct avec la touche \texttt{$e^x$}. \; \textbf{Attention aux unités} : $\lambda$ et $t$ doivent être cohérents (même unité de temps).
+\end{tcolorbox}
+
+\vfill
+\begin{center}
+\color{uimmgray}\small
+\textit{Document réalisé par le Pôle Formation UIMM -- Centre-Val de Loire}\\
+\textit{La Fabrique de l'Avenir -- S. JAUBERT}
+\end{center}
+
+\end{document}

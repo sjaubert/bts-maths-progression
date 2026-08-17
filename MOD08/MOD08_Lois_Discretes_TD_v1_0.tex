@@ -1,0 +1,243 @@
+% ============================================================
+% TD : Les Lois Discrètes
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Travaux dirigés (sans corrigés)
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{consigne}{%
+  colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08 -- TD}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Travaux Dirigés -- MOD08}\\[4pt]
+{\color{white}\large Les Lois Discrètes}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Séquence : & [S02] Variables aléatoires et lois usuelles \\
+Compétences : & [C01] Bernoulli \quad [C02] reconnaître la binomiale \quad [C03] représenter \quad [C04] calcul de probabilités \quad [C05] espérance / écart-type \\
+\end{tabular}
+
+\begin{consigne}
+\textbf{Consignes.} Les probabilités sont arrondies à $10^{-4}$, les autres résultats à $10^{-2}$ (sauf mention contraire). Pour chaque situation, \textbf{identifier la loi} et \textbf{justifier} avant de calculer. Calculatrice autorisée : \texttt{binomFdp} / \texttt{Bpd} et \texttt{binomFRép} / \texttt{Bcd} pour la binomiale, \texttt{poissonFdp} / \texttt{Ppd} et \texttt{poissonFRép} / \texttt{Pcd} pour Poisson.
+\end{consigne}
+
+% ============================================================
+\section{Variables aléatoires discrètes \hfill {\normalsize\color{uimmred}[C05]}}
+
+\begin{exo}{Exercice 1 -- Coût de maintenance}
+Le nombre $X$ d'interventions correctives par semaine sur une ligne suit la loi :
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{uimmlightblue}
+$x_i$ & $0$ & $1$ & $2$ & $3$ \\
+\hline
+$p_i$ & $0{,}40$ & $0{,}35$ & $0{,}20$ & $0{,}05$ \\
+\hline
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=\alph*)]
+  \item Vérifier qu'il s'agit d'une loi de probabilité.
+  \item Calculer $E(X)$ et interpréter en contexte.
+  \item Calculer l'écart-type $\sigma(X)$.
+  \item Chaque intervention coûte $250$ €. Quel est le coût hebdomadaire moyen ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 2 -- Loi à compléter}
+Une variable aléatoire $X$ prend les valeurs $10$, $20$, $30$ et $40$. On sait que $P(X=10)=0{,}30$, $P(X=20)=0{,}25$ et $P(X=40)=0{,}15$.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer $P(X=30)$.
+  \item Calculer $E(X)$ et $\sigma(X)$.
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{Loi de Bernoulli et schéma de Bernoulli \hfill {\normalsize\color{uimmred}[C01]}}
+
+\begin{exo}{Exercice 3 -- Épreuve de Bernoulli}
+Sur un poste de contrôle, une pièce est déclarée conforme avec la probabilité $0{,}92$. On pose $X = 1$ si la pièce est conforme, $X = 0$ sinon.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la loi de $X$ et son paramètre.
+  \item Calculer $E(X)$ et $\sigma(X)$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 4 -- Reconnaître un schéma de Bernoulli}
+Pour chacune des situations, dire si elle constitue un schéma de Bernoulli. Justifier en examinant les issues, l'indépendance et la constance de $p$.
+\begin{enumerate}[label=\alph*)]
+  \item On prélève successivement $10$ pièces \textbf{avec remise} dans une caisse contenant $3\,\%$ de rebuts ; on note à chaque fois « conforme » ou « non conforme ».
+  \item On prélève $5$ cartes \textbf{sans remise} dans un lot de $12$ cartes dont $4$ sont défectueuses.
+  \item On mesure la longueur exacte de $8$ axes successifs.
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{Loi binomiale \hfill {\normalsize\color{uimmred}[C02]\,[C03]\,[C04]}}
+
+\begin{exo}{Exercice 5 -- Contrôle d'un échantillon}
+Une machine produit $6\,\%$ de pièces non conformes. On prélève $n = 12$ pièces (tirage assimilé à indépendant). Soit $X$ le nombre de pièces non conformes.
+\begin{enumerate}[label=\alph*)]
+  \item Justifier que $X$ suit une loi binomiale et donner ses paramètres.
+  \item Calculer $P(X = 0)$ et $P(X = 1)$.
+  \item Calculer $P(X \leq 2)$.
+  \item Calculer $E(X)$ et $\sigma(X)$, et interpréter $E(X)$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 6 -- Plan de contrôle à la réception}
+Un client accepte un lot si, sur $n = 20$ pièces prélevées, il trouve \textbf{au plus une} pièce défectueuse. Le lot présente une proportion $p = 5\,\%$ de défectueux.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la loi du nombre $X$ de pièces défectueuses dans le prélèvement.
+  \item Calculer la probabilité d'accepter le lot.
+  \item Calculer la probabilité de le refuser.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 7 -- Fiabilité de modules}
+Un équipement comporte $n = 6$ modules identiques et indépendants. Chacun fonctionne sans panne sur un an avec la probabilité $0{,}85$. Soit $X$ le nombre de modules encore en service au bout d'un an.
+\begin{enumerate}[label=\alph*)]
+  \item Justifier le modèle binomial et donner ses paramètres.
+  \item Calculer la probabilité que les $6$ modules tiennent l'année.
+  \item Calculer la probabilité qu'au moins $5$ modules soient en service.
+  \item Donner le nombre moyen de modules en service.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 8 -- Représentation graphique}
+On considère $X \sim \mathcal{B}(8\,;0{,}25)$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $P(X = k)$ pour $k$ de $0$ à $4$ (arrondir à $10^{-4}$).
+  \item Tracer le diagramme en bâtons correspondant.
+  \item Calculer $E(X)$ et $\sigma(X)$ ; repérer $E(X)$ sur le graphique.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 9 -- Robotique : préhension}
+Un robot de tri saisit correctement une pièce avec la probabilité $0{,}97$, indépendamment d'une prise à l'autre. Sur un cycle, il réalise $n = 30$ prises.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la loi du nombre $X$ de prises correctes sur un cycle.
+  \item Calculer la probabilité qu'aucune prise ne rate.
+  \item Calculer la probabilité qu'au plus une prise rate (c'est-à-dire $X \geq 29$).
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{Loi de Poisson \hfill {\normalsize\color{uimmred}[C04]\,[C05]}}
+
+\begin{exo}{Exercice 10 -- Pannes d'une machine}
+Le nombre de pannes d'une machine suit une loi de Poisson de moyenne $\lambda = 2$ par mois.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité d'un mois sans panne.
+  \item Calculer $P(X = 2)$ puis $P(X \leq 3)$.
+  \item Calculer $P(X \geq 1)$.
+  \item Donner l'espérance et l'écart-type du nombre mensuel de pannes.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 11 -- Défauts de surface}
+Sur une bobine de tôle, les défauts d'aspect apparaissent en moyenne $1{,}2$ fois par mètre carré. On note $X$ le nombre de défauts sur $1\,\text{m}^2$, supposé suivre une loi de Poisson.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $P(X = 0)$ et $P(X = 1)$.
+  \item Calculer la probabilité qu'un mètre carré présente au moins deux défauts.
+  \item Une tôle mesure $3\,\text{m}^2$. Quelle est la loi du nombre de défauts sur cette tôle ? Donner son espérance.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 12 -- Service après-vente}
+Un service reçoit en moyenne $4$ appels de dépannage par heure, selon une loi de Poisson.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité de recevoir exactement $4$ appels en une heure.
+  \item Calculer la probabilité d'en recevoir au plus $2$.
+  \item Calculer la probabilité d'en recevoir strictement plus de $6$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 13 -- Test du modèle de Poisson}
+Sur $200$ mètres de câble, un contrôleur relève le nombre de défauts par tronçon de $10$ m. La moyenne observée est $2{,}5$ défauts et la variance observée $2{,}6$ défauts.
+\begin{enumerate}[label=\alph*)]
+  \item Rappeler la propriété de la loi de Poisson reliant espérance et variance.
+  \item La loi de Poisson est-elle un modèle plausible ici ? Justifier.
+  \item En admettant $X \sim \mathcal{P}(2{,}5)$, calculer la probabilité qu'un tronçon de $10$ m soit sans défaut.
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{Approximation de la binomiale par Poisson \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{exo}{Exercice 14 -- Composants rares}
+Un composant électronique est défaillant avec la probabilité $p = 0{,}008$. On en monte $n = 500$ sur une carte. Soit $X$ le nombre de composants défaillants.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la loi exacte de $X$ et calculer $\lambda = np$.
+  \item Vérifier que les conditions d'approximation par une loi de Poisson sont réunies.
+  \item À l'aide de la loi de Poisson, estimer $P(X = 0)$, $P(X \leq 2)$ et $P(X \geq 1)$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 15 -- Synthèse : comparaison des deux calculs}
+Une presse produit $0{,}5\,\%$ de pièces avec microfissure. Un lot contient $n = 600$ pièces. Soit $X$ le nombre de pièces fissurées.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la loi exacte de $X$ et ses paramètres $\mu = np$ et $\sigma$.
+  \item Justifier le choix de l'approximation de Poisson plutôt que de l'approximation normale.
+  \item Estimer $P(X \leq 2)$ par la loi de Poisson.
+  \item Le seuil d'alerte qualité est fixé à « plus de $6$ pièces fissurées ». Estimer la probabilité de déclencher l'alerte.
+\end{enumerate}
+\end{exo}
+
+\vfill
+\begin{center}\color{uimmgray}\small
+\textit{Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}

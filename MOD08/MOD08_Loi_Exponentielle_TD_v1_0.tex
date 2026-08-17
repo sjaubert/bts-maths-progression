@@ -1,0 +1,225 @@
+% ============================================================
+% TD : La Loi Exponentielle
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Travaux dirigés (sans corrigés)
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{consigne}{%
+  colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08 -- TD}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Travaux Dirigés -- MOD08}\\[4pt]
+{\color{white}\large La Loi Exponentielle -- lois de survie}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Séquence : & [S02] Variables aléatoires et lois usuelles \\
+Compétences : & [C04] calcul de probabilités (loi exponentielle) \quad [C05] espérance / écart-type \quad fiabilité et lois de survie \\
+\end{tabular}
+
+\begin{consigne}
+\textbf{Consignes.} Les probabilités sont arrondies à $10^{-4}$, les durées à l'unité près. Pour $T \sim \mathcal{E}(\lambda)$, on rappelle $R(t) = P(T>t) = e^{-\lambda t}$, $F(t) = 1 - e^{-\lambda t}$ et $E(T) = 1/\lambda$ (MTBF). \textbf{Vérifier la cohérence des unités} entre $\lambda$ et $t$. Calculatrice autorisée : calcul direct avec la touche \texttt{$e^x$} (pas de menu dédié).
+\end{consigne}
+
+% ============================================================
+\section{Calculs de base \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{exo}{Exercice 1 -- Durée de vie d'un relais}
+La durée de vie $T$ (en heures) d'un relais suit $\mathcal{E}(\lambda)$ avec $\lambda = 0{,}0005$ h$^{-1}$.
+\begin{enumerate}[label=\alph*)]
+  \item Donner l'expression de la fonction de survie $R(t)$.
+  \item Calculer $P(T > 2000)$ et $P(T \leq 1500)$.
+  \item Calculer $P(1000 \leq T \leq 3000)$.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 2 -- Lecture d'un taux}
+Un variateur a un taux de défaillance $\lambda = 0{,}00008$ h$^{-1}$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité qu'il fonctionne au-delà de $10\,000$ h.
+  \item Calculer la probabilité qu'il tombe en panne avant $5000$ h.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 3 -- Médiane de durée de vie}
+La durée de vie $T$ (en heures) d'une LED de puissance suit $\mathcal{E}(0{,}00002)$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer $R(20\,000)$.
+  \item Déterminer la durée $t_m$ telle que $P(T > t_m) = 0{,}5$ (durée de vie médiane).
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{MTBF, espérance et écart-type \hfill {\normalsize\color{uimmred}[C05]}}
+
+\begin{exo}{Exercice 4 -- MTBF d'un moteur}
+La durée de vie d'un moteur suit une loi exponentielle de taux $\lambda = 0{,}00025$ h$^{-1}$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la MTBF et l'écart-type de la durée de vie.
+  \item Calculer la probabilité que le moteur dépasse sa MTBF.
+  \item Ce résultat dépend-il de la valeur de $\lambda$ ? Justifier.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 5 -- Du besoin à la MTBF}
+Un bureau d'études souhaite qu'une pompe ait une durée de vie moyenne d'au moins $12\,000$ h.
+\begin{enumerate}[label=\alph*)]
+  \item Quel taux de défaillance maximal $\lambda$ doit respecter la pompe ?
+  \item Avec ce taux, calculer la fiabilité à $6000$ h.
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{Durée de vie sans vieillissement \hfill {\normalsize\color{uimmred}[C05]}}
+
+\begin{exo}{Exercice 6 -- Absence de mémoire}
+La durée de vie $T$ d'un capteur suit $\mathcal{E}(0{,}0004)$ (en heures). Le capteur est en service depuis $3000$ h et fonctionne encore.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité qu'il fonctionne encore au moins $1000$ h de plus.
+  \item Comparer avec la probabilité qu'un capteur neuf tienne $1000$ h.
+  \item Quel principe cette égalité illustre-t-elle ? En quoi limite-t-il le modèle pour des pièces soumises à l'usure ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 7 -- Un composant « vieilli » ?}
+Un fournisseur affirme qu'un de ses fusibles thermiques, de durée de vie exponentielle, est « plus fiable après rodage ». Un technicien objecte.
+\begin{enumerate}[label=\alph*)]
+  \item Que dit la loi exponentielle sur l'effet de l'âge du composant ?
+  \item Le discours du fournisseur est-il compatible avec le modèle exponentiel ? Justifier.
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{Fiabilité et maintenance \hfill {\normalsize\color{uimmred}[C04]\,[C05]}}
+
+\begin{exo}{Exercice 8 -- Périodicité préventive}
+Un roulement a un taux de défaillance $\lambda = 0{,}0003$ h$^{-1}$.
+\begin{enumerate}[label=\alph*)]
+  \item Exprimer la fiabilité $R(t)$.
+  \item Déterminer la durée $t$ au bout de laquelle la fiabilité tombe à $0{,}90$.
+  \item On veut maintenir une fiabilité d'au moins $0{,}95$ : quelle périodicité de remplacement préconiser ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 9 -- De la MTBF à la garantie}
+Une carte électronique a une MTBF de $8000$ h (durée de vie exponentielle).
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer le taux de défaillance $\lambda$.
+  \item Calculer la fiabilité à $4000$ h et à $8000$ h.
+  \item Déterminer la durée de garantie $t_0$ telle que $95\,\%$ des cartes fonctionnent encore.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 10 -- Fonctionnement sur une mission}
+Un équipement embarqué doit fonctionner sans panne pendant une mission de $600$ h. Sa durée de vie suit $\mathcal{E}(\lambda)$ avec $\lambda = 0{,}0002$ h$^{-1}$.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité de réussir la mission (aucune panne sur $600$ h).
+  \item Quelle MTBF faudrait-il pour porter cette probabilité à $0{,}99$ ?
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 11 -- Deux composants en série}
+Deux composants indépendants, de durées de vie exponentielles de taux $\lambda_1 = 0{,}0002$ h$^{-1}$ et $\lambda_2 = 0{,}0003$ h$^{-1}$, sont montés \textbf{en série} : le système tombe en panne dès que l'un des deux lâche.
+\begin{enumerate}[label=\alph*)]
+  \item Exprimer la fiabilité du système $R(t) = R_1(t) \times R_2(t)$.
+  \item Montrer que le système suit encore une loi exponentielle et donner son taux.
+  \item Calculer sa MTBF, puis $R(1000)$.
+\end{enumerate}
+\end{exo}
+
+% ============================================================
+\section{Lien avec Poisson et simulation \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{exo}{Exercice 12 -- Temps entre deux pièces}
+Un poste reçoit en moyenne $4$ pièces par minute, selon un processus de Poisson.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la loi du temps d'attente $T$ (en minutes) entre deux pièces et sa moyenne.
+  \item Calculer la probabilité d'attendre plus de $20$ secondes.
+  \item Calculer la probabilité d'attendre moins de $10$ secondes.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 13 -- Cohérence Poisson / exponentielle}
+Une machine tombe en panne en moyenne $1{,}5$ fois par an, selon un processus de Poisson.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer, avec la loi de Poisson, la probabilité qu'il n'y ait aucune panne sur une année.
+  \item Retrouver ce résultat avec la loi exponentielle du temps d'attente $T$ (en années).
+  \item Calculer le temps d'attente moyen entre deux pannes.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 14 -- Simulation}
+On veut simuler des durées de vie suivant $\mathcal{E}(\lambda)$ avec $\lambda = 0{,}0004$ h$^{-1}$, à partir de tirages $U$ uniformes sur $[0\,;1]$.
+\begin{enumerate}[label=\alph*)]
+  \item Rappeler la formule donnant $T$ en fonction de $U$ et $\lambda$.
+  \item Pour $U = 0{,}5$, calculer la durée $T$ obtenue. Comparer à la durée de vie médiane.
+  \item Écrire un algorithme (langage naturel ou Python) estimant la MTBF sur $N$ simulations.
+\end{enumerate}
+\end{exo}
+
+\begin{exo}{Exercice 15 -- Synthèse : politique de remplacement}
+Un servomoteur a une durée de vie exponentielle de MTBF $10\,000$ h.
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer $\lambda$, puis calculer $R(5000)$ et $F(2000)$.
+  \item Déterminer la durée $t_0$ garantissant une fiabilité de $0{,}98$.
+  \item Un parc contient $50$ servomoteurs indépendants. En admettant la fiabilité de la question a) à $5000$ h, quel est le nombre moyen de moteurs encore en service à $5000$ h ?
+  \item Le seuil d'alerte est atteint quand la fiabilité individuelle passe sous $0{,}80$. À partir de quelle durée de fonctionnement est-on dans cette zone ?
+\end{enumerate}
+\end{exo}
+
+\vfill
+\begin{center}\color{uimmgray}\small
+\textit{Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}

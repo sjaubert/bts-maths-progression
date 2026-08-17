@@ -1,0 +1,699 @@
+% ============================================================
+% Cours : Les Lois Discrètes
+% Pôle Formation UIMM - CVDL
+% BTS Industriel - Mathématiques
+% Auteur : S. JAUBERT
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+
+% ----- Encodage et langue -----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+
+% ----- Polices sans-serif -----
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+
+% ----- Mise en page -----
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+
+% ----- Mathématiques -----
+\usepackage{amsmath,amssymb,amsfonts}
+
+% ----- Graphiques et couleurs -----
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, decorations.pathmorphing, calc}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+
+% ----- Boîtes colorées -----
+\usepackage[most]{tcolorbox}
+
+% ----- Code / algorithmes -----
+\usepackage{listings}
+
+% ----- En-tête et pied de page -----
+\usepackage{fancyhdr}
+
+% ----- Hyperliens -----
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+% ----- Enumération personnalisée -----
+\usepackage{enumitem}
+
+% ----- Tableaux -----
+\usepackage{booktabs,array}
+
+% ============================================================
+% CHARTE GRAPHIQUE UIMM
+% ============================================================
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+
+% ----- Styles des sections -----
+\usepackage{titlesec}
+\titleformat{\section}
+  {\LARGE\bfseries\color{uimmblue}}
+  {\thesection.}{0.5em}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.5pt]}]
+\titleformat{\subsection}
+  {\Large\bfseries\color{uimmblue}}
+  {\thesubsection.}{0.5em}{}
+\titleformat{\subsubsection}
+  {\large\bfseries\color{uimmblue!80!black}}
+  {\thesubsubsection.}{0.5em}{}
+
+% ----- Puces personnalisées -----
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+\setlist[itemize,2]{label={\color{uimmblue}--}}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+
+% ----- Style listings -----
+\lstdefinestyle{uimmpython}{
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{uimmblue}\bfseries,
+  commentstyle=\color{green!50!black}\itshape,
+  stringstyle=\color{uimmred},
+  numbers=left,
+  numberstyle=\tiny\color{uimmgray},
+  numbersep=8pt,
+  showstringspaces=false,
+  breaklines=true,
+  frame=single,
+  rulecolor=\color{uimmblue},
+  backgroundcolor=\color{uimmlightgray},
+  language=Python
+}
+
+% ============================================================
+% BOÎTES TCOLORBOX
+% ============================================================
+\newtcolorbox{definition}[1][]{%
+  colback=uimmlightblue, colframe=uimmblue,
+  fonttitle=\bfseries\color{white}, title={\textsf{Définition}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{theoreme}[1][]{%
+  colback=uimmlightblue!50, colframe=uimmblue!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Théorème / Propriété}~#1},
+  coltitle=white, boxrule=1.2pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{methode}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Méthode}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{exemple}[1][]{%
+  colback=orange!5, colframe=orange!70!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Exemple}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{remarque}[1][]{%
+  colback=uimmlightgray, colframe=uimmgray,
+  fonttitle=\bfseries, title={\textsf{Remarque}~#1},
+  boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{appliindus}[1][]{%
+  colback=uimmred!5, colframe=uimmred!80!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\triangleright$ Application industrielle}~#1},
+  coltitle=white, boxrule=1.2pt, arc=4pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+\newtcolorbox{calculatrice}[1][]{%
+  colback=uimmblue!3, colframe=uimmblue!70!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{$\square$ À la calculatrice}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=10pt, after skip=10pt}
+
+% ============================================================
+% EN-TÊTE / PIED DE PAGE
+% ============================================================
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{%
+  \begin{minipage}{8cm}\centering
+    {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+    {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}
+  \end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08}}}
+\fancyfoot[C]{%
+  {\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+% ============================================================
+% PAGE DE TITRE
+% ============================================================
+\begin{document}
+
+\begin{titlepage}
+\begin{tikzpicture}[remember picture, overlay]
+  \fill[uimmblue] (current page.north west) rectangle ([yshift=-4cm]current page.north east);
+  \node[anchor=north west] at ([xshift=2cm, yshift=-0.5cm]current page.north west)
+    {\includegraphics[height=3cm]{logo_uimm_placeholder.jpg}};
+  \node[anchor=north east, white, font=\large\bfseries] at ([xshift=-2cm, yshift=-1.5cm]current page.north east)
+    {Pôle Formation UIMM - CVDL};
+  \node[anchor=north east, white, font=\small, align=right] at ([xshift=-2cm, yshift=-2.2cm]current page.north east)
+    {BTS Industriel -- Mathématiques\\[2pt]S. Jaubert};
+  \fill[uimmred] ([yshift=-4cm]current page.north west) rectangle ([yshift=-4.4cm]current page.north east);
+  \node[anchor=center, text width=14cm, align=center] at ([yshift=-1cm]current page.center) {
+    {\fontsize{28}{34}\selectfont\bfseries\color{uimmblue} Les Lois Discrètes}\\[20pt]
+    {\Large\color{uimmgray} Module 08 -- Calcul des probabilités}\\[12pt]
+    {\large\color{uimmgray}\textit{Loi de Bernoulli, loi binomiale, loi de Poisson}}
+  };
+  % Diagramme en bâtons décoratif
+  \node[anchor=center] at ([yshift=-5.2cm]current page.center) {
+    \begin{tikzpicture}
+      \begin{axis}[hide axis, width=10cm, height=4.2cm,
+        xmin=-0.6, xmax=10.6, ymin=0, ymax=0.30, ybar=0pt, bar width=7pt]
+        \addplot[uimmblue, fill=uimmlightblue] coordinates {
+          (0,0.0282)(1,0.1211)(2,0.2335)(3,0.2668)(4,0.2001)(5,0.1029)(6,0.0368)(7,0.009)(8,0.0014)(9,0.0001)(10,0)};
+      \end{axis}
+    \end{tikzpicture}};
+  \fill[uimmblue] ([yshift=1.5cm]current page.south west) rectangle (current page.south east);
+  \node[anchor=center, white, font=\small] at ([yshift=0.75cm]current page.south) {
+    Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ La Fabrique de l'Avenir};
+\end{tikzpicture}
+\end{titlepage}
+
+% ============================================================
+% FICHE MODULE
+% ============================================================
+\thispagestyle{fancy}
+\vspace*{0.5cm}
+\begin{center}
+{\LARGE\bfseries\color{uimmblue} MOD08 -- Les Lois Discrètes}\\[6pt]
+{\large\color{uimmgray} Support de cours}\\[4pt]
+{\normalsize\color{uimmgray} Auteur : S. JAUBERT \hspace{1cm} Formation : BTS Industriel (ATI / CPRP / CRSA)}
+\end{center}
+\vspace{0.8cm}
+
+\begin{tcolorbox}[colback=uimmlightblue!30, colframe=uimmblue,
+  title={\textbf{\textsf{Fiche du Module}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1.2pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+\renewcommand{\arraystretch}{1.6}
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l @{\hspace{12pt}} p{12cm}@{}}
+Bloc / Période : & Semestres 1 \& 2 \\
+Module :         & {[MOD08]} Calcul des probabilités \\
+Séquence :       & {[S02]} Variables aléatoires et lois usuelles \\
+Thème :          & Variables aléatoires discrètes, loi de Bernoulli, loi binomiale, loi de Poisson et approximation \\
+\end{tabular}
+\end{tcolorbox}
+\vspace{0.4cm}
+
+\begin{tcolorbox}[colback=white, colframe=uimmblue!80!black,
+  title={\textbf{\textsf{Compétences travaillées}}}, fonttitle=\large\bfseries\color{white},
+  coltitle=white, boxrule=1pt, arc=4pt, left=10pt, right=10pt, top=8pt, bottom=8pt]
+
+\textbf{\color{uimmblue} [S02] -- Variables aléatoires et lois usuelles}
+\begin{itemize}[leftmargin=1.5cm]
+  \item[\textbf{\color{uimmblue}[C01]}] Simuler un schéma de Bernoulli
+  \item[\textbf{\color{uimmblue}[C02]}] Reconnaître et justifier qu'une situation relève de la loi binomiale
+  \item[\textbf{\color{uimmblue}[C03]}] Représenter graphiquement la loi binomiale
+  \item[\textbf{\color{uimmblue}[C04]}] Calculer une probabilité dans le cadre de la loi binomiale et de la loi de Poisson
+  \item[\textbf{\color{uimmblue}[C05]}] Interpréter l'espérance et l'écart-type d'une loi
+\end{itemize}
+\end{tcolorbox}
+\vspace{0.3cm}
+
+\begin{remarque}[-- Positionnement du cours]
+Ce support ouvre l'étude des \textbf{lois usuelles}. On travaille ici sur des variables \textbf{discrètes} : on compte des occurrences (pièces défectueuses, pannes, défauts). Il précède et prépare le cours sur la \textbf{loi normale}, qui traite le cas continu. Prérequis : dénombrement et probabilités conditionnelles (MOD08 S01). Les calculs se font à la \textbf{calculatrice} ; les probabilités sont arrondies à $10^{-4}$.
+\end{remarque}
+
+\newpage
+\tableofcontents
+\newpage
+
+% ============================================================
+% SECTION 1 : VARIABLES ALEATOIRES DISCRETES
+% ============================================================
+\section{Variables aléatoires discrètes \hfill {\normalsize\color{uimmred}[C05]}}
+
+\subsection{Notion de variable aléatoire}
+
+\begin{definition}
+Une \textbf{variable aléatoire} $X$ associe un nombre réel à chaque issue d'une expérience aléatoire. Elle est \textbf{discrète} lorsqu'elle ne prend qu'un nombre fini (ou dénombrable) de valeurs isolées $x_1, x_2, \dots, x_n$.
+\end{definition}
+
+\begin{exemple}[-- Situations discrètes]
+Le nombre de pièces défectueuses dans un lot, le nombre de pannes d'une machine dans un mois, le nombre de retouches sur une série : ces grandeurs se \textbf{comptent}, elles sont discrètes.
+\end{exemple}
+
+\subsection{Loi de probabilité}
+
+\begin{definition}
+Donner la \textbf{loi de probabilité} de $X$, c'est associer à chaque valeur $x_i$ sa probabilité $p_i = P(X = x_i)$. On la présente dans un tableau :
+\end{definition}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{uimmlightblue}
+$x_i$ & $x_1$ & $x_2$ & $\cdots$ & $x_n$ \\
+\hline
+$P(X = x_i)$ & $p_1$ & $p_2$ & $\cdots$ & $p_n$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{theoreme}[-- Condition fondamentale]
+La somme de toutes les probabilités d'une loi vaut $1$ :
+\[
+p_1 + p_2 + \dots + p_n = \sum_{i=1}^{n} P(X = x_i) = 1.
+\]
+\end{theoreme}
+
+\subsection{Espérance, variance, écart-type \hfill {\normalsize\color{uimmred}[C05]}}
+
+\begin{definition}
+Pour une variable aléatoire discrète $X$ de loi $\big(x_i\,;p_i\big)$ :
+\[
+\underbrace{E(X) = \sum_{i=1}^{n} x_i\,p_i}_{\text{espérance}}, \qquad
+\underbrace{V(X) = \sum_{i=1}^{n} x_i^2\,p_i - \big(E(X)\big)^2}_{\text{variance}}, \qquad
+\underbrace{\sigma(X) = \sqrt{V(X)}}_{\text{écart-type}}.
+\]
+\end{definition}
+
+\begin{remarque}[-- Interprétation]
+L'\textbf{espérance} $E(X)$ est la valeur moyenne attendue sur un très grand nombre de répétitions. L'\textbf{écart-type} $\sigma(X)$ mesure la dispersion des résultats autour de cette moyenne. En production, $E(X)$ donne le niveau moyen (par exemple le nombre moyen de rebuts) et $\sigma(X)$ sa régularité.
+\end{remarque}
+
+\begin{exemple}[-- Nombre de retouches par pièce]
+Sur un poste, le nombre $X$ de retouches par pièce suit la loi :
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{uimmlightblue}
+$x_i$ & $0$ & $1$ & $2$ & $3$ \\
+\hline
+$p_i$ & $0{,}50$ & $0{,}30$ & $0{,}15$ & $0{,}05$ \\
+\hline
+\end{tabular}
+\end{center}
+On vérifie $\sum p_i = 1$. Alors :
+\[
+E(X) = 0\times0{,}5 + 1\times0{,}3 + 2\times0{,}15 + 3\times0{,}05 = 0{,}75,
+\]
+\[
+V(X) = \big(0^2\times0{,}5 + 1^2\times0{,}3 + 2^2\times0{,}15 + 3^2\times0{,}05\big) - 0{,}75^2 = 1{,}35 - 0{,}5625 = 0{,}7875,
+\]
+\[
+\sigma(X) = \sqrt{0{,}7875} \approx 0{,}89.
+\]
+En moyenne, $0{,}75$ retouche par pièce.
+\end{exemple}
+
+% ============================================================
+% SECTION 2 : LOI DE BERNOULLI
+% ============================================================
+\newpage
+\section{La loi de Bernoulli \hfill {\normalsize\color{uimmred}[C01]}}
+
+\subsection{Épreuve de Bernoulli}
+
+\begin{definition}
+Une \textbf{épreuve de Bernoulli} est une expérience aléatoire à \textbf{deux issues} seulement :
+\begin{itemize}
+  \item le \textbf{succès} $S$, de probabilité $p$ ;
+  \item l'\textbf{échec} $\overline{S}$, de probabilité $1 - p$.
+\end{itemize}
+\end{definition}
+
+\begin{definition}[-- Loi de Bernoulli]
+La variable $X$ qui vaut $1$ en cas de succès et $0$ en cas d'échec suit la \textbf{loi de Bernoulli} de paramètre $p$, notée $\mathcal{B}(p)$ :
+\[
+P(X = 1) = p, \qquad P(X = 0) = 1 - p.
+\]
+\end{definition}
+
+\begin{theoreme}[-- Espérance et écart-type]
+Pour $X \sim \mathcal{B}(p)$ :
+\[
+E(X) = p, \qquad V(X) = p(1 - p), \qquad \sigma(X) = \sqrt{p(1 - p)}.
+\]
+\end{theoreme}
+
+\begin{appliindus}[-- Contrôle « conforme / non conforme »]
+Prélever une pièce et tester sa conformité est une épreuve de Bernoulli : succès $=$ « pièce conforme ». Si le procédé produit $5\,\%$ de rebut, alors $p = 0{,}95$ pour l'événement « conforme », et $\sigma = \sqrt{0{,}95 \times 0{,}05} \approx 0{,}2179$.
+\end{appliindus}
+
+\subsection{Schéma de Bernoulli \hfill {\normalsize\color{uimmred}[C01]}}
+
+\begin{definition}
+Un \textbf{schéma de Bernoulli} est la répétition de $n$ épreuves de Bernoulli \textbf{identiques} et \textbf{indépendantes}, chacune de paramètre $p$.
+\end{definition}
+
+\begin{remarque}
+Trois conditions sont à réunir : \textbf{deux issues} par épreuve, un paramètre $p$ \textbf{constant}, et l'\textbf{indépendance} des épreuves. Le tirage \emph{avec remise} respecte l'indépendance ; le tirage \emph{sans remise} ne la respecte pas (sauf si la population est très grande devant l'échantillon).
+\end{remarque}
+
+\begin{lstlisting}[style=uimmpython, caption={Simulation d'un schéma de Bernoulli (n = 20, p = 0.95)}]
+import random
+
+n, p = 20, 0.95
+resultats = [1 if random.random() < p else 0 for _ in range(n)]
+nb_succes = sum(resultats)
+print("Tirages :", resultats)
+print("Nombre de succes :", nb_succes)
+\end{lstlisting}
+
+% ============================================================
+% SECTION 3 : LOI BINOMIALE
+% ============================================================
+\newpage
+\section{La loi binomiale \hfill {\normalsize\color{uimmred}[C02]\,[C03]\,[C04]}}
+
+\subsection{Définition}
+
+\begin{definition}
+Dans un schéma de Bernoulli de $n$ épreuves de paramètre $p$, la variable $X$ égale au \textbf{nombre de succès} suit la \textbf{loi binomiale} de paramètres $n$ et $p$, notée $\mathcal{B}(n\,;p)$.
+\end{definition}
+
+\begin{methode}[-- Reconnaître une loi binomiale {\normalsize\color{uimmred}[C02]}]
+On vérifie les quatre points :
+\begin{enumerate}
+  \item on répète $n$ fois la même épreuve ;
+  \item chaque épreuve n'a que \textbf{deux issues} (succès / échec) ;
+  \item les épreuves sont \textbf{indépendantes} ;
+  \item la probabilité $p$ de succès est \textbf{constante}.
+\end{enumerate}
+Alors $X = $ « nombre de succès » suit $\mathcal{B}(n\,;p)$.
+\end{methode}
+
+\subsection{Coefficient binomial}
+
+\begin{definition}
+Le nombre de façons de choisir $k$ succès parmi $n$ épreuves est le \textbf{coefficient binomial} $\dbinom{n}{k}$ (lu « $k$ parmi $n$ ») :
+\[
+\binom{n}{k} = \frac{n!}{k!\,(n-k)!}.
+\]
+\end{definition}
+
+\begin{exemple}
+$\dbinom{5}{2} = \dfrac{5!}{2!\,3!} = 10$ ; \quad $\dbinom{10}{3} = 120$ ; \quad $\dbinom{n}{0} = \dbinom{n}{n} = 1$.
+\end{exemple}
+
+\subsection{Calcul des probabilités \hfill {\normalsize\color{uimmred}[C04]}}
+
+\begin{theoreme}[-- Terme général]
+Pour $X \sim \mathcal{B}(n\,;p)$ et $0 \leq k \leq n$ :
+\[
+\boxed{P(X = k) = \binom{n}{k}\,p^{\,k}\,(1 - p)^{\,n-k}}
+\]
+\end{theoreme}
+
+\begin{exemple}[-- Calcul détaillé]
+Pour $X \sim \mathcal{B}(6\,;0{,}2)$ :
+\[
+P(X = 2) = \binom{6}{2}\,0{,}2^{2}\,0{,}8^{4} = 15 \times 0{,}04 \times 0{,}4096 \approx 0{,}2458.
+\]
+\end{exemple}
+
+\begin{calculatrice}[-- Loi binomiale $\mathcal{B}(n\,;p)$]
+\begin{itemize}
+  \item \textbf{TI (82/83/84)} : \texttt{binomFdp(n, p, k)} pour $P(X = k)$ ; \; \texttt{binomFRép(n, p, k)} pour $P(X \leq k)$.
+  \item \textbf{Casio (Graph)} : menu \texttt{STAT} $\rightarrow$ \texttt{DIST} $\rightarrow$ \texttt{BINM} $\rightarrow$ \texttt{Bpd} pour $P(X = k)$ et \texttt{Bcd} pour $P(X \leq k)$.
+\end{itemize}
+Pour $P(X \geq k)$, utiliser $P(X \geq k) = 1 - P(X \leq k-1)$.
+\end{calculatrice}
+
+\begin{theoreme}[-- Espérance et écart-type {\normalsize\color{uimmred}[C05]}]
+Pour $X \sim \mathcal{B}(n\,;p)$ :
+\[
+E(X) = np, \qquad V(X) = np(1 - p), \qquad \sigma(X) = \sqrt{np(1 - p)}.
+\]
+\end{theoreme}
+
+\subsection{Représentation graphique \hfill {\normalsize\color{uimmred}[C03]}}
+
+On représente la loi binomiale par un \textbf{diagramme en bâtons} : en abscisse le nombre de succès $k$, en ordonnée la probabilité $P(X = k)$.
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=13cm, height=6cm,
+  xlabel={$k$ (nombre de succès)}, ylabel={$P(X=k)$},
+  xmin=-0.6, xmax=10.6, ymin=0, ymax=0.30,
+  axis lines=left, tick style={uimmgray}, every axis label/.style={uimmblue},
+  xtick={0,1,2,3,4,5,6,7,8,9,10},
+  ycomb, mark=*, uimmblue, mark options={fill=uimmred, draw=uimmred},
+  every axis plot/.append style={line width=1.4pt}
+]
+\addplot coordinates {
+  (0,0.0282)(1,0.1211)(2,0.2335)(3,0.2668)(4,0.2001)(5,0.1029)(6,0.0368)(7,0.009)(8,0.0014)(9,0.0001)(10,0)};
+\end{axis}
+\end{tikzpicture}\\
+{\footnotesize\color{uimmgray} Loi binomiale $\mathcal{B}(10\,;0{,}3)$ : $E(X) = 3$, $\sigma(X) \approx 1{,}45$.}
+\end{center}
+
+\begin{appliindus}[-- Contrôle qualité d'un lot]
+Un procédé produit $5\,\%$ de pièces défectueuses. On prélève $n = 20$ pièces (population très grande, tirage assimilé à indépendant). Le nombre $X$ de pièces défectueuses suit $\mathcal{B}(20\,;0{,}05)$ : $E(X) = 1$ pièce, $\sigma(X) \approx 0{,}97$.
+\begin{itemize}
+  \item $P(X = 0) = 0{,}95^{20} \approx 0{,}3585$ (lot parfait) ;
+  \item $P(X \leq 2) \approx 0{,}9245$ ;
+  \item $P(X \geq 1) = 1 - P(X = 0) \approx 0{,}6415$.
+\end{itemize}
+\end{appliindus}
+
+% ============================================================
+% SECTION 4 : LOI DE POISSON
+% ============================================================
+\newpage
+\section{La loi de Poisson \hfill {\normalsize\color{uimmred}[C04]\,[C05]}}
+
+\subsection{Définition}
+
+La loi de Poisson modélise le nombre d'\textbf{événements rares} survenant pendant une durée, sur une longueur ou une surface données : pannes par mois, défauts par mètre carré, arrivées par heure.
+
+\begin{definition}
+La variable $X$ suit la \textbf{loi de Poisson} de paramètre $\lambda > 0$, notée $\mathcal{P}(\lambda)$, si pour tout entier $k \geq 0$ :
+\[
+\boxed{P(X = k) = e^{-\lambda}\,\frac{\lambda^{\,k}}{k!}}
+\]
+Le paramètre $\lambda$ représente le \textbf{nombre moyen} d'événements sur l'intervalle considéré.
+\end{definition}
+
+\begin{theoreme}[-- Espérance et écart-type {\normalsize\color{uimmred}[C05]}]
+Pour $X \sim \mathcal{P}(\lambda)$ :
+\[
+E(X) = \lambda, \qquad V(X) = \lambda, \qquad \sigma(X) = \sqrt{\lambda}.
+\]
+\end{theoreme}
+
+\begin{remarque}
+Propriété caractéristique : pour une loi de Poisson, \textbf{l'espérance et la variance sont égales} à $\lambda$. C'est un bon test : si, sur des relevés, moyenne et variance sont proches, le modèle de Poisson est plausible.
+\end{remarque}
+
+\begin{calculatrice}[-- Loi de Poisson $\mathcal{P}(\lambda)$]
+\begin{itemize}
+  \item \textbf{TI} : \texttt{poissonFdp($\lambda$, k)} pour $P(X = k)$ ; \; \texttt{poissonFRép($\lambda$, k)} pour $P(X \leq k)$.
+  \item \textbf{Casio} : \texttt{DIST} $\rightarrow$ \texttt{POISN} $\rightarrow$ \texttt{Ppd} pour $P(X = k)$ et \texttt{Pcd} pour $P(X \leq k)$.
+\end{itemize}
+\end{calculatrice}
+
+\begin{exemple}[-- Calcul détaillé]
+Pour $X \sim \mathcal{P}(2)$ :
+\[
+P(X = 3) = e^{-2}\,\frac{2^{3}}{3!} = e^{-2}\,\frac{8}{6} \approx 0{,}1804.
+\]
+\end{exemple}
+
+\subsection{Représentation graphique}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  width=13cm, height=6cm,
+  xlabel={$k$ (nombre d'événements)}, ylabel={$P(X=k)$},
+  xmin=-0.6, xmax=10.6, ymin=0, ymax=0.26,
+  axis lines=left, tick style={uimmgray}, every axis label/.style={uimmblue},
+  xtick={0,1,2,3,4,5,6,7,8,9,10},
+  ycomb, mark=*, uimmblue, mark options={fill=uimmred, draw=uimmred},
+  every axis plot/.append style={line width=1.4pt}
+]
+\addplot coordinates {
+  (0,0.0498)(1,0.1494)(2,0.224)(3,0.224)(4,0.168)(5,0.1008)(6,0.0504)(7,0.0216)(8,0.0081)(9,0.0027)(10,0.0008)};
+\end{axis}
+\end{tikzpicture}\\
+{\footnotesize\color{uimmgray} Loi de Poisson $\mathcal{P}(3)$ : $E(X) = 3$, $\sigma(X) = \sqrt{3} \approx 1{,}73$.}
+\end{center}
+
+\begin{appliindus}[-- Pannes d'une machine]
+Une machine tombe en panne en moyenne $3$ fois par mois. En admettant un modèle de Poisson, le nombre $X$ de pannes mensuelles suit $\mathcal{P}(3)$ :
+\begin{itemize}
+  \item $P(X = 0) = e^{-3} \approx 0{,}0498$ (mois sans panne) ;
+  \item $P(X \leq 2) \approx 0{,}4232$ ;
+  \item $P(X \geq 1) = 1 - e^{-3} \approx 0{,}9502$.
+\end{itemize}
+Ces valeurs alimentent le dimensionnement d'un stock de pièces de rechange.
+\end{appliindus}
+
+% ============================================================
+% SECTION 5 : APPROXIMATION BINOMIALE PAR POISSON
+% ============================================================
+\newpage
+\section{Approximation d'une loi binomiale par une loi de Poisson \hfill {\normalsize\color{uimmred}[C04]}}
+
+\subsection{Principe}
+
+Quand une loi binomiale porte sur un \textbf{grand nombre d'épreuves} ($n$ grand) avec une \textbf{probabilité de succès faible} ($p$ petit), le calcul direct devient lourd et la loi de Poisson en donne une excellente approximation. On parle de \textbf{loi des petits nombres}.
+
+\begin{theoreme}[-- Approximation de Poisson]
+Si $X \sim \mathcal{B}(n\,;p)$ avec $n$ grand et $p$ petit, on peut approcher $X$ par la loi de Poisson de même espérance :
+\[
+\mathcal{B}(n\,;p) \approx \mathcal{P}(\lambda) \quad\text{avec}\quad \lambda = np.
+\]
+L'approximation est jugée acceptable lorsque $n \geq 30$, $p \leq 0{,}1$ et $\lambda = np \leq 10$.
+\end{theoreme}
+
+\begin{exemple}[-- Comparaison chiffrée]
+Soit $X \sim \mathcal{B}(200\,;0{,}01)$. Ici $\lambda = np = 2$. On compare la loi exacte et son approximation $\mathcal{P}(2)$ :
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|c|}
+\hline
+\rowcolor{uimmlightblue}
+$k$ & $0$ & $1$ & $2$ & $3$ & $P(X \leq 3)$ \\
+\hline
+$\mathcal{B}(200\,;0{,}01)$ & $0{,}1340$ & $0{,}2707$ & $0{,}2720$ & $0{,}1814$ & $0{,}8580$ \\
+\hline
+$\mathcal{P}(2)$ & $0{,}1353$ & $0{,}2707$ & $0{,}2707$ & $0{,}1804$ & $0{,}8571$ \\
+\hline
+\end{tabular}
+\end{center}
+Les écarts sont inférieurs à $2 \times 10^{-3}$ : l'approximation est très satisfaisante.
+\end{exemple}
+
+\begin{remarque}[-- Deux approximations à ne pas confondre]
+La loi binomiale admet \textbf{deux} approximations selon le contexte :
+\begin{itemize}
+  \item par la loi de \textbf{Poisson} quand $p$ est \emph{petit} (événements rares) -- ce cours ;
+  \item par la loi \textbf{normale} quand $n$ est grand et $p$ \emph{modéré} -- voir le cours « Loi normale ».
+\end{itemize}
+\end{remarque}
+
+% ============================================================
+% SECTION 6 : EXERCICES
+% ============================================================
+\newpage
+\section{Exercices d'application}
+
+\subsection*{Exercice 1 -- Loi de probabilité \hfill {\normalsize\color{uimmred}[C05]}}
+Le nombre $X$ de défauts d'aspect par pièce suit la loi :
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+\rowcolor{uimmlightblue}
+$x_i$ & $0$ & $1$ & $2$ & $3$ \\
+\hline
+$p_i$ & $0{,}60$ & $0{,}25$ & $?$ & $0{,}05$ \\
+\hline
+\end{tabular}
+\end{center}
+\begin{enumerate}[label=\alph*)]
+  \item Déterminer $P(X = 2)$.
+  \item Calculer $E(X)$ et interpréter.
+  \item Calculer l'écart-type $\sigma(X)$.
+\end{enumerate}
+
+\subsection*{Exercice 2 -- Loi de Bernoulli \hfill {\normalsize\color{uimmred}[C01]}}
+Une soudure est acceptée avec la probabilité $p = 0{,}97$. On note $X = 1$ si la soudure est acceptée, $0$ sinon.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la loi de $X$.
+  \item Calculer $E(X)$ et $\sigma(X)$.
+\end{enumerate}
+
+\subsection*{Exercice 3 -- Loi binomiale \hfill {\normalsize\color{uimmred}[C02]\,[C04]}}
+Une machine produit $4\,\%$ de pièces non conformes. On prélève un échantillon de $n = 15$ pièces (tirage assimilé à indépendant). Soit $X$ le nombre de pièces non conformes.
+\begin{enumerate}[label=\alph*)]
+  \item Justifier que $X$ suit une loi binomiale et donner ses paramètres.
+  \item Calculer $P(X = 0)$, puis $P(X = 1)$.
+  \item Calculer $P(X \leq 2)$ et $E(X)$.
+\end{enumerate}
+
+\subsection*{Exercice 4 -- Loi de Poisson \hfill {\normalsize\color{uimmred}[C04]\,[C05]}}
+Le nombre de coupures de courant sur une ligne suit une loi de Poisson de moyenne $\lambda = 1{,}5$ par semaine.
+\begin{enumerate}[label=\alph*)]
+  \item Calculer la probabilité qu'une semaine se passe sans coupure.
+  \item Calculer $P(X \geq 2)$.
+  \item Donner l'écart-type du nombre hebdomadaire de coupures.
+\end{enumerate}
+
+\subsection*{Exercice 5 -- Approximation de Poisson \hfill {\normalsize\color{uimmred}[C04]}}
+Un composant électronique est défaillant avec une probabilité $p = 0{,}005$. On en monte $n = 400$ sur une carte. Soit $X$ le nombre de composants défaillants.
+\begin{enumerate}[label=\alph*)]
+  \item Donner la loi exacte de $X$ et calculer $\lambda = np$.
+  \item Vérifier que l'approximation de Poisson est justifiée.
+  \item À l'aide de la loi de Poisson, estimer $P(X = 0)$ et $P(X \leq 2)$.
+\end{enumerate}
+
+\subsection*{Exercice 6 -- Synthèse : fiabilité d'un système \hfill {\normalsize\color{uimmred}[C02]\,[C04]}}
+Un équipement comporte $n = 8$ modules identiques et indépendants. Chaque module fonctionne sans panne sur un an avec la probabilité $0{,}90$. Soit $X$ le nombre de modules encore en service au bout d'un an.
+\begin{enumerate}[label=\alph*)]
+  \item Justifier que $X$ suit une loi binomiale et donner ses paramètres.
+  \item Calculer la probabilité que les $8$ modules tiennent l'année.
+  \item Calculer la probabilité qu'au moins $7$ modules soient en service.
+  \item Donner le nombre moyen de modules en service au bout d'un an.
+\end{enumerate}
+
+% ============================================================
+% FORMULAIRE
+% ============================================================
+\newpage
+\section*{Formulaire -- À retenir}
+\addcontentsline{toc}{section}{Formulaire}
+
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, title={\textbf{Formulaire des lois discrètes}}, fonttitle=\large\bfseries\sffamily, coltitle=white, boxrule=1.5pt, arc=5pt]
+
+\renewcommand{\arraystretch}{1.9}
+\begin{tabular}{|>{\centering\arraybackslash}m{2.6cm}|>{\centering\arraybackslash}m{4.6cm}|>{\centering\arraybackslash}m{2.3cm}|>{\centering\arraybackslash}m{2.8cm}|}
+\hline
+\rowcolor{uimmblue}
+\textcolor{white}{\textbf{Loi}} & \textcolor{white}{\textbf{$P(X=k)$}} & \textcolor{white}{\textbf{$E(X)$}} & \textcolor{white}{\textbf{$\sigma(X)$}} \\
+\hline
+Bernoulli $\mathcal{B}(p)$ & $P(1)=p,\ P(0)=1-p$ & $p$ & $\sqrt{p(1-p)}$ \\
+\hline
+Binomiale $\mathcal{B}(n\,;p)$ & $\dbinom{n}{k}p^{k}(1-p)^{n-k}$ & $np$ & $\sqrt{np(1-p)}$ \\
+\hline
+Poisson $\mathcal{P}(\lambda)$ & $e^{-\lambda}\dfrac{\lambda^{k}}{k!}$ & $\lambda$ & $\sqrt{\lambda}$ \\
+\hline
+\end{tabular}
+
+\vspace{8pt}
+\textbf{Variable discrète générale :} $\displaystyle \sum p_i = 1$ ; \; $E(X) = \sum x_i p_i$ ; \; $V(X) = \sum x_i^2 p_i - E(X)^2$ ; \; $\sigma(X) = \sqrt{V(X)}$.
+
+\vspace{4pt}
+\textbf{Coefficient binomial :} $\dbinom{n}{k} = \dfrac{n!}{k!\,(n-k)!}$.
+
+\vspace{4pt}
+\textbf{Approximations de $\mathcal{B}(n\,;p)$ :} par $\mathcal{P}(np)$ si $p$ petit ($n\geq30$, $p\leq0{,}1$, $np\leq10$) ; par la loi normale si $n$ grand et $p$ modéré.
+
+\vspace{6pt}
+\textbf{Calculatrice.} \; Binomiale -- TI : \texttt{binomFdp/binomFRép} ; Casio : \texttt{Bpd/Bcd}. \; Poisson -- TI : \texttt{poissonFdp/poissonFRép} ; Casio : \texttt{Ppd/Pcd}.
+\end{tcolorbox}
+
+\vfill
+\begin{center}
+\color{uimmgray}\small
+\textit{Document réalisé par le Pôle Formation UIMM -- Centre-Val de Loire}\\
+\textit{La Fabrique de l'Avenir -- S. JAUBERT}
+\end{center}
+
+\end{document}
