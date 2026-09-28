@@ -16,6 +16,8 @@
 \usetikzlibrary{arrows.meta, decorations.pathmorphing, calc}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.18}
+% Densité de Weibull (eta = 1) : #1 = variable, #2 = paramètre de forme beta
+\newcommand{\weibD}[2]{(#2)*(#1)^((#2)-1)*exp(-((#1)^(#2)))}
 \usepackage[most]{tcolorbox}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
@@ -85,6 +87,21 @@
     {\Large\color{uimmgray} Module 11 -- F.M.D.}\\[12pt]
     {\large\color{uimmgray}\textit{Fiabilité, Maintenabilité, Disponibilité : lois et applications}}
   };
+  % Petites densités de Weibull décoratives (eta = 1)
+  \node[anchor=center] at ([yshift=-5.4cm]current page.center) {
+    \begin{tikzpicture}
+      \begin{axis}[hide axis, width=10cm, height=4.6cm, samples=150,
+        xmin=-0.05, xmax=2.3, ymin=0, ymax=1.55, clip=false]
+        \addplot[uimmred!12, draw=none, domain=0.001:2.2] {\weibD{x}{3.5}} \closedcycle;
+        \addplot[uimmgray!70, very thick, domain=0:2.2] {exp(-x)};
+        \addplot[uimmblue, very thick, domain=0.001:2.2] {\weibD{x}{2}};
+        \addplot[uimmred, very thick, domain=0.001:2.2] {\weibD{x}{3.5}};
+        \draw[uimmgray!70, thin] (axis cs:-0.05,0) -- (axis cs:2.3,0);
+        \node[anchor=south west, font=\small, text=uimmgray] at (axis cs:0.06,1.0) {$\beta=1$};
+        \node[anchor=south west, font=\small, text=uimmblue] at (axis cs:1.5,0.42) {$\beta=2$};
+        \node[anchor=south, font=\small, text=uimmred] at (axis cs:0.91,1.37) {$\beta=3{,}5$};
+      \end{axis}
+    \end{tikzpicture}};
   \fill[uimmblue] ([yshift=1.5cm]current page.south west) rectangle (current page.south east);
   \node[anchor=center, white, font=\small] at ([yshift=0.75cm]current page.south) {
     Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ La Fabrique de l'Avenir};

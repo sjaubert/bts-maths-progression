@@ -1,0 +1,123 @@
+% ============================================================
+% Évaluation : Séries de Fourier (durée 1 h)
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Corrigé et barème : MOD13_Series_Fourier_Evaluation_Corrige_v1_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+\newcommand{\pts}[1]{\hfill{\color{uimmred}\small\textbf{(#1)}}}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt, breakable}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newcommand{\M}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD13 -- Éval}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Évaluation -- MOD13}\\[4pt]
+{\color{white}\large Séries de Fourier \hfill Durée : 1 h \quad Note : \dots\dots / 20}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent{\small\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{8pt}}p{13.8cm}@{}}
+Nom, prénom : & \dotfill \\
+Séquences : & [S01] Séries numériques et signaux périodiques ([C01] à [C04]) -- [S02] Coefficients de Fourier et spectre ([C01], [C02], [C05], [C06]) \\
+\end{tabular}}
+
+\begin{consigne}
+\textbf{Consignes.} Calculatrice autorisée (en radians). Détailler les calculs d'intégrales. Formulaire : $\omega = \frac{2\pi}{T}$ ; $a_0 = \frac1T\int_0^T f$ ; $a_n = \frac2T\int_0^T f(t)\cos(n\omega t)\,\mathrm dt$ ; $b_n = \frac2T\int_0^T f(t)\sin(n\omega t)\,\mathrm dt$ ; $A_n = \sqrt{a_n^2+b_n^2}$ ; Parseval : $\frac1T\int_0^T f^2 = a_0^2 + \frac12\sum(a_n^2+b_n^2)$. Le barème est indicatif.
+\end{consigne}
+
+\needspace{8cm}
+\section{Séries numériques \hfill {\normalsize\color{uimmred}[S01] [C01] [C02]}}
+\begin{exo}{Exercice 1 \hfill 5 points}
+\label{ev:1}
+\begin{enumerate}
+  \item La série $\sum_{n\geq 0} 0{,}8^n$ converge-t-elle ? Si oui, calculer sa somme. \pts{1 pt}
+  \item Même question pour $\sum_{n\geq 1} 3\times 0{,}5^n$. \pts{1 pt}
+  \item Les séries $\sum_{n\geq1}\frac{1}{n^{0{,}9}}$ et $\sum_{n\geq1}\frac{1}{n^{2{,}5}}$ convergent-elles ? Justifier. \pts{1 pt}
+  \item Une électrovanne défectueuse fuit à chaque fermeture. La première fuite est de $0{,}5$\,L, puis chaque fuite vaut $90\,\%$ de la précédente (le joint se tasse). Quel volume total aura fui si l'on ne remplace jamais la vanne ? \pts{2 pts}
+\end{enumerate}
+\end{exo}
+
+\needspace{8cm}
+\section{Coefficients d'un créneau \hfill {\normalsize\color{uimmred}[S01] [C04] -- [S02] [C01] [C05] [C06]}}
+\begin{exo}{Exercice 2 \hfill 8 points}
+\label{ev:2}
+Une sortie d'automate commande un vérin avec la tension périodique $f$ de période $T = 20$\,ms : $f(t) = 10$\,V sur $\left]0\,;\,\frac T2\right[$ et $f(t) = 0$ sur $\left]\frac T2\,;\,T\right[$.
+\begin{enumerate}
+  \item Représenter $f$ sur deux périodes. Donner sa fréquence et sa pulsation $\omega$. \pts{1 pt}
+  \item Calculer $a_0$ et vérifier sur le graphique. \pts{1 pt}
+  \item Montrer que $a_n = 0$ pour tout $n\geq 1$. \pts{1,5 pt}
+  \item Calculer $b_n$ et montrer que $b_n = \dfrac{20}{n\pi}$ si $n$ est impair et $b_n = 0$ si $n$ est pair. \pts{2,5 pts}
+  \item Donner les amplitudes des harmoniques $1$ à $5$ (au centième) et tracer le spectre d'amplitude (fréquences en Hz). \pts{1 pt}
+  \item Calculer la valeur exacte de $\frac1T\int_0^T f^2(t)\,\mathrm dt$, puis la part de cette quantité portée par $a_0$ et le fondamental. \pts{1 pt}
+\end{enumerate}
+\end{exo}
+
+\needspace{8cm}
+\section{Diagnostic vibratoire \hfill {\normalsize\color{uimmred}[S02] [C01] [C02] [C05] [C06]}}
+\begin{exo}{Exercice 3 \hfill 7 points}
+\label{ev:3}
+Sur le banc BV12 tournant à $1\,500$\,tr/min, la vitesse vibratoire d'un palier (en mm/s) est modélisée par
+\[
+v(t) = 3\cos(50\pi t) + 4\sin(50\pi t) + 1{,}5\sin(100\pi t) + 0{,}5\cos(150\pi t).
+\]
+\begin{enumerate}
+  \item Déterminer la fréquence $f_0$ et la période $T$ du fondamental. \pts{1 pt}
+  \item Donner $a_0$, $a_n$ et $b_n$ pour $n = 1, 2, 3$. \pts{1,5 pt}
+  \item Calculer les amplitudes $A_1$, $A_2$, $A_3$ et tracer le spectre d'amplitude. \pts{1,5 pt}
+  \item Quelle raie domine ? Quel défaut peut-on suspecter ? \pts{1 pt}
+  \item Calculer le niveau global $V_{\text{eff}}$ de la vitesse vibratoire. \pts{1,5 pt}
+  \item Le signal $v$ est-il pair ? Justifier à partir des coefficients. \pts{0,5 pt}
+\end{enumerate}
+\end{exo}
+
+\end{document}

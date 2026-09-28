@@ -1,0 +1,91 @@
+% ============================================================
+% Plan de progression pédagogique - Mathématiques BTS
+% Pôle Formation UIMM - CVDL - S. JAUBERT
+% Version 2.3 (27/09/2026) : ajout du module [MOD12] Calcul matriciel en semestre 4.
+% Version 2.4 (27/09/2026) : ajout du module [MOD13] Séries de Fourier en semestre 4.
+% Source recomposée à l'identique de la version 2.2 (PDF du 16/09/2025), seules les lignes MOD12 et MOD13 sont nouvelles.
+% ============================================================
+\documentclass[a4paper,10pt,landscape]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\IfFileExists{lmodern.sty}{\usepackage{lmodern}}{}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage[top=1.8cm, bottom=1.8cm, left=2cm, right=2cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{longtable,booktabs,array}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small Plan de Progression Pédagogique - BTS Mathématiques}
+\fancyhead[R]{\small Version 2.4}
+\fancyfoot[C]{\small Page \thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries Plan de Progression Pédagogique Conforme PR3 - Mathématiques BTS}
+\end{center}
+\vspace{4pt}
+
+\renewcommand{\arraystretch}{1.15}
+\begin{longtable}{>{\raggedright\arraybackslash}p{2.2cm} >{\raggedright\arraybackslash}p{3cm} >{\raggedright\arraybackslash}p{3.5cm} >{\raggedright\arraybackslash}p{13.2cm}}
+\toprule
+\textbf{Période} & \textbf{Bloc / Unité} & \textbf{Thème / Séquence} & \textbf{Compétences ou Capacités Travaillées} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Période} & \textbf{Bloc / Unité} & \textbf{Thème / Séquence} & \textbf{Compétences ou Capacités Travaillées} \\
+\midrule
+\endhead
+\textbf{Semestre 1} & \textbf{[MOD00]} Pré-requis & \textbf{[S01]} Calculs fondamentaux & \textbf{[C01]} Maîtriser les rudiments de logique classique\newline \textbf{[C02]} Calculer avec des relatifs\newline \textbf{[C03]} Effectuer des calculs fractionnaires\newline \textbf{[C04]} Développer, réduire et factoriser des expressions littérales\newline \textbf{[C05]} Résoudre des équations linéaires à une ou plusieurs inconnues\newline \textbf{[C06]} Résoudre des équations du second degré à une inconnue\newline \textbf{[C07]} Poser un problème \\
+\midrule
+\textbf{Semestre 1} & \textbf{[MOD01]} Nombres Complexes & \textbf{[S01]} Forme algébrique & \textbf{[C01]} Définir l'ensemble $\mathbb{C}$ et les formes algébriques\newline \textbf{[C02]} Résoudre une équation du second degré à coefficients réels\newline \textbf{[C03]} Représenter un nombre complexe par un point ou un vecteur\newline \textbf{[C04]} Déterminer et construire un ensemble de points (partie réelle/imaginaire ou module/argument donnés) \\
+\cmidrule(l){3-4}
+ &  & \textbf{[S02]} Forme trigonométrique et exponentielle & \textbf{[C01]} Déterminer le module et l'argument d'un nombre complexe\newline \textbf{[C02]} Utiliser les formes trigonométrique et exponentielle\newline \textbf{[C03]} Appliquer la formule de Moivre et les formules d'Euler\newline \textbf{[C04]} Utiliser la forme la plus adaptée à la résolution d'un problème \\
+\midrule
+\textbf{Semestre 1} & \textbf{[MOD02]} Les Suites & \textbf{[S01]} Généralités & \textbf{[C01]} Calculer les termes d'une suite (calculatrice/logiciel/algorithme)\newline \textbf{[C02]} Réaliser et exploiter une représentation graphique des termes d'une suite \\
+\cmidrule(l){3-4}
+ &  & \textbf{[S02]} Suites arithmétiques et géométriques & \textbf{[C01]} Écrire le terme général d'une suite arithmétique ou géométrique\newline \textbf{[C02]} Calculer la somme de $n$ termes consécutifs\newline \textbf{[C03]} Déterminer un seuil ($u_n \geq a$ ou $u_n \leq 10^{-p}$) à l'aide d'un tableur ou d'un algorithme \\
+\midrule
+\textbf{S1 \& S2} & \textbf{[MOD07]} Statistique Descriptive & \textbf{[S01]} Séries à une variable & \textbf{[C01]} Utiliser un logiciel ou une calculatrice pour résumer et représenter des séries statistiques\newline \textbf{[C02]} Interpréter les résultats pour une série ou pour comparer deux séries\newline \textbf{[C03]} Choisir des résumés numériques ou graphiques adaptés à une problématique \\
+\cmidrule(l){3-4}
+ &  & \textbf{[S02]} Séries à deux variables & \textbf{[C01]} Représenter une série à deux variables et déterminer un ajustement affine (moindres carrés)\newline \textbf{[C02]} Réaliser un ajustement se ramenant, par un changement de variable, à un ajustement affine\newline \textbf{[C03]} Utiliser un ajustement pour interpoler ou extrapoler \\
+\midrule
+\textbf{S1 \& S2} & \textbf{[MOD08]} Calcul des Probabilités & \textbf{[S01]} Dénombrement et probabilités conditionnelles & \textbf{[C01]} Construire un arbre et/ou un tableau des probabilités\newline \textbf{[C02]} Exploiter l'arbre/tableau pour déterminer des probabilités\newline \textbf{[C03]} Calculer la probabilité d'un événement (formule des probabilités totales)\newline \textbf{[C04]} Utiliser ou justifier l'indépendance de deux événements \\
+\cmidrule(l){3-4}
+ &  & \textbf{[S02]} Variables aléatoires et lois usuelles & \textbf{[C01]} Simuler un schéma de Bernoulli\newline \textbf{[C02]} Reconnaître et justifier qu'une situation relève de la loi binomiale\newline \textbf{[C03]} Représenter graphiquement la loi binomiale\newline \textbf{[C04]} Calculer une probabilité dans le cadre de la loi binomiale, de Poisson et normale\newline \textbf{[C05]} Interpréter l'espérance et l'écart-type d'une loi (Binomiale, Poisson) \\
+\midrule
+\textbf{Semestre 2} & \textbf{[MOD03]} Calcul Différentiel & \textbf{[S01]} Dérivation et étude de fonction & \textbf{[C01]} Calculer la dérivée d'une fonction (à la main ou via logiciel de calcul formel)\newline \textbf{[C02]} Étudier les variations d'une fonction simple\newline \textbf{[C03]} Exploiter un tableau de variation pour obtenir un extremum\newline \textbf{[C04]} Exploiter un tableau de variation pour obtenir le signe de $f$\newline \textbf{[C05]} Exploiter un tableau de variation pour obtenir le nombre de solutions de $f(x) = k$\newline \textbf{[C06]} Mettre en œuvre un procédé de recherche de valeur approchée d'une racine\newline \textbf{[C07]} Interpréter une représentation graphique en termes de limite\newline \textbf{[C08]} Interpréter graphiquement une limite en termes d'asymptote \\
+\midrule
+\textbf{Semestre 2} & \textbf{[MOD05]} Calcul Intégral & \textbf{[S01]} Primitives et intégrales & \textbf{[C01]} Déterminer des primitives d'une fonction (à la main ou via logiciel)\newline \textbf{[C02]} Déterminer une intégrale (à la main ou via logiciel) \\
+\cmidrule(l){3-4}
+ &  & \textbf{[S02]} Techniques d'intégration & \textbf{[C01]} Calculer une intégrale par intégration par parties\newline \textbf{[C02]} Savoir effectuer un changement de variables \\
+\cmidrule(l){3-4}
+ &  & \textbf{[S03]} Applications géométriques & \textbf{[C01]} Déterminer l'aire d'un domaine défini par $f(x) \leq y \leq g(x)$ \\
+\midrule
+\textbf{Semestre 3} & \textbf{[MOD06]} Équations Différentielles & \textbf{[S01]} Premier ordre & \textbf{[C01]} Résoudre une équation différentielle du premier ordre (à la main ou via logiciel)\newline \textbf{[C02]} Déterminer la solution vérifiant une condition initiale donnée\newline \textbf{[C03]} Représenter à l'aide d'un logiciel la famille des courbes solutions \\
+\cmidrule(l){3-4}
+ &  & \textbf{[S02]} Second ordre (coeff. constants) & \textbf{[C01]} Résoudre une équation du second degré à coefficients réels\newline \textbf{[C02]} Résoudre une équation différentielle du second ordre (à la main ou via logiciel)\newline \textbf{[C03]} Déterminer la solution vérifiant des conditions initiales données \\
+\midrule
+\textbf{Semestre 3} & \textbf{[MOD09]} Statistique Inférentielle & \textbf{[S01]} Estimation par intervalle de confiance & \textbf{[C01]} Estimer ponctuellement une proportion, une moyenne ou un écart type\newline \textbf{[C02]} Déterminer un intervalle de confiance pour une proportion ou une moyenne\newline \textbf{[C03]} Exploiter un intervalle de confiance\newline \textbf{[C04]} Déterminer la taille nécessaire d'un échantillon pour une précision donnée \\
+\cmidrule(l){3-4}
+ &  & \textbf{[S02]} Tests d'hypothèses & \textbf{[C01]} Déterminer la région de rejet de l'hypothèse nulle et énoncer la règle de décision\newline \textbf{[C02]} Utiliser les tests bilatéraux et unilatéraux (comparaison de proportions ou de moyennes)\newline \textbf{[C03]} Analyser les risques d'erreur de première et de seconde espèce \\
+\midrule
+\textbf{Semestre 4} & \textbf{[MOD11]} Fiabilité & \textbf{[S01]} Concepts et lois & \textbf{[C01]} Connaître le vocabulaire de la fiabilité et sa traduction mathématique\newline \textbf{[C02]} Représenter des temps de bon fonctionnement à l'aide d'un logiciel\newline \textbf{[C03]} Utiliser la régression linéaire pour ajuster une distribution observée (Exponentielle/Weibull)\newline \textbf{[C04]} Calculer et interpréter des probabilités de panne et la MTBF\newline \textbf{[C05]} Calculer la périodicité d'une intervention fondée sur une fiabilité déterminée \\
+\midrule
+\textbf{Semestre 4} & \textbf{[MOD12]} Calcul Matriciel & \textbf{[S01]} Matrices et opérations & \textbf{[C01]} Représenter une situation simple à l'aide d'une écriture matricielle\newline \textbf{[C02]} Effectuer des calculs matriciels (addition, multiplication par un réel, multiplication), à la main à l'ordre 2, via calculatrice ou logiciel au-delà\newline \textbf{[C03]} Calculer une puissance de matrice et traiter un processus discret à l'aide d'une suite de matrices \\
+\cmidrule(l){3-4}
+ &  & \textbf{[S02]} Inverse d'une matrice et systèmes linéaires & \textbf{[C01]} Montrer qu'une matrice est l'inverse d'une autre\newline \textbf{[C02]} Déterminer à l'aide d'une calculatrice ou d'un logiciel l'inverse d'une matrice inversible\newline \textbf{[C03]} Résoudre un système linéaire de $n$ équations à $n$ inconnues à l'aide d'une inversion de matrice \\
+\midrule
+\textbf{Semestre 4} & \textbf{[MOD13]} Séries de Fourier & \textbf{[S01]} Séries numériques et signaux périodiques & \textbf{[C01]} Reconnaître une série géométrique et connaître la condition de convergence\newline \textbf{[C02]} Connaître la condition de convergence d'une série de Riemann\newline \textbf{[C03]} Représenter graphiquement une fonction $T$-périodique continue par morceaux\newline \textbf{[C04]} Exploiter la représentation graphique d'une fonction $T$-périodique affine par morceaux (périodicité, parité, expression sur une période ou une demi-période) \\
+\cmidrule(l){3-4}
+ &  & \textbf{[S02]} Coefficients de Fourier et spectre & \textbf{[C01]} Calculer les coefficients de Fourier (à la main pour un créneau, via logiciel de calcul formel dans tous les cas)\newline \textbf{[C02]} Exploiter la parité d'une fonction pour simplifier le calcul des coefficients\newline \textbf{[C03]} Représenter à l'aide d'un logiciel une somme partielle et la comparer au signal\newline \textbf{[C04]} Identifier, parmi plusieurs développements proposés, celui d'une fonction donnée\newline \textbf{[C05]} Calculer une valeur efficace exacte et approchée (formule de Parseval)\newline \textbf{[C06]} Représenter et interpréter le spectre d'amplitude d'un signal (analyse harmonique) \\
+\bottomrule
+\end{longtable}
+
+\end{document}

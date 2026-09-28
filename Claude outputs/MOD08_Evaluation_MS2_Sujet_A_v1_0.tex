@@ -1,0 +1,165 @@
+% ============================================================
+% Évaluation MOD08 : lois discrètes, loi normale, probabilités conditionnelles
+% Sujet A -- BTS MS 2e année -- durée 45 min
+% Pôle Formation UIMM - CVDL - S. JAUBERT
+% Corrigé et barème : MOD08_Evaluation_MS2_Sujet_A_Corrige_v1_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=10pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newcommand{\pts}[1]{\hfill\mbox{\color{uimmred}\small\textbf{(#1)}}}
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.85*\i) -- (\linewidth-1pt,-0.85*\i);}
+  \end{tikzpicture}\par\medskip}
+% Cadre vide (arbre pondéré) : #1 = hauteur
+\newcommand{\cadre}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \draw[uimmgray!40, rounded corners=3pt] (0,0) rectangle (\linewidth-1pt,-#1);
+  \end{tikzpicture}\par\medskip}
+\newcommand{\EnTete}[2]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS MS 2\textsuperscript{e} année -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{Éval. Sujet A}{Sujet A}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Évaluation -- MOD08 \hfill Sujet A}\\[4pt]
+{\color{white}\large Lois discrètes, loi normale, probabilités conditionnelles \hfill Durée~: 45 min}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent{\small\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{8pt}}p{13.8cm}@{}}
+Nom, prénom~: & \dotfill \hspace{1cm}{\bfseries\color{uimmblue}Note~:}\ \dots\dots\ / 20 \\
+\end{tabular}}
+
+\begin{consigne}
+\textbf{Consignes.} Calculatrice autorisée en mode examen, aucun document. Répondre sur le sujet, dans les zones prévues.
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Toute loi utilisée doit être \textbf{nommée avec ses paramètres}.
+  \item Pour chaque calcul fait à la calculatrice \calc, écrire d'abord la probabilité cherchée avec la variable aléatoire (par exemple $P(X\geq 3)$), puis la commande utilisée et le résultat.
+  \item Probabilités arrondies à $10^{-4}$. Le barème est donné à titre indicatif.
+\end{itemize}
+\end{consigne}
+
+% ------------------------------------------------------------
+\needspace{12cm}
+\section{Exercice 1 -- Stock de roulements \hfill {\normalsize\color{uimmred}8 points}}
+\begin{exo}{Contexte}
+Le magasin de maintenance s'approvisionne en roulements auprès de deux fournisseurs. Le fournisseur Alpha livre $60\,\%$ du stock et $2\,\%$ de ses roulements sont non conformes. Le fournisseur Bêta livre le reste du stock et $5\,\%$ de ses roulements sont non conformes. On prend un roulement au hasard dans le stock.
+\end{exo}
+\begin{enumerate}
+  \needspace{7.4cm}
+  \item Définir les évènements utiles, puis traduire les données de l'énoncé en probabilités. Un arbre pondéré est conseillé. \pts{1 pt}
+  \cadre{5.2cm}
+  \needspace{4.8cm}
+  \item Montrer que la probabilité que le roulement soit non conforme vaut $0{,}032$. \pts{1,5 pt}
+  \zone{3}
+  \needspace{4.8cm}
+  \item Le roulement prélevé est non conforme. Quelle est la probabilité qu'il provienne du fournisseur Bêta~? \pts{1,5 pt}
+  \zone{3}
+\end{enumerate}
+
+\needspace{4cm}
+\noindent Un technicien prélève $25$ roulements dans le stock. Le stock est assez important pour assimiler ce prélèvement à un tirage avec remise. On note $X$ le nombre de roulements \textbf{conformes} parmi les $25$.
+\begin{enumerate}[resume]
+  \needspace{6.5cm}
+  \item Justifier que $X$ suit une loi binomiale. Préciser ses paramètres. \pts{1,5 pt}
+  \zone{5}
+  \needspace{5.6cm}
+  \item Traduire à l'aide de $X$ l'évènement «~le prélèvement contient au plus $2$ roulements non conformes~», puis calculer sa probabilité. \calc \pts{1,5 pt}
+  \zone{4}
+  \needspace{4.8cm}
+  \item Combien de roulements non conformes peut-on attendre, en moyenne, dans un tel prélèvement~? Justifier. \pts{1 pt}
+  \zone{3}
+\end{enumerate}
+
+% ------------------------------------------------------------
+\needspace{12cm}
+\section{Exercice 2 -- Pannes de capteurs \hfill {\normalsize\color{uimmred}5 points}}
+\begin{exo}{Contexte}
+Une usine surveille ses machines avec un parc de $150$ capteurs de vibration. Chaque capteur tombe en panne au cours d'une semaine avec la probabilité $0{,}01$, indépendamment des autres. On note $N$ le nombre de capteurs en panne au cours d'une semaine. On admet que $N$ suit la loi binomiale $\mathcal{B}(150\,;0{,}01)$.
+\end{exo}
+\begin{enumerate}
+  \needspace{4.8cm}
+  \item Justifier qu'on peut approcher la loi de $N$ par une loi de Poisson, dont on précisera le paramètre. \pts{1 pt}
+  \zone{3}
+\end{enumerate}
+\noindent\textit{Dans la suite, on utilise cette loi de Poisson.}
+\begin{enumerate}[resume]
+  \needspace{5.6cm}
+  \item Calculer la probabilité qu'aucun capteur ne tombe en panne dans la semaine, puis la probabilité qu'au plus $2$ capteurs tombent en panne. \calc \pts{1,5 pt}
+  \zone{4}
+  \needspace{6.5cm}
+  \item Au cours d'une semaine, au moins un capteur est tombé en panne. Quelle est la probabilité qu'il y ait eu au plus $2$ pannes cette semaine-là~? \pts{1,5 pt}
+  \zone{5}
+  \needspace{5.6cm}
+  \item Le magasin veut garder en réserve $k$ capteurs neufs. Déterminer le plus petit $k$ tel que la réserve suffise pour la semaine avec une probabilité d'au moins $95\,\%$. \calc \pts{1 pt}
+  \zone{4}
+\end{enumerate}
+
+% ------------------------------------------------------------
+\needspace{12cm}
+\section{Exercice 3 -- Diamètre d'arbres rectifiés \hfill {\normalsize\color{uimmred}7 points}}
+\begin{exo}{Contexte}
+Une rectifieuse produit des arbres dont le diamètre $D$, en mm, suit la loi normale de moyenne $\mu = 25{,}00$ et d'écart-type $\sigma = 0{,}015$. Un arbre est \textbf{conforme} si $24{,}97 \leq D \leq 25{,}03$. Sinon, il est rebuté. Un arbre est en \textbf{zone d'alerte} si son diamètre dépasse $25{,}02$\,mm.
+\end{exo}
+\begin{enumerate}
+  \needspace{4.8cm}
+  \item Calculer la probabilité qu'un arbre pris au hasard soit conforme. \calc \pts{1,5 pt}
+  \zone{3}
+  \needspace{4.8cm}
+  \item Calculer la probabilité qu'un arbre pris au hasard soit en zone d'alerte. \calc \pts{1 pt}
+  \zone{3}
+  \needspace{6.5cm}
+  \item Un arbre est en zone d'alerte. Quelle est la probabilité qu'il soit rebuté~? \pts{2 pts}
+  \zone{5}
+  \needspace{8.2cm}
+  \item Après une révision de la rectifieuse, la moyenne reste réglée à $25{,}00$\,mm. Le responsable qualité exige que $99\,\%$ des arbres soient conformes. Déterminer l'écart-type maximal $\sigma$ compatible avec cette exigence. Détailler la démarche. \pts{2,5 pts}
+  \zone{7}
+\end{enumerate}
+
+\end{document}

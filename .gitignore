@@ -40,3 +40,6 @@ npm-debug.log
 *.acn
 *.acr
 *.alg
+
+# Fichier temporaire du générateur de README
+.github/scripts/README_genere.md

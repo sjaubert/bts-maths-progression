@@ -1,0 +1,403 @@
+% ============================================================
+% Corrigé du TD : Calcul matriciel
+% Pôle Formation UIMM - CVDL - BTS ATI / CRSA - S. JAUBERT
+% Les références « Cours » et « Énoncé » sont lues dans les fichiers .aux
+% du cours et du TD : compiler d'abord le cours et le TD, puis ce corrigé (deux passes).
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{xr-hyper}
+\usepackage{hyperref}
+\externaldocument[C-]{MOD12_Calcul_Matriciel_Cours_v1_0}
+\externaldocument[T-]{MOD12_Calcul_Matriciel_TD_v1_0}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newtcolorbox{piege}{%
+  colback=uimmred!5, colframe=uimmred!80!black, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt, before skip=6pt, after skip=6pt}
+
+\newcommand{\M}[1]{\begin{pmatrix}#1\end{pmatrix}}
+% Référence vers le cours : §section, page
+\newcommand{\cours}[1]{§\ref{C-#1} p.~\pageref{C-#1}}
+% Ligne de références en tête de chaque correction
+\newcommand{\source}[2]{{\footnotesize\color{uimmgray}\textbf{Réf.} \enspace Énoncé : TD MOD12 p.~\pageref{T-#1} \enspace$\bullet$\enspace Cours MOD12 : #2}\par\smallskip}
+\newcommand{\annexe}[1]{annexe p.~\pageref{C-#1}}
+\newcommand{\q}[1]{\textbf{\color{uimmblue}#1}\ }
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS ATI / CRSA -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD12 -- Corrigé TD}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé -- Travaux Dirigés MOD12}\\[4pt]
+{\color{white}\large Calcul matriciel}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Mode d'emploi.} Chaque correction indique la page de l'énoncé dans le TD et le paragraphe du cours à relire (numéro de paragraphe et page du support de cours MOD12). Les encadrés rouges signalent les erreurs les plus fréquentes.
+\end{tcolorbox}
+
+% ============================================================
+\needspace{8cm}
+\section{Lire et construire une matrice}
+
+\begin{correction}[-- Exercice 1 : stock de trois entrepôts]
+\source{exo:1}{\cours{subsec:def} et \cours{subsec:defproduit}}
+\q{a)} $M$ a $3$ lignes et $4$ colonnes : format $3\times 4$.
+
+\q{b)} $m_{23} = 25$ : l'entrepôt de Tours (ligne 2) stocke $25$ régulateurs (colonne 3).\\
+$m_{32} = 60$ : l'entrepôt de Bourges (ligne 3) stocke $60$ distributeurs (colonne 2).
+
+\q{c)} Orléans : $m_{13} = 0$.
+
+\q{d)} $LM$ : $(1\times 3)\times(3\times 4)$ donne une matrice $1\times 4$. Chaque coefficient est la somme d'une colonne :
+\[
+LM = \M{120+80+15 & 45+30+60 & 0+25+10 & 60+40+90} = \M{215 & 135 & 35 & 190}.
+\]
+C'est le stock total de chaque référence, tous entrepôts confondus : $215$ vérins, $135$ distributeurs, $35$ régulateurs, $190$ capteurs.
+
+\q{e)} $MC$ : $(3\times 4)\times(4\times 1)$ donne $3\times 1$. Chaque coefficient est la somme d'une ligne :
+\[
+MC = \M{120+45+0+60\\ 80+30+25+40\\ 15+60+10+90} = \M{225\\175\\175}.
+\]
+C'est le nombre total d'articles dans chaque entrepôt : $225$ à Orléans, $175$ à Tours et $175$ à Bourges.
+\end{correction}
+
+\begin{correction}[-- Exercice 2 : production de deux usines]
+\source{exo:2}{\cours{subsec:particulieres}, \cours{subsec:addition} et \cours{subsec:reel}}
+\q{a)} $J+F = \M{950 & 620 & 380\\ 820 & 680 & 320}$ : production cumulée de janvier et février, par usine et par pièce.
+
+\q{b)} $F-J = \M{-50 & 20 & -20\\ 20 & -20 & 20}$. C'est l'usine $U_2$ qui a augmenté sa production de $p_1$, de $20$ pièces ($U_1$ en a produit $50$ de moins).
+
+\q{c)} Hausse de $20\,\%$ : on multiplie par $1{,}2$.
+\[
+1{,}2\,J = \M{600 & 360 & 240\\ 480 & 420 & 180}.
+\]
+\q{d)} Deux matrices égales ont les mêmes coefficients aux mêmes places : $2a = 500$ et $b + 50 = 350$, soit $a = 250$ et $b = 300$.
+\end{correction}
+
+% ============================================================
+\needspace{8cm}
+\section{Produit de matrices}
+
+\begin{correction}[-- Exercice 3 : calculs à la main]
+\source{exo:3}{\cours{sec:addition} et \cours{meth:croix}}
+\q{a)} $A + B = \M{3 & 4\\ 1 & 4}$ \qquad $3A - 2B = \M{6 & -3\\ 9 & 12} - \M{2 & 10\\ -4 & 0} = \M{4 & -13\\ 13 & 12}$.
+
+\q{b)}
+\[
+AB = \M{2\times 1 + (-1)\times(-2) & 2\times 5 + (-1)\times 0\\ 3\times 1 + 4\times(-2) & 3\times 5 + 4\times 0} = \M{4 & 10\\ -5 & 15}
+\]
+\[
+BA = \M{1\times 2 + 5\times 3 & 1\times(-1) + 5\times 4\\ -2\times 2 + 0\times 3 & -2\times(-1) + 0\times 4} = \M{17 & 19\\ -4 & 2}
+\]
+$AB\neq BA$ : le produit matriciel n'est pas commutatif.
+
+\q{c)} $A^2 = AA = \M{4-3 & -2-4\\ 6+12 & -3+16} = \M{1 & -6\\ 18 & 13}$.
+\begin{piege}
+\textbf{Erreur fréquente :} écrire $A^2 = \M{4 & 1\\ 9 & 16}$ en élevant chaque coefficient au carré. $A^2$ est le produit $A\times A$.
+\end{piege}
+\end{correction}
+
+\begin{correction}[-- Exercice 4 : le bon format]
+\source{exo:4}{\cours{subsec:defproduit} (règle des dimensions)}
+Le produit $XY$ existe si le nombre de colonnes de $X$ égale le nombre de lignes de $Y$.
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\rowcolor{uimmlightblue}
+Produit & Formats & Existe ? & Format du résultat \\
+\hline
+$AB$ & $(2\times 3)(3\times 3)$ & oui & $2\times 3$ \\
+$BA$ & $(3\times 3)(2\times 3)$ & non ($3\neq 2$) & -- \\
+$AC$ & $(2\times 3)(3\times 1)$ & oui & $2\times 1$ \\
+$CA$ & $(3\times 1)(2\times 3)$ & non ($1\neq 2$) & -- \\
+$DA$ & $(1\times 2)(2\times 3)$ & oui & $1\times 3$ \\
+$AD$ & $(2\times 3)(1\times 2)$ & non ($3\neq 1$) & -- \\
+$CD$ & $(3\times 1)(1\times 2)$ & oui & $3\times 2$ \\
+$DC$ & $(1\times 2)(3\times 1)$ & non ($2\neq 3$) & -- \\
+\hline
+\end{tabular}
+\end{center}
+\end{correction}
+
+\begin{correction}[-- Exercice 5 : chiffre d'affaires et marge]
+\source{exo:5}{\cours{ex:besoins}}
+\q{a)} $J$ est $2\times 3$ et $P$ est $3\times 1$ : $JP$ existe et il est $2\times 1$.
+\[
+JP = \M{500\times 8 + 300\times 12 + 200\times 20\\ 400\times 8 + 350\times 12 + 150\times 20} = \M{11\,600\\ 10\,400}.
+\]
+Chiffre d'affaires de janvier : $11\,600$\,€ pour $U_1$ et $10\,400$\,€ pour $U_2$.
+
+\q{b)} $P - K = \M{3\\5\\7}$ (marge unitaire de chaque pièce). \quad
+$J(P-K) = \M{1\,500 + 1\,500 + 1\,400\\ 1\,200 + 1\,750 + 1\,050} = \M{4\,400\\ 4\,000}$.\\
+C'est la marge sur coût de revient de janvier : $4\,400$\,€ pour $U_1$, $4\,000$\,€ pour $U_2$.
+
+\q{c)} Nouveaux prix $1{,}05\,P$, d'où $J(1{,}05\,P) = 1{,}05\,(JP) = \M{12\,180\\ 10\,920}$ (en €).
+\end{correction}
+
+\begin{correction}[-- Exercice 6 : plan de charge d'un îlot d'usinage]
+\source{exo:6}{\cours{ex:besoins} et \cours{subsec:proprietes}}
+\q{a)}
+\[
+TX = \M{12\times 60 + 8\times 45\\ 15\times 60 + 20\times 45\\ 5\times 60 + 6\times 45} = \M{1\,080\\ 1\,800\\ 570} \text{ min} = \M{18\\ 30\\ 9{,}5} \text{ h}.
+\]
+Ce sont les charges de travail du tour, de la fraiseuse et de la rectifieuse pour la commande.
+
+\q{b)} $18 \leq 35$, $30\leq 35$ et $9{,}5\leq 35$ : la commande est réalisable. La fraiseuse est le poste le plus chargé ($30/35\approx 86\,\%$).
+
+\q{c)} $H$ est $1\times 3$, la charge en heures est $3\times 1$ : le produit est un nombre.
+\[
+H\M{18\\30\\9{,}5} = 45\times 18 + 55\times 30 + 60\times 9{,}5 = 810 + 1\,650 + 570 = 3\,030 \text{ €.}
+\]
+\end{correction}
+
+\begin{correction}[-- Exercice 7 : attention aux habitudes]
+\source{exo:7}{\cours{subsec:proprietes} (encadrés « Attention »)}
+\q{a)} $AB = \M{2-2 & -4+4\\ 4-4 & -8+8} = \M{0 & 0\\ 0 & 0}$ \qquad $BA = \M{2-8 & 4-16\\ -1+4 & -2+8} = \M{-6 & -12\\ 3 & 6}$.\\
+$AB$ est nulle alors que ni $A$ ni $B$ ne l'est. De plus $BA\neq AB$.
+
+\q{b)} $C + D = \M{2 & 1\\ 1 & 2}$, donc $(C+D)^2 = \M{5 & 4\\ 4 & 5}$.\\
+$C^2 = \M{1 & 2\\ 0 & 1}$, $D^2 = \M{1 & 0\\ 2 & 1}$, $CD = \M{2 & 1\\ 1 & 1}$, donc $C^2 + 2CD + D^2 = \M{6 & 4\\ 4 & 4}$. Les deux résultats diffèrent.
+
+\q{c)} $(C+D)(C+D) = C^2 + CD + DC + D^2$. On n'obtient $C^2 + 2CD + D^2$ que si $DC = CD$. Ici $DC = \M{1 & 1\\ 1 & 2}\neq CD$, et l'écart vaut $DC - CD = \M{-1 & 0\\ 0 & 1}$.
+\end{correction}
+
+% ============================================================
+\needspace{8cm}
+\section{Puissances et processus discrets}
+
+\begin{correction}[-- Exercice 8 : table tournante d'un robot]
+\source{exo:8}{\cours{subsec:defpuissance} et \annexe{fiche:calc}}
+\q{a)} $R\M{4\\0} = \M{\frac{\sqrt 3}{2}\times 4 - \frac12\times 0\\[2pt] \frac12\times 4 + \frac{\sqrt 3}{2}\times 0} = \M{2\sqrt 3\\ 2}\approx\M{3{,}46\\ 2}$ (en dm).
+
+\q{b)} La calculatrice donne $R^3 = \M{0 & -1\\ 1 & 0}$ : c'est la rotation de $90^\circ$ ($3\times 30^\circ$). Après trois indexations, la pièce est en $R^3\M{4\\0} = \M{0\\4}$.
+
+\q{c)} $R^{12} = I_2$ (la calculatrice peut afficher des valeurs comme $10^{-13}$ à la place de $0$ : ce sont des erreurs d'arrondi). Douze indexations de $30^\circ$ font un tour complet ($360^\circ$) : la pièce revient à sa position de départ.
+
+\q{d)} $R\times R^{11} = R^{12} = I_2$, donc $S = R^{11}$ convient. C'est la rotation de $330^\circ$, c'est-à-dire de $-30^\circ$ : elle annule une indexation (retour arrière du plateau).
+\[
+S = \M{\cos(-30^\circ) & -\sin(-30^\circ)\\ \sin(-30^\circ) & \cos(-30^\circ)} = \M{\frac{\sqrt3}{2} & \frac12\\[2pt] -\frac12 & \frac{\sqrt3}{2}}.
+\]
+\end{correction}
+
+\begin{correction}[-- Exercice 9 : disponibilité d'un parc de machines]
+\source{exo:9}{\cours{subsec:processus} (exemple des robots de soudage)}
+\q{a)} Les presses en marche la semaine $n+1$ viennent des trois états :
+\[
+\left\{\begin{array}{l}
+m_{n+1} = 0{,}85\,m_n + 0{,}90\,p_n + 0{,}60\,d_n\\
+p_{n+1} = 0{,}10\,m_n + 0{,}10\,p_n\\
+d_{n+1} = 0{,}05\,m_n + 0{,}40\,d_n
+\end{array}\right.
+\qquad
+A = \M{0{,}85 & 0{,}90 & 0{,}60\\ 0{,}10 & 0{,}10 & 0\\ 0{,}05 & 0 & 0{,}40}.
+\]
+Colonne 1 : $0{,}85 + 0{,}10 + 0{,}05 = 1$ ; colonne 2 : $0{,}90 + 0{,}10 + 0 = 1$ ; colonne 3 : $0{,}60 + 0 + 0{,}40 = 1$. Une presse qui part d'un état se retrouve forcément dans l'un des trois états : les probabilités de chaque colonne se complètent.
+
+\q{b)} $X_1 = AX_0 = \M{0{,}85\times 40\\ 0{,}10\times 40\\ 0{,}05\times 40} = \M{34\\4\\2}$.
+
+\q{c)} Avec $X_n = A^nX_0$ :
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|c|c|c|}
+\hline
+\rowcolor{uimmlightblue}
+ & $X_4$ & $X_{10}$ & $X_{20}$ \\
+\hline
+$m_n$ & $33{,}52$ & $33{,}49$ & $33{,}49$ \\
+$p_n$ & $3{,}73$ & $3{,}72$ & $3{,}72$ \\
+$d_n$ & $2{,}75$ & $2{,}79$ & $2{,}79$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\q{d)} $\dfrac{33{,}49}{40}\approx 0{,}837$ : la disponibilité se stabilise autour de $83{,}7\,\%$ (valeur exacte $\frac{36}{43}$).
+
+\q{e)} Nouvelle matrice $A' = \M{0{,}85 & 0{,}90 & 0{,}80\\ 0{,}10 & 0{,}10 & 0\\ 0{,}05 & 0 & 0{,}20}$. Pour $n$ grand, $A'^{\,n}X_0\approx\M{34{,}08\\ 3{,}79\\ 2{,}13}$ : disponibilité $\approx 85{,}2\,\%$ (valeur exacte $\frac{144}{169}$).\\
+Le gain est de $1{,}5$ point, soit environ $0{,}6$ presse de plus en marche en moyenne. Il faut le comparer au coût du contrat : la panne n'est pas l'état qui pèse le plus, car les presses tombent rarement en panne ($5\,\%$ par semaine).
+\end{correction}
+
+\begin{correction}[-- Exercice 10 : trajets d'AGV]
+\source{exo:10}{\cours{ex:reseau}}
+\q{a)} Ordre des zones : $1$, $2$, $3$, $4$.
+\qquad
+$G = \M{0 & 1 & 0 & 0\\ 0 & 0 & 1 & 1\\ 0 & 1 & 0 & 1\\ 1 & 0 & 0 & 0}$
+
+\q{b)}
+$G^2 = \M{0 & 0 & 1 & 1\\ 1 & 1 & 0 & 1\\ 1 & 0 & 1 & 1\\ 0 & 1 & 0 & 0}$
+\qquad
+$G^3 = \M{1 & 1 & 0 & 1\\ 1 & 1 & 1 & 1\\ 1 & 2 & 0 & 1\\ 0 & 0 & 1 & 1}$
+
+\q{c)} $(G^3)_{14} = 1$ : un seul trajet en $3$ étapes de la réception à l'expédition, $1\to 2\to 3\to 4$.
+
+\q{d)} $(G^3)_{32} = 2$ : deux trajets, $3\to 2\to 3\to 2$ et $3\to 4\to 1\to 2$.
+
+\q{e)} $(G^2)_{22} = 1$ : oui, par le trajet $2\to 3\to 2$ (stock, production, retour au stock).
+\end{correction}
+
+% ============================================================
+\needspace{8cm}
+\section{Inverse d'une matrice}
+
+\begin{correction}[-- Exercice 11 : montrer qu'une matrice est l'inverse d'une autre]
+\source{exo:11}{\cours{meth:montrerinverse} (méthode et encadré « Attention »)}
+\q{a)} $AB = \M{9-8 & -6+6\\ 12-12 & -8+9} = \M{1 & 0\\ 0 & 1} = I_2$. Donc $A$ est inversible et $A^{-1} = B$.
+
+\q{b)} $TT' = \M{1 & 0 & -2+2\\ 0 & 1 & 0\\ 0 & 0 & 1} = I_3$, donc $T^{-1} = T'$. $T'$ est la translation de vecteur $(-2\,;\,0)$ : elle ramène chaque point à sa position de départ.
+
+\q{c)} La ligne 1 de $C$ est le double de sa ligne 2. Comme la ligne $i$ de $CB$ est « ligne $i$ de $C$ fois $B$ », la ligne 1 de $CB$ est le double de sa ligne 2. Or $CB = I_2$ aurait pour lignes $\M{1 & 0}$ et $\M{0 & 1}$, et $\M{1 & 0}\neq 2\M{0 & 1}$. Contradiction : aucune matrice $B$ ne convient, $C$ n'est pas inversible.
+\end{correction}
+
+\begin{correction}[-- Exercice 12 : inverse à partir d'une relation]
+\source{exo:12}{\cours{subsec:definverse}}
+\q{a)} $A^2 = \M{9-2 & -6+0\\ 3+0 & -2+0} = \M{7 & -6\\ 3 & -2}$ \qquad $3A - 2I_2 = \M{9-2 & -6\\ 3 & 0-2} = \M{7 & -6\\ 3 & -2}$.\\
+On constate que $A^2 = 3A - 2I_2$.
+
+\q{b)} $A\times\frac12(3I_2 - A) = \frac12(3A - A^2) = \frac12\big(3A - (3A - 2I_2)\big) = \frac12\times 2I_2 = I_2$.
+
+\q{c)} On a trouvé une matrice $B$ telle que $AB = I_2$ : $A$ est inversible et
+\[
+A^{-1} = \frac12(3I_2 - A) = \frac12\M{0 & 2\\ -1 & 3} = \M{0 & 1\\ -\frac12 & \frac32}.
+\]
+\q{d)} La calculatrice affiche $A^{-1} = \M{0 & 1\\ -0{,}5 & 1{,}5}$.
+\end{correction}
+
+% ============================================================
+\needspace{8cm}
+\section{Systèmes linéaires}
+
+\begin{correction}[-- Exercice 13 : saturer un atelier]
+\source{exo:13}{\cours{meth:systeme} (méthode et exemple du plan de charge)}
+\q{a)} $\left\{\begin{array}{ll} 3x + 2y = 240 & \text{(assemblage)}\\ x + y = 100 & \text{(câblage)}\end{array}\right.$
+\qquad
+$\underbrace{\M{3 & 2\\ 1 & 1}}_{A}\underbrace{\M{x\\y}}_{X} = \underbrace{\M{240\\100}}_{B}$.
+
+\q{b)} $A\M{1 & -2\\ -1 & 3} = \M{3-2 & -6+6\\ 1-1 & -2+3} = I_2$. Donc $A^{-1} = \M{1 & -2\\ -1 & 3}$.
+
+\q{c)} $X = A^{-1}B = \M{1 & -2\\ -1 & 3}\M{240\\100} = \M{240 - 200\\ -240 + 300} = \M{40\\60}$.\\
+Vérification : $3\times 40 + 2\times 60 = 240$ et $40 + 60 = 100$. On fabrique $40$ coffrets $E_1$ et $60$ coffrets $E_2$.
+
+\q{d)} Même matrice $A$, nouveau second membre : $X = A^{-1}\M{270\\110} = \M{270 - 220\\ -270 + 330} = \M{50\\60}$.\\
+On fabrique $50$ coffrets $E_1$ et $60$ coffrets $E_2$.
+\begin{piege}
+\textbf{Erreur fréquente :} calculer $BA^{-1}$. Ce produit n'existe pas ($(2\times 1)(2\times 2)$). On multiplie \textbf{à gauche} : $X = A^{-1}B$.
+\end{piege}
+\end{correction}
+
+\begin{correction}[-- Exercice 14 : élaboration d'un alliage]
+\source{exo:14}{\cours{meth:inversecalc} et \cours{ex:stock}}
+\q{a)} On fait le bilan de chaque métal (les pourcentages s'écrivent en décimal) :
+\[
+\left\{\begin{array}{l} 0{,}7x + 0{,}5y + 0{,}6z = 610\\ 0{,}2x + 0{,}4y + 0{,}1z = 230\\ 0{,}1x + 0{,}1y + 0{,}3z = 160\end{array}\right.
+\qquad
+A = \M{0{,}7 & 0{,}5 & 0{,}6\\ 0{,}2 & 0{,}4 & 0{,}1\\ 0{,}1 & 0{,}1 & 0{,}3},\quad
+B = \M{610\\230\\160}.
+\]
+\q{b)} La calculatrice donne
+$A^{-1} = \M{2{,}75 & -2{,}25 & -4{,}75\\ -1{,}25 & 3{,}75 & 1{,}25\\ -0{,}5 & -0{,}5 & 4{,}5}$
+et $AA^{-1} = I_3$.
+
+\q{c)} $X = A^{-1}B = \M{400\\300\\300}$ : on fond $400$\,kg de $L_1$, $300$\,kg de $L_2$ et $300$\,kg de $L_3$.\\
+Masse totale : $400 + 300 + 300 = 1\,000$\,kg, ce qui est cohérent avec $610 + 230 + 160 = 1\,000$\,kg.
+\end{correction}
+
+\begin{correction}[-- Exercice 15 : étalonnage d'un capteur]
+\source{exo:15}{\cours{meth:systeme}}
+\q{a)} Chaque mesure donne une équation $U = aT^2 + bT + c$ :
+\[
+\left\{\begin{array}{l} 400a + 20b + c = 1{,}18\\ 3\,600a + 60b + c = 2{,}22\\ 10\,000a + 100b + c = 3{,}90\end{array}\right.
+\qquad
+\M{400 & 20 & 1\\ 3\,600 & 60 & 1\\ 10\,000 & 100 & 1}\M{a\\b\\c} = \M{1{,}18\\2{,}22\\3{,}90}.
+\]
+\q{b)} La calculatrice donne $\M{a\\b\\c} = \M{0{,}0002\\ 0{,}01\\ 0{,}9}$, soit $U = 0{,}0002\,T^2 + 0{,}01\,T + 0{,}9$.
+
+\q{c)} $U(80) = 0{,}0002\times 6\,400 + 0{,}01\times 80 + 0{,}9 = 1{,}28 + 0{,}8 + 0{,}9 = 2{,}98$\,V.
+\end{correction}
+
+\begin{correction}[-- Exercice 16 : courants dans un circuit]
+\source{exo:16}{\cours{subsec:ecriture}}
+\q{a)} On écrit $0$ pour chaque inconnue absente d'une équation :
+\[
+\M{1 & -1 & -1\\ 20 & 40 & 0\\ 0 & 40 & -30}\M{I_1\\I_2\\I_3} = \M{0\\22\\6}.
+\]
+\q{b)} La calculatrice donne $I_1 = 0{,}5$\,A, $I_2 = 0{,}3$\,A, $I_3 = 0{,}2$\,A.
+
+\q{c)} $0{,}5 - 0{,}3 - 0{,}2 = 0$ : la loi des nœuds est bien vérifiée.
+\end{correction}
+
+% ============================================================
+\needspace{8cm}
+\section{Problème de synthèse}
+
+\begin{correction}[-- Problème : les services internes d'une usine]
+\source{exo:pb}{\cours{th:resolution} et \cours{meth:inversecalc}}
+\q{1. a)} La production d'énergie $x$ sert à trois usages : la consommation du service Énergie ($0{,}1x$), celle du service Maintenance ($0{,}3y$) et la demande des ateliers ($135$). D'où $x = 0{,}1x + 0{,}3y + 135$. De même, $y = 0{,}2x + 0{,}1y + 95$.
+
+\q{1. b)} $CX + D = \M{0{,}1x + 0{,}3y + 135\\ 0{,}2x + 0{,}1y + 95} = \M{x\\y} = X$.\\
+Alors $X - CX = D$, soit $I_2X - CX = D$, d'où $(I_2 - C)X = D$ (distributivité).
+
+\q{2. a)} $I_2 - C = \M{0{,}9 & -0{,}3\\ -0{,}2 & 0{,}9}$.
+
+\q{2. b)} $(I_2 - C)^{-1} = \M{\frac65 & \frac25\\[2pt] \frac{4}{15} & \frac65}\approx\M{1{,}2 & 0{,}4\\ 0{,}267 & 1{,}2}$.
+
+\q{2. c)} $X = (I_2 - C)^{-1}D = \M{\frac65\times 135 + \frac25\times 95\\[2pt] \frac{4}{15}\times 135 + \frac65\times 95} = \M{162 + 38\\ 36 + 114} = \M{200\\150}$.\\
+Le service Énergie doit produire $200$\,k€ et le service Maintenance $150$\,k€ pour satisfaire une demande de $135$\,k€ et $95$\,k€ : la différence est absorbée par les services eux-mêmes.\\
+Vérification : $0{,}9\times 200 - 0{,}3\times 150 = 135$ et $-0{,}2\times 200 + 0{,}9\times 150 = 95$.
+
+\q{3. a)} Énergie consommée par les services : $0{,}1\times 200 + 0{,}3\times 150 = 65$\,k€, soit $\frac{65}{200} = 32{,}5\,\%$ de la production d'énergie.
+
+\q{3. b)} La matrice $I_2 - C$ ne change pas, seul $D$ change :
+\[
+X' = (I_2 - C)^{-1}\M{150\\100} = \M{180 + 40\\ 40 + 120} = \M{220\\160}.
+\]
+Productions : $220$\,k€ d'énergie et $160$\,k€ de maintenance. C'est tout l'intérêt de l'inverse : une fois calculé, il répond à toutes les demandes.
+\begin{piege}
+Ce modèle entrées-sorties (modèle de Leontief) sert en contrôle de gestion pour répartir les coûts des services auxiliaires. Il repose sur une hypothèse forte : des consommations internes proportionnelles à la production.
+\end{piege}
+\end{correction}
+
+\end{document}

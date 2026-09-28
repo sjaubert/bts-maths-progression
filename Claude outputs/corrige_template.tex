@@ -1,0 +1,204 @@
+% ============================================================
+% Corrigé et barème -- Évaluation MOD08, Sujet <<S>>
+% Lois discrètes, loi normale, probabilités conditionnelles
+% BTS MS 2e année -- Pôle Formation UIMM - CVDL - S. JAUBERT
+% Énoncé : MOD08_Evaluation_MS2_Sujet_<<S>>_v1_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\input{preambule_eval}
+\EnTete{Corrigé Sujet <<S>>}{Corrigé <<S>>}
+\renewcommand{\pts}[1]{\hfill\mbox{\color{white}\small\textbf{#1}}}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\bareme}[1]{\par\smallskip{\footnotesize\color{uimmred}\textbf{Barème~:} #1}}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\LD}{Cours MOD08 \textit{Lois discrètes}}
+\newcommand{\LN}{Cours MOD08 \textit{Loi normale}}
+\newcommand{\VM}{Vade-mecum MOD08 S01 \textit{Dénombrement et probabilités conditionnelles}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé et barème -- Évaluation MOD08 \hfill Sujet <<S>>}\\[4pt]
+{\color{white}\large Lois discrètes, loi normale, probabilités conditionnelles \hfill Total~: 20 points}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Principes de notation.} Les points de méthode (évènements nommés, formule écrite, traduction avec la variable aléatoire) sont accordés même en cas d'erreur de calcul. Une erreur n'est sanctionnée qu'une fois : la suite, cohérente avec un résultat faux, est notée normalement. Un résultat de calculatrice sans la probabilité écrite avec la variable aléatoire perd la moitié des points de la question. Une loi citée sans ses paramètres perd $0{,}25$\,pt.\\[3pt]
+\textbf{Repères de durée (estimation).} Exercice 1 : 17 min \quad Exercice 2 : 11 min \quad Exercice 3 : 15 min.\\[3pt]
+\textbf{Références.} Les pages citées sont celles des PDF \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0} et \texttt{MOD08\_Loi\_Normale\_Cours\_v1\_0} (numérotation imprimée en pied de page).
+\end{tcolorbox}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 1 -- <<E1TITRE>> (8 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\VM{} (arbre pondéré, probabilités conditionnelles)}
+On note $<<EV1>>$ l'évènement «~<<EV1TXT>>~», $\overline{<<EV1>>}$ son contraire («~<<EV2TXT>>~») et $N$ l'évènement «~<<OBJ>> est non conforme~».
+\[
+P(<<EV1>>) = <<PA>>,\qquad P(\overline{<<EV1>>}) = <<PB>>,\qquad P_{<<EV1>>}(N) = <<NA>>,\qquad P_{\overline{<<EV1>>}}(N) = <<NB>>.
+\]
+\bareme{évènements définis en phrase : 0,5 \quad probabilités conditionnelles correctement notées : 0,5}
+\piege{écrire $P(<<EV1>>\cap N) = <<NA>>$ au lieu de $P_{<<EV1>>}(N) = <<NA>>$ ; oublier de définir les évènements.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\VM{} (formule des probabilités totales)}
+$<<EV1>>$ et $\overline{<<EV1>>}$ forment une partition de l'univers. D'après la formule des probabilités totales :
+\[
+P(N) = P(<<EV1>>)\,P_{<<EV1>>}(N) + P(\overline{<<EV1>>})\,P_{\overline{<<EV1>>}}(N) = <<PA>>\times <<NA>> + <<PB>>\times <<NB>> = <<IA>> + <<IB>> = <<PN>>.
+\]
+\bareme{partition ou formule citée : 0,5 \quad calcul : 1}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1,5 pt}]
+\source{\VM{} (probabilité conditionnelle «~inversée~»)}
+On cherche $P_N(\overline{<<EV1>>})$ :
+\[
+P_N(\overline{<<EV1>>}) = \frac{P(\overline{<<EV1>>}\cap N)}{P(N)} = \frac{<<IB>>}{<<PN>>} \approx <<BAYES>>.
+\]
+<<BAYESPHRASE>>
+\bareme{formule : 0,5 \quad numérateur $P(\overline{<<EV1>>}\cap N)$ : 0,5 \quad résultat et phrase : 0,5}
+\piege{répondre $<<NB>>$, c'est-à-dire confondre $P_N(\overline{<<EV1>>})$ et $P_{\overline{<<EV1>>}}(N)$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1,5 pt}]
+\source{\LD{}, §2.2 Schéma de Bernoulli p.~5 et §3.1 Définition p.~7}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Épreuve de Bernoulli : on prélève <<UN>> et on regarde s'il est conforme. Deux issues. Succès : «~<<OBJ>> est conforme~», de probabilité $p = 1 - <<PN>> = <<PC>>$.
+  \item L'épreuve est répétée $<<n>>$ fois, de façon identique et indépendante (tirage assimilé à un tirage avec remise).
+  \item $X$ compte le nombre de succès.
+\end{itemize}
+Donc $X$ suit la loi binomiale $\mathcal{B}(<<n>>\,;<<PC>>)$.
+\bareme{Bernoulli, succès et $p$ : 0,5 \quad répétitions identiques et indépendantes : 0,5 \quad loi et paramètres : 0,5}
+\piege{prendre $p = <<PN>>$ alors que $X$ compte les \textbf{conformes} ; oublier l'indépendance.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 5 \pts{1,5 pt}]
+\source{\LD{}, §3.3 Calcul des probabilités p.~7 (encadré «~À la calculatrice~»)}
+«~Au plus $<<k>>$ non conformes~» $\iff$ «~au moins $<<n>> - <<k>> = <<nmk>>$ conformes~» $\iff X \geq <<nmk>>$.
+\[
+P(X\geq <<nmk>>) = 1 - P(X\leq <<nmk1>>) = 1 - \texttt{binomFRép}(<<n>>,\,<<PC>>,\,<<nmk1>>) \approx 1 - <<CDF>> = <<RES5>>.
+\]
+Variante acceptée : $Y = <<n>> - X$ suit $\mathcal{B}(<<n>>\,;<<PN>>)$ et $P(Y\leq <<k>>) \approx <<RES5>>$, à condition que $Y$ soit défini.
+\bareme{traduction $X\geq <<nmk>>$ : 0,75 \quad passage au complémentaire et résultat : 0,75}
+\piege{calculer $P(X\leq <<k>>)$ (résultat quasi nul, qui devrait alerter) ; écrire $1 - P(X\leq <<nmk>>)$ ; traduire par $X \geq <<nmk1>>$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 6 \pts{1 pt}]
+\source{\LD{}, §3.3 p.~8 (propriété «~Espérance et écart-type~»)}
+Le nombre de non conformes est $Y = <<n>> - X$, donc $E(Y) = <<n>> - E(X) = <<n>> - <<n>>\times <<PC>> = <<n>> - <<EX>> = <<EY>>$.\\
+On peut aussi dire que $Y$ suit $\mathcal{B}(<<n>>\,;<<PN>>)$, donc $E(Y) = <<n>>\times <<PN>> = <<EY>>$.\\
+En moyenne, un prélèvement de $<<n>>$ <<PLURIEL>> contient $<<EY>>$ <<NCMOY>>.
+\bareme{justification ($E = np$ appliquée au bon $p$) : 0,5 \quad valeur et phrase : 0,5}
+\piege{répondre $E(X) = <<EX>>$, qui est le nombre moyen de \textbf{conformes}.}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 2 -- <<E2TITRE>> (5 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §5.1 Principe p.~11}
+$n = <<n2>> \geq 30$, $p = 0{,}01 \leq 0{,}1$ et $np = <<LAM>> \leq 10$. On peut approcher la loi de $N$ par la loi de Poisson $\mathcal{P}(\lambda)$ avec $\lambda = np = <<LAM>>$.
+\bareme{les trois conditions : 0,5 \quad $\lambda = np$ : 0,5}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\LD{}, §4.1 Définition p.~9 (encadré «~À la calculatrice~»)}
+$P(N = 0) = e^{-<<LAM>>} \approx <<P0>>$.
+\qquad
+$P(N\leq 2) = \texttt{poissonFRép}(<<LAM>>,\,2) \approx <<P2>>$.\\
+Calcul à la main accepté : $P(N\leq 2) = e^{-<<LAM>>}\left(1 + <<LAM>> + \dfrac{<<LAM>>^2}{2}\right) \approx <<P2>>$.
+\bareme{$P(N=0)$ : 0,5 \quad $P(N\leq 2)$ : 1}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1,5 pt}]
+\source{\VM{} (définition de $P_B(A)$) et \LD{}, §4.1 p.~9}
+On cherche $P_{\{N\geq 1\}}(N\leq 2)$. Or $\{N\leq 2\}\cap\{N\geq 1\} = \{1\leq N\leq 2\}$.
+\[
+P_{\{N\geq 1\}}(N\leq 2) = \frac{P(1\leq N\leq 2)}{P(N\geq 1)} = \frac{P(N\leq 2) - P(N=0)}{1 - P(N=0)} \approx \frac{<<P2>> - <<P0>>}{1 - <<P0>>} \approx <<COND2>>.
+\]
+Sachant qu'il y a eu au moins une panne, la probabilité qu'il y en ait eu au plus deux vaut environ $<<COND2>>$.
+\bareme{formule de la probabilité conditionnelle : 0,5 \quad intersection $\{1\leq N\leq 2\}$ : 0,5 \quad résultat : 0,5}
+\piege{répondre $P(N\leq 2)$ sans conditionner ; faire le produit $P(N\leq 2)\times P(N\geq 1)$ ; garder $P(N=0)$ au numérateur.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9}
+La réserve suffit si $N \leq k$. On cherche le plus petit $k$ tel que $P(N\leq k)\geq 0{,}95$.\\
+$P(N\leq <<KM1>>) \approx <<PKM1>> < 0{,}95$ \quad et \quad $P(N\leq <<K>>) \approx <<PK>> \geq 0{,}95$. Donc $k = <<K>>$.
+\bareme{les deux valeurs encadrantes : 0,5 \quad conclusion : 0,5}
+\piege{s'arrêter à la première valeur calculée sans montrer que la précédente ne convient pas.}
+\end{correction}
+
+\noindent{\footnotesize\color{uimmgray}\textit{Contrôle : avec la loi binomiale exacte $\mathcal{B}(<<n2>>\,;0{,}01)$, on trouve $P(N\leq <<KM1>>)\approx <<BKM1>>$ et $P(N\leq <<K>>)\approx <<BK>>$ : la valeur de $k$ est la même.}}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 3 -- <<E3TITRE>> (7 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1,5 pt}]
+\source{\LN{}, §3.2 Calcul d'une probabilité p.~6}
+$<<V>>$ suit $\mathcal{N}(<<MU>>\,;<<SIG>>)$.
+\[
+P(<<LO>> \leq <<V>> \leq <<HI>>) = \texttt{normalFRép}(<<LO>>,\,<<HI>>,\,<<MU>>,\,<<SIG>>) \approx <<PCONF>>.
+\]
+Ces bornes valent $\mu \pm <<ZT>>\sigma$.
+\bareme{probabilité écrite avec $<<V>>$ : 0,5 \quad commande et paramètres : 0,5 \quad résultat : 0,5}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1 pt}]
+\source{\LN{}, §3.2 p.~6 et §3.3 Standardisation p.~7}
+<<ALERTECALC>>
+\bareme{écriture correcte (sens de l'inégalité) : 0,5 \quad résultat : 0,5}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{2 pts}]
+\source{\VM{} (définition de $P_B(A)$) et \LN{}, §3.2 p.~6}
+Soit $R$ l'évènement «~<<OBJ3>> est <<REBUTE>>~» et $\mathcal{A}$ l'évènement «~<<OBJ3>> est en zone d'alerte~». On cherche $P_{\mathcal{A}}(R)$.\\
+$R = \{<<RDEF>>\}$ et $\mathcal{A} = \{<<ZADEF>>\}$. Donc $R\cap \mathcal{A} = \{<<RINTER>>\}$.
+\[
+P_{\mathcal{A}}(R) = \frac{P(R\cap \mathcal{A})}{P(\mathcal{A})} = \frac{P(<<RINTER>>)}{P(<<ZADEF>>)} \approx \frac{<<PINT>>}{<<PALERTE>>} \approx <<COND3>>.
+\]
+<<COND3PHRASE>>
+\bareme{évènements et formule : 0,5 \quad intersection $R\cap \mathcal{A} = \{<<RINTER>>\}$ : 0,75 \quad calcul et phrase : 0,75}
+\piege{répondre $P(R) \approx <<PREBUT>>$ sans conditionner ; oublier que la zone d'alerte ne contient qu'une des deux queues de rebut.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{2,5 pts}]
+\source{\LN{}, §3.3 Standardisation p.~7 et §4.2 Retrouver un paramètre p.~8}
+On pose $Z = \dfrac{<<V>> - <<MU>>}{\sigma}$, qui suit $\mathcal{N}(0\,;1)$. La tolérance vaut $\pm <<TOL>>$ autour de la moyenne.
+\begin{align*}
+P(<<LO>>\leq <<V>>\leq <<HI>>)\geq 0{,}99
+&\iff P\!\left(-\frac{<<TOL>>}{\sigma}\leq Z\leq \frac{<<TOL>>}{\sigma}\right)\geq 0{,}99\\
+&\iff 2\,P\!\left(Z\leq \frac{<<TOL>>}{\sigma}\right) - 1\geq 0{,}99\\
+&\iff P\!\left(Z\leq \frac{<<TOL>>}{\sigma}\right)\geq 0{,}995.
+\end{align*}
+$\texttt{FracNormale}(0{,}995)\approx 2{,}5758$, donc $\dfrac{<<TOL>>}{\sigma}\geq 2{,}5758$, soit $\sigma\leq \dfrac{<<TOL>>}{2{,}5758}\approx <<SIGMAX>>$.\\
+L'écart-type maximal est $\sigma\approx <<SIGMAXR>>$\,mm (arrondi \textbf{par défaut}, pour respecter l'exigence).
+\bareme{standardisation : 0,75 \quad symétrie, passage à $0{,}995$ : 0,75 \quad $z = 2{,}5758$ : 0,5 \quad $\sigma$ et arrondi par défaut : 0,5}
+\piege{utiliser $\texttt{FracNormale}(0{,}99)\approx 2{,}3263$ (oubli de la symétrie), ce qui donne $\sigma\approx <<SIGFAUX>>$ ; arrondir $\sigma$ par excès.}
+\end{correction}
+
+\end{document}

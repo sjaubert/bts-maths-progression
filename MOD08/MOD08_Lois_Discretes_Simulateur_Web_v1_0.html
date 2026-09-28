@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulateur de lois discrètes — MOD08</title>
+<meta name="description" content="Simulation interactive de Bernoulli, Binomiale et Poisson avec curseurs, pour le cours MOD08 BTS Industriel (Pôle Formation UIMM Centre-Val de Loire).">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+  :root{
+    color-scheme: light dark;
+    --bg:#f5f7fa; --surface:#ffffff; --surface-2:#eef2f6;
+    --text:#17232e; --text-muted:#5b6b78; --border:rgba(23,35,46,.10);
+    --primary:#1b4f72; --primary-soft:rgba(27,79,114,.12);
+    --accent:#df7c1f; --accent-soft:rgba(223,124,31,.18);
+    --accent2:#b93d2e; --accent2-soft:rgba(185,61,46,.16);
+    --good:#1e7a46; --good-bg:rgba(30,122,70,.12);
+    --warn:#b33f1f; --warn-bg:rgba(179,63,31,.12);
+    --grid-line:rgba(23,35,46,.09);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0e1620; --surface:#16212c; --surface-2:#1b2733;
+      --text:#e8eef3; --text-muted:#93a5b3; --border:rgba(232,238,243,.12);
+      --primary:#75acd9; --primary-soft:rgba(117,172,217,.18);
+      --accent:#f0973f; --accent-soft:rgba(240,151,63,.22);
+      --accent2:#e2685a; --accent2-soft:rgba(226,104,90,.18);
+      --good:#4caf7d; --good-bg:rgba(76,175,125,.16);
+      --warn:#e2685a; --warn-bg:rgba(226,104,90,.16);
+      --grid-line:rgba(232,238,243,.10);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1620; --surface:#16212c; --surface-2:#1b2733;
+    --text:#e8eef3; --text-muted:#93a5b3; --border:rgba(232,238,243,.12);
+    --primary:#75acd9; --primary-soft:rgba(117,172,217,.18);
+    --accent:#f0973f; --accent-soft:rgba(240,151,63,.22);
+    --accent2:#e2685a; --accent2-soft:rgba(226,104,90,.18);
+    --good:#4caf7d; --good-bg:rgba(76,175,125,.16);
+    --warn:#e2685a; --warn-bg:rgba(226,104,90,.16);
+    --grid-line:rgba(232,238,243,.10);
+  }
+
+  *{box-sizing:border-box;}
+  html, body{ margin:0; padding:0; }
+  body{
+    background:var(--bg); color:var(--text);
+    font-family:"Inter",system-ui,sans-serif;
+    padding-block:20px;
+  }
+  @media (prefers-reduced-motion: reduce){ *{transition:none!important; animation:none!important;} }
+
+  .page{ max-width:1180px; margin:0 auto; padding-inline:16px; display:flex; flex-direction:column; gap:18px; }
+
+  header.top{ display:flex; flex-direction:column; gap:6px; }
+  header.top .eyebrow{
+    font-family:"IBM Plex Mono",monospace; font-size:.72rem; letter-spacing:.10em;
+    text-transform:uppercase; color:var(--text-muted);
+  }
+  header.top h1{
+    font-family:"Manrope",sans-serif; font-weight:800; font-size:clamp(1.5rem,3.2vw,2.15rem);
+    margin:0; text-wrap:balance; letter-spacing:-.01em;
+  }
+  header.top .bar{ height:4px; width:100%; border-radius:4px; margin-top:4px;
+    background:linear-gradient(90deg, var(--primary), var(--accent) 60%, var(--accent2)); }
+
+  .layout{ display:grid; grid-template-columns:300px 1fr; gap:18px; align-items:start; }
+  @media (max-width:880px){ .layout{ grid-template-columns:1fr; } }
+
+  .panel{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px; }
+  .sidebar{ background:var(--surface-2); display:flex; flex-direction:column; gap:16px; position:sticky; top:16px; }
+  @media (max-width:880px){ .sidebar{ position:static; } }
+
+  .tabs{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .tab{
+    font-family:"Manrope",sans-serif; font-weight:700; font-size:.86rem;
+    border:1px solid var(--border); background:var(--surface); color:var(--text-muted);
+    border-radius:10px; padding:10px 8px; cursor:pointer; text-align:center;
+    transition:background .12s ease, color .12s ease, border-color .12s ease;
+  }
+  .tab:hover{ border-color:var(--primary); }
+  .tab.active{ background:var(--primary); color:#fff; border-color:var(--primary); }
+  .tab:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field .row{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .field label{ font-size:.86rem; font-weight:600; }
+  .field .val{
+    font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums;
+    font-size:.86rem; color:var(--primary); background:var(--primary-soft);
+    padding:2px 8px; border-radius:6px; min-width:3.4em; text-align:center;
+  }
+  input[type="range"]{
+    -webkit-appearance:none; appearance:none; width:100%; height:6px; border-radius:4px;
+    background:var(--border); outline:none; cursor:pointer;
+  }
+  input[type="range"]::-webkit-slider-thumb{
+    -webkit-appearance:none; width:18px; height:18px; border-radius:50%;
+    background:var(--primary); border:3px solid var(--surface); box-shadow:0 0 0 1px var(--border);
+    cursor:pointer;
+  }
+  input[type="range"]::-moz-range-thumb{
+    width:18px; height:18px; border-radius:50%; background:var(--primary);
+    border:3px solid var(--surface); box-shadow:0 0 0 1px var(--border); cursor:pointer;
+  }
+  input[type="range"]:focus-visible::-webkit-slider-thumb{ outline:2px solid var(--accent); outline-offset:2px; }
+
+  .btn{
+    font-family:"Manrope",sans-serif; font-weight:700; font-size:.88rem;
+    border-radius:10px; padding:11px 14px; cursor:pointer; border:1px solid transparent;
+    display:flex; align-items:center; justify-content:center; gap:8px; width:100%;
+    transition:filter .12s ease, background .12s ease;
+  }
+  .btn-primary{ background:var(--primary); color:#fff; }
+  .btn-primary:hover{ filter:brightness(1.08); }
+  .btn-outline{ background:transparent; color:var(--accent); border-color:var(--accent); }
+  .btn-outline:hover{ background:var(--accent-soft); }
+  .btn:focus-visible{ outline:2px solid var(--accent2); outline-offset:2px; }
+
+  .help{ font-size:.8rem; color:var(--text-muted); line-height:1.5; }
+  .help b{ color:var(--text); }
+
+  .content{ display:flex; flex-direction:column; gap:18px; }
+  .chart-card{ display:flex; flex-direction:column; gap:10px; }
+  .chart-title{ font-family:"Manrope",sans-serif; font-weight:700; font-size:1.02rem; text-wrap:balance; }
+  .legend{ display:flex; gap:16px; flex-wrap:wrap; font-size:.82rem; color:var(--text-muted); }
+  .legend .dot{ display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:6px; vertical-align:middle; }
+  .chart-wrap{ position:relative; width:100%; height:clamp(260px,38vw,400px); }
+  .chart-wrap canvas{ width:100%; height:100%; display:block; }
+  .axis-caption{ text-align:center; font-size:.8rem; color:var(--text-muted); }
+
+  .stats{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+  @media (max-width:640px){ .stats{ grid-template-columns:1fr 1fr; } }
+  .stat{ background:var(--surface-2); border-radius:10px; padding:10px 12px; display:flex; flex-direction:column; gap:2px; }
+  .stat .label{ font-size:.72rem; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em; }
+  .stat .value{ font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums; font-size:1.05rem; font-weight:600; }
+
+  .badge{
+    display:inline-flex; align-items:center; gap:6px; font-size:.78rem; font-weight:600;
+    padding:5px 10px; border-radius:999px; width:fit-content;
+  }
+  .badge.good{ background:var(--good-bg); color:var(--good); }
+  .badge.warn{ background:var(--warn-bg); color:var(--warn); }
+
+  .formula-card{ display:flex; flex-direction:column; gap:10px; }
+  .formula-card h3{ margin:0; font-family:"Manrope",sans-serif; font-size:.92rem; }
+  .formula{
+    font-family:"IBM Plex Mono",monospace; font-size:.95rem; background:var(--surface-2);
+    border-radius:10px; padding:12px 14px; line-height:1.7; overflow-x:auto;
+  }
+  .formula .sub{ font-size:.72em; vertical-align:sub; }
+  .formula .sup{ font-size:.72em; vertical-align:super; }
+  .formula .muted{ color:var(--text-muted); }
+
+  footer.foot{ font-size:.76rem; color:var(--text-muted); text-align:center; padding-top:6px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <header class="top">
+    <span class="eyebrow">MOD08 · Calcul des probabilités · BTS Industriel</span>
+    <h1>Simulateur de lois discrètes</h1>
+    <div class="bar"></div>
+  </header>
+
+  <div class="layout">
+    <div class="panel sidebar">
+      <div class="tabs" role="tablist" aria-label="Choix de la loi">
+        <button class="tab" data-loi="bernoulli" role="tab">Bernoulli</button>
+        <button class="tab" data-loi="binomiale" role="tab">Binomiale</button>
+        <button class="tab" data-loi="poisson" role="tab">Poisson</button>
+        <button class="tab" data-loi="comparaison" role="tab">Comparaison</button>
+      </div>
+
+      <div class="field" data-for="bernoulli">
+        <div class="row"><label for="p_bernoulli">Probabilité de succès p</label><span class="val" id="v_p_bernoulli">0.30</span></div>
+        <input type="range" id="p_bernoulli" min="0.01" max="0.99" step="0.01" value="0.30">
+      </div>
+
+      <div class="field" data-for="binomiale,comparaison">
+        <div class="row"><label for="n_binom">Nombre d'épreuves n</label><span class="val" id="v_n_binom">10</span></div>
+        <input type="range" id="n_binom" min="1" max="200" step="1" value="10">
+      </div>
+      <div class="field" data-for="binomiale,comparaison">
+        <div class="row"><label for="p_binom">Probabilité de succès p</label><span class="val" id="v_p_binom">0.30</span></div>
+        <input type="range" id="p_binom" min="0.01" max="0.99" step="0.01" value="0.30">
+      </div>
+
+      <div class="field" data-for="poisson">
+        <div class="row"><label for="lambda">Paramètre λ</label><span class="val" id="v_lambda">3.0</span></div>
+        <input type="range" id="lambda" min="0.1" max="30" step="0.1" value="3">
+      </div>
+
+      <div class="field" data-for="bernoulli,binomiale,poisson">
+        <div class="row"><label for="n_sim">Tirages simulés</label><span class="val" id="v_n_sim">1 000</span></div>
+        <input type="range" id="n_sim" min="100" max="10000" step="100" value="1000">
+      </div>
+
+      <button class="btn btn-primary" id="btn_rejouer" data-for="bernoulli,binomiale,poisson">↻ Nouveau tirage</button>
+      <button class="btn btn-outline" id="btn_exemple" data-for="binomiale,poisson">Charger l'exemple du cours</button>
+
+      <p class="help" id="help_text"></p>
+    </div>
+
+    <div class="content">
+      <div class="panel chart-card">
+        <div class="chart-title" id="chart_title"></div>
+        <div class="legend" id="legend"></div>
+        <div class="chart-wrap"><canvas id="chart" aria-label="Diagramme de la loi simulée"></canvas></div>
+        <div class="axis-caption" id="x_caption"></div>
+      </div>
+
+      <div class="panel">
+        <div class="stats" id="stats"></div>
+      </div>
+
+      <div class="panel formula-card">
+        <h3>Formulaire</h3>
+        <div class="formula" id="formula"></div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="foot">Pôle Formation UIMM Centre-Val de Loire — Support MOD08, Les Lois Discrètes (S. Jaubert)</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------------------------------------------------------------
+  // 1. Fonctions statistiques (lgamma, dbinom, dpois)
+  // ---------------------------------------------------------------
+  const LANCZOS_G = 7;
+  const LANCZOS_COEF = [
+    0.99999999999980993, 676.5203681218851, -1259.1392167224028,
+    771.32342877765313, -176.61502916214059, 12.507343278686905,
+    -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7
+  ];
+  function lgamma(x){
+    if (x < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * x)) - lgamma(1 - x);
+    x -= 1;
+    let a = LANCZOS_COEF[0];
+    const t = x + LANCZOS_G + 0.5;
+    for (let i = 1; i < LANCZOS_G + 2; i++) a += LANCZOS_COEF[i] / (x + i);
+    return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+  }
+  function logChoose(n, k){ return lgamma(n + 1) - lgamma(k + 1) - lgamma(n - k + 1); }
+  function dbinom(k, n, p){
+    if (k < 0 || k > n) return 0;
+    if (p <= 0) return k === 0 ? 1 : 0;
+    if (p >= 1) return k === n ? 1 : 0;
+    return Math.exp(logChoose(n, k) + k * Math.log(p) + (n - k) * Math.log(1 - p));
+  }
+  function dpois(k, lambda){
+    if (k < 0) return 0;
+    return Math.exp(-lambda + k * Math.log(lambda) - lgamma(k + 1));
+  }
+  function sampleBinomial(n, p){ let s = 0; for (let i = 0; i < n; i++) if (Math.random() < p) s++; return s; }
+  function samplePoisson(lambda){
+    const L = Math.exp(-lambda);
+    let k = 0, prod = 1;
+    do { k++; prod *= Math.random(); } while (prod > L);
+    return k - 1;
+  }
+  function mean(arr){ return arr.reduce((a,b)=>a+b,0) / arr.length; }
+  function sd(arr){ const m = mean(arr); return Math.sqrt(mean(arr.map(x=>(x-m)*(x-m)))); }
+  function fmt4(x){ return x.toFixed(4).replace(".", ","); }
+  function fmtInt(x){ return Math.round(x).toLocaleString("fr-FR"); }
+
+  // ---------------------------------------------------------------
+  // 2. Etat
+  // ---------------------------------------------------------------
+  const els = {
+    p_bernoulli: document.getElementById("p_bernoulli"),
+    n_binom: document.getElementById("n_binom"),
+    p_binom: document.getElementById("p_binom"),
+    lambda: document.getElementById("lambda"),
+    n_sim: document.getElementById("n_sim"),
+  };
+  const readouts = {
+    p_bernoulli: document.getElementById("v_p_bernoulli"),
+    n_binom: document.getElementById("v_n_binom"),
+    p_binom: document.getElementById("v_p_binom"),
+    lambda: document.getElementById("v_lambda"),
+    n_sim: document.getElementById("v_n_sim"),
+  };
+  let loi = "bernoulli";
+  const canvas = document.getElementById("chart");
+  const ctx = canvas.getContext("2d");
+
+  function syncReadouts(){
+    readouts.p_bernoulli.textContent = parseFloat(els.p_bernoulli.value).toFixed(2);
+    readouts.n_binom.textContent = els.n_binom.value;
+    readouts.p_binom.textContent = parseFloat(els.p_binom.value).toFixed(2);
+    readouts.lambda.textContent = parseFloat(els.lambda.value).toFixed(1);
+    readouts.n_sim.textContent = parseInt(els.n_sim.value,10).toLocaleString("fr-FR");
+  }
+
+  // ---------------------------------------------------------------
+  // 3. Visibilite des controles selon la loi
+  // ---------------------------------------------------------------
+  function updateVisibility(){
+    document.querySelectorAll("[data-for]").forEach(el => {
+      const modes = el.getAttribute("data-for").split(",");
+      el.style.display = modes.includes(loi) ? "" : "none";
+    });
+    document.querySelectorAll(".tab").forEach(t => {
+      const active = t.getAttribute("data-loi") === loi;
+      t.classList.toggle("active", active);
+      t.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    const helps = {
+      bernoulli: "Une épreuve à deux issues (succès / échec). Bleu = probabilité théorique, orange = fréquence obtenue par simulation.",
+      binomiale: "Nombre de succès sur n épreuves indépendantes de même paramètre p. Bleu = théorique, orange = fréquence simulée.",
+      poisson: "Nombre d'événements rares sur un intervalle donné, de moyenne λ. Bleu = théorique, orange = fréquence simulée.",
+      comparaison: "Approximation d'une loi Binomiale B(n ; p) par une loi de Poisson P(np), valable quand n est grand et p petit."
+    };
+    document.getElementById("help_text").innerHTML = "<b>" + ({bernoulli:"Bernoulli", binomiale:"Binomiale", poisson:"Poisson", comparaison:"Comparaison"})[loi] + ".</b> " + helps[loi];
+  }
+
+  // ---------------------------------------------------------------
+  // 4. Construction du modele de donnees pour la loi courante
+  // ---------------------------------------------------------------
+  function buildModel(){
+    if (loi === "bernoulli"){
+      const p = parseFloat(els.p_bernoulli.value);
+      const nSim = parseInt(els.n_sim.value, 10);
+      const draws = Array.from({length:nSim}, () => Math.random() < p ? 1 : 0);
+      const freq0 = draws.filter(x=>x===0).length / nSim;
+      const freq1 = 1 - freq0;
+      return {
+        mode:"grouped", labels:["0 (échec)","1 (succès)"],
+        theo:[1-p, p], emp:[freq0, freq1],
+        eTheo:p, sTheo:Math.sqrt(p*(1-p)), eEmp:mean(draws), sEmp:sd(draws),
+        title:`Loi de Bernoulli B(${p.toFixed(2)}) — ${fmtInt(nSim)} tirages simulés`,
+        xCaption:"Issue", yCaption:"Probabilité / Fréquence"
+      };
+    }
+    if (loi === "binomiale"){
+      const n = parseInt(els.n_binom.value, 10);
+      const p = parseFloat(els.p_binom.value);
+      const nSim = parseInt(els.n_sim.value, 10);
+      const draws = Array.from({length:nSim}, () => sampleBinomial(n, p));
+      const counts = new Array(n+1).fill(0);
+      draws.forEach(k => counts[k]++);
+      const labels = []; const theo = []; const emp = [];
+      for (let k=0;k<=n;k++){ labels.push(String(k)); theo.push(dbinom(k,n,p)); emp.push(counts[k]/nSim); }
+      return {
+        mode:"stem", labels, theo, emp,
+        eTheo:n*p, sTheo:Math.sqrt(n*p*(1-p)), eEmp:mean(draws), sEmp:sd(draws),
+        title:`Loi Binomiale B(${n} ; ${p.toFixed(2)}) — ${fmtInt(nSim)} tirages simulés`,
+        xCaption:"k (nombre de succès)", yCaption:"Probabilité / Fréquence"
+      };
+    }
+    if (loi === "poisson"){
+      const lambda = parseFloat(els.lambda.value);
+      const nSim = parseInt(els.n_sim.value, 10);
+      const draws = Array.from({length:nSim}, () => samplePoisson(lambda));
+      const kMax = Math.max(10, Math.ceil(lambda + 5*Math.sqrt(lambda)));
+      const counts = new Array(kMax+1).fill(0);
+      draws.forEach(k => { if (k<=kMax) counts[k]++; });
+      const labels = []; const theo = []; const emp = [];
+      for (let k=0;k<=kMax;k++){ labels.push(String(k)); theo.push(dpois(k,lambda)); emp.push(counts[k]/nSim); }
+      return {
+        mode:"stem", labels, theo, emp,
+        eTheo:lambda, sTheo:Math.sqrt(lambda), eEmp:mean(draws), sEmp:sd(draws),
+        title:`Loi de Poisson P(${lambda.toFixed(1)}) — ${fmtInt(nSim)} périodes simulées`,
+        xCaption:"k (nombre d'événements)", yCaption:"Probabilité / Fréquence"
+      };
+    }
+    // comparaison
+    const n = parseInt(els.n_binom.value, 10);
+    const p = parseFloat(els.p_binom.value);
+    const lambda = n*p;
+    const kMax = Math.min(n, Math.max(10, Math.ceil(lambda + 5*Math.sqrt(lambda))));
+    const labels = []; const theo = []; const emp = [];
+    let ecartMax = 0;
+    for (let k=0;k<=kMax;k++){
+      labels.push(String(k));
+      const bino = dbinom(k,n,p), pois = dpois(k,lambda);
+      theo.push(bino); emp.push(pois);
+      ecartMax = Math.max(ecartMax, Math.abs(bino-pois));
+    }
+    const ok = (n>=30 && p<=0.1 && lambda<=10);
+    return {
+      mode:"compare", labels, theo, emp,
+      eTheo:lambda, sTheo:Math.sqrt(n*p*(1-p)), eEmp:lambda, sEmp:Math.sqrt(lambda),
+      ecartMax, ok, n, p, lambda,
+      title:`B(${n} ; ${p.toFixed(2)})  vs  P(np)  —  λ = np = ${lambda.toFixed(2)}`,
+      xCaption:"k", yCaption:"Probabilité"
+    };
+  }
+
+  // ---------------------------------------------------------------
+  // 5. Rendu du graphique (canvas)
+  // ---------------------------------------------------------------
+  function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+  function niceStep(maxVal){
+    const raw = maxVal / 5;
+    const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const norm = raw / mag;
+    let step;
+    if (norm < 1.5) step = 1; else if (norm < 3) step = 2; else if (norm < 7) step = 5; else step = 10;
+    return step * mag;
+  }
+
+  function drawChart(model){
+    const wrap = canvas.parentElement;
+    const dpr = window.devicePixelRatio || 1;
+    const cssW = wrap.clientWidth, cssH = wrap.clientHeight;
+    canvas.width = cssW * dpr; canvas.height = cssH * dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,cssW,cssH);
+
+    const colText = cssVar("--text-muted");
+    const colGrid = cssVar("--grid-line");
+    const colPrimary = cssVar("--primary");
+    const colAccent = cssVar("--accent");
+    const colAccent2 = cssVar("--accent2");
+
+    const padL = 46, padR = 10, padT = 12, padB = 28;
+    const plotW = cssW - padL - padR, plotH = cssH - padT - padB;
+
+    const maxVal = Math.max(...model.theo, ...model.emp) * 1.25 || 1;
+    const step = niceStep(maxVal);
+    const yMax = Math.ceil(maxVal/step)*step;
+
+    // gridlines + y ticks
+    ctx.font = "11px IBM Plex Mono, monospace";
+    ctx.fillStyle = colText;
+    ctx.strokeStyle = colGrid;
+    ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    for (let v=0; v<=yMax+1e-9; v+=step){
+      const y = padT + plotH - (v/yMax)*plotH;
+      ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(padL+plotW, y); ctx.lineWidth=1; ctx.stroke();
+      ctx.fillText(v.toFixed(step<1?2:0), padL-8, y);
+    }
+
+    const n = model.labels.length;
+    const slot = plotW / n;
+    const showDots = n <= 60;
+    const labelStep = Math.max(1, Math.ceil(n/14));
+
+    // x tick labels
+    ctx.textAlign = "center"; ctx.textBaseline = "top";
+    for (let i=0;i<n;i++){
+      if (i % labelStep === 0 || i === n-1){
+        const x = padL + (i+0.5)*slot;
+        ctx.fillText(model.labels[i], x, padT+plotH+6);
+      }
+    }
+    // baseline
+    ctx.strokeStyle = colText; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(padL, padT+plotH); ctx.lineTo(padL+plotW, padT+plotH); ctx.stroke();
+
+    function yOf(v){ return padT + plotH - Math.min(v/yMax,1)*plotH; }
+
+    if (model.mode === "grouped"){
+      const bw = slot*0.32;
+      const baseline = padT + plotH;
+      for (let i=0;i<n;i++){
+        const cx = padL + (i+0.5)*slot;
+        const yTheo = yOf(model.theo[i]);
+        const yEmp = yOf(model.emp[i]);
+        ctx.fillStyle = colPrimary;
+        ctx.fillRect(cx-bw-2, yTheo, bw, baseline - yTheo);
+        ctx.fillStyle = colAccent;
+        ctx.fillRect(cx+2, yEmp, bw, baseline - yEmp);
+      }
+    } else if (model.mode === "stem"){
+      const gap = n>40 ? 0 : slot*0.18;
+      const bw = slot - gap;
+      // barres empiriques
+      ctx.fillStyle = hexToRgba(colAccent, 0.55);
+      for (let i=0;i<n;i++){
+        const x = padL + i*slot + gap/2;
+        const y = yOf(model.emp[i]);
+        ctx.fillRect(x, y, bw, (padT+plotH)-y);
+      }
+      // theorique : stems + points, ou ligne si trop de categories
+      ctx.strokeStyle = colPrimary; ctx.fillStyle = colPrimary;
+      if (showDots){
+        for (let i=0;i<n;i++){
+          const cx = padL + (i+0.5)*slot;
+          const y = yOf(model.theo[i]);
+          ctx.lineWidth = 2.4;
+          ctx.beginPath(); ctx.moveTo(cx, padT+plotH); ctx.lineTo(cx, y); ctx.stroke();
+          ctx.beginPath(); ctx.arc(cx, y, 3.6, 0, Math.PI*2); ctx.fill();
+        }
+      } else {
+        ctx.lineWidth = 2.2; ctx.beginPath();
+        for (let i=0;i<n;i++){
+          const cx = padL + (i+0.5)*slot; const y = yOf(model.theo[i]);
+          if (i===0) ctx.moveTo(cx,y); else ctx.lineTo(cx,y);
+        }
+        ctx.stroke();
+      }
+    } else if (model.mode === "compare"){
+      const gap = n>40 ? 0 : slot*0.18;
+      const bw = slot - gap;
+      ctx.fillStyle = hexToRgba(colPrimary, 0.55);
+      for (let i=0;i<n;i++){
+        const x = padL + i*slot + gap/2;
+        const y = yOf(model.theo[i]);
+        ctx.fillRect(x, y, bw, (padT+plotH)-y);
+      }
+      ctx.strokeStyle = colAccent2; ctx.fillStyle = colAccent2;
+      if (showDots){
+        ctx.lineWidth = 2.2; ctx.beginPath();
+        for (let i=0;i<n;i++){
+          const cx = padL + (i+0.5)*slot; const y = yOf(model.emp[i]);
+          if (i===0) ctx.moveTo(cx,y); else ctx.lineTo(cx,y);
+        }
+        ctx.stroke();
+        for (let i=0;i<n;i++){
+          const cx = padL + (i+0.5)*slot; const y = yOf(model.emp[i]);
+          ctx.beginPath(); ctx.arc(cx, y, 3.2, 0, Math.PI*2); ctx.fill();
+        }
+      } else {
+        ctx.lineWidth = 2.2; ctx.beginPath();
+        for (let i=0;i<n;i++){
+          const cx = padL + (i+0.5)*slot; const y = yOf(model.emp[i]);
+          if (i===0) ctx.moveTo(cx,y); else ctx.lineTo(cx,y);
+        }
+        ctx.stroke();
+      }
+    }
+  }
+  function hexToRgba(hex, alpha){
+    hex = hex.trim();
+    if (hex.startsWith("#")){
+      const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+      return `rgba(${r},${g},${b},${alpha})`;
+    }
+    return hex; // deja en rgb/rgba
+  }
+
+  // ---------------------------------------------------------------
+  // 6. Legende, stats, formulaire
+  // ---------------------------------------------------------------
+  function updateLegend(model){
+    const L = document.getElementById("legend");
+    if (loi === "bernoulli"){
+      L.innerHTML = `<span><span class="dot" style="background:var(--primary)"></span>Théorique</span>
+                     <span><span class="dot" style="background:var(--accent)"></span>Simulé</span>`;
+    } else if (loi === "comparaison"){
+      L.innerHTML = `<span><span class="dot" style="background:var(--primary)"></span>Binomiale B(n ; p)</span>
+                     <span><span class="dot" style="background:var(--accent2)"></span>Poisson P(np)</span>`;
+    } else {
+      L.innerHTML = `<span><span class="dot" style="background:var(--accent)"></span>Fréquence simulée</span>
+                     <span><span class="dot" style="background:var(--primary)"></span>Probabilité théorique</span>`;
+    }
+  }
+
+  function statTile(label, value){
+    return `<div class="stat"><span class="label">${label}</span><span class="value">${value}</span></div>`;
+  }
+
+  function updateStats(model){
+    const S = document.getElementById("stats");
+    if (loi === "comparaison"){
+      S.innerHTML =
+        statTile("E(X) — les deux lois", fmt4(model.eTheo)) +
+        statTile("σ(X) Binomiale", fmt4(model.sTheo)) +
+        statTile("σ(X) Poisson", fmt4(model.sEmp)) +
+        statTile("Écart maximal", fmt4(model.ecartMax)) +
+        `<div class="stat" style="grid-column:1/-1">
+           <span class="badge ${model.ok ? "good":"warn"}">${model.ok ? "Conditions d'approximation vérifiées" : "Conditions NON vérifiées (n ≥ 30, p ≤ 0,1, λ = np ≤ 10)"}</span>
+         </div>`;
+    } else {
+      S.innerHTML =
+        statTile("E(X) théorique", fmt4(model.eTheo)) +
+        statTile("E(X) simulée", fmt4(model.eEmp)) +
+        statTile("σ(X) théorique", fmt4(model.sTheo)) +
+        statTile("σ(X) simulée", fmt4(model.sEmp));
+    }
+  }
+
+  function updateFormula(){
+    const F = document.getElementById("formula");
+    const formulas = {
+      bernoulli: `P(X=1) = p &nbsp;&nbsp; P(X=0) = 1 − p<br>
+                  E(X) = p &nbsp;&nbsp; σ(X) = √(p(1−p))`,
+      binomiale: `P(X=k) = C(n,k) · p<span class="sup">k</span> · (1−p)<span class="sup">n−k</span><br>
+                  E(X) = np &nbsp;&nbsp; σ(X) = √(np(1−p))`,
+      poisson: `P(X=k) = e<span class="sup">−λ</span> · λ<span class="sup">k</span> / k!<br>
+                E(X) = λ &nbsp;&nbsp; σ(X) = √λ`,
+      comparaison: `B(n ; p) ≈ P(λ) &nbsp; avec &nbsp; λ = np <span class="muted">(si n ≥ 30, p ≤ 0,1, λ ≤ 10)</span><br>
+                    P(X=k) = C(n,k)·p<span class="sup">k</span>(1−p)<span class="sup">n−k</span>
+                    &nbsp;≈&nbsp; e<span class="sup">−λ</span>·λ<span class="sup">k</span>/k!`
+    };
+    F.innerHTML = formulas[loi];
+  }
+
+  // ---------------------------------------------------------------
+  // 7. Rendu global
+  // ---------------------------------------------------------------
+  function render(){
+    const model = buildModel();
+    document.getElementById("chart_title").textContent = model.title;
+    document.getElementById("x_caption").textContent = model.xCaption + "   |   axe vertical : " + model.yCaption;
+    updateLegend(model);
+    updateStats(model);
+    updateFormula();
+    drawChart(model);
+  }
+
+  let rafId = null;
+  function scheduleRender(){
+    if (rafId) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(render);
+  }
+
+  // ---------------------------------------------------------------
+  // 8. Cablage des evenements
+  // ---------------------------------------------------------------
+  document.querySelectorAll(".tab").forEach(tab => {
+    tab.addEventListener("click", () => {
+      loi = tab.getAttribute("data-loi");
+      updateVisibility();
+      scheduleRender();
+    });
+  });
+  Object.values(els).forEach(el => {
+    el.addEventListener("input", () => { syncReadouts(); scheduleRender(); });
+  });
+  document.getElementById("btn_rejouer").addEventListener("click", scheduleRender);
+  document.getElementById("btn_exemple").addEventListener("click", () => {
+    if (loi === "binomiale"){ els.n_binom.value = 10; els.p_binom.value = 0.3; }
+    else if (loi === "poisson"){ els.lambda.value = 3; }
+    syncReadouts();
+    scheduleRender();
+  });
+  window.addEventListener("resize", scheduleRender);
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", scheduleRender);
+
+  // ---------------------------------------------------------------
+  // 9. Demarrage
+  // ---------------------------------------------------------------
+  syncReadouts();
+  updateVisibility();
+  render();
+})();
+</script>
+</body>
+</html>

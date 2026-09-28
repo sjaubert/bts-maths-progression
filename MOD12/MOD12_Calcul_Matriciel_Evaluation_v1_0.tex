@@ -1,0 +1,128 @@
+% ============================================================
+% Évaluation : Calcul matriciel (durée 1 h)
+% Pôle Formation UIMM - CVDL - BTS ATI / CRSA - S. JAUBERT
+% Corrigé et barème : MOD12_Calcul_Matriciel_Evaluation_Corrige_v1_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+\newcommand{\pts}[1]{\hfill{\color{uimmred}\small\textbf{(#1)}}}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt, breakable}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newcommand{\M}[1]{\begin{pmatrix}#1\end{pmatrix}}
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS ATI / CRSA -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD12 -- Éval}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Évaluation -- MOD12}\\[4pt]
+{\color{white}\large Calcul matriciel \hfill Durée : 1 h \quad Note : \dots\dots / 20}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent{\small\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{8pt}}p{13.8cm}@{}}
+Nom, prénom : & \dotfill \\
+Séquences : & [S01] Matrices et opérations ([C01] à [C03]) -- [S02] Inverse et systèmes linéaires ([C01] à [C03]) \\
+\end{tabular}}
+
+\begin{consigne}
+\textbf{Consignes.} Calculatrice autorisée. Les calculs sur des matrices d'ordre 2 doivent être \textbf{détaillés}. Pour les questions marquées \calc, recopier les matrices saisies et le résultat affiché. Conclure chaque question par une phrase avec les unités. Le barème est donné à titre indicatif.
+\end{consigne}
+
+\needspace{8cm}
+\section{Calculs matriciels \hfill {\normalsize\color{uimmred}[S01] [C02]}}
+\begin{exo}{Exercice 1 \hfill 6 points}
+\label{ev:1}
+On donne $A = \M{1 & 3\\ -2 & 1}$, $B = \M{2 & 0\\ 1 & -1}$ et $M = \M{1 & 0 & 2\\ 3 & 1 & 0}$.
+\begin{enumerate}
+  \item Calculer $2A - B$. \pts{1 pt}
+  \item Calculer $AB$ et $BA$. Que peut-on en conclure ? \pts{2,5 pts}
+  \item Calculer $A^2$. \pts{1 pt}
+  \item Les produits $AM$ et $MA$ existent-ils ? Calculer celui qui existe. \pts{1,5 pt}
+\end{enumerate}
+\end{exo}
+
+\needspace{8cm}
+\section{Inverse et système \hfill {\normalsize\color{uimmred}[S02] [C01] [C03]}}
+\begin{exo}{Exercice 2 \hfill 6 points}
+\label{ev:2}
+Un atelier de tôlerie fabrique deux types de supports, $S_1$ et $S_2$. Un support $S_1$ demande $4$\,min de découpe laser et $3$\,min de pliage ; un support $S_2$ demande $3$\,min de découpe et $2$\,min de pliage. Sur une journée, la découpeuse est disponible $380$\,min et la plieuse $270$\,min. On cherche les nombres $x$ et $y$ de supports $S_1$ et $S_2$ qui utilisent entièrement ces deux machines.
+\begin{enumerate}
+  \item Écrire le système vérifié par $x$ et $y$, puis sa forme matricielle $AX = C$. \pts{1,5 pt}
+  \item Montrer que $B = \M{-2 & 3\\ 3 & -4}$ est l'inverse de $A$. \pts{1,5 pt}
+  \item En déduire $x$ et $y$. Vérifier et conclure. \pts{2 pts}
+  \item Un opérateur écrit : « $X = C\times A^{-1}$ ». Expliquer pourquoi c'est faux. \pts{1 pt}
+\end{enumerate}
+\end{exo}
+
+\needspace{8cm}
+\section{Problème : armoires électriques \hfill {\normalsize\color{uimmred}[S01] [C01] [C02] -- [S02] [C02] [C03]}}
+\begin{exo}{Exercice 3 \hfill 8 points}
+\label{ev:3}
+Une PME câble trois modèles d'armoires électriques, $A_1$, $A_2$, $A_3$. Le nombre de disjoncteurs, de relais et de borniers nécessaires à chaque armoire est donné par la nomenclature
+\[
+N = \M{2 & 3 & 4\\ 5 & 4 & 6\\ 10 & 12 & 20}
+\qquad
+\begin{array}{l}\text{lignes : disjoncteurs, relais, borniers}\\ \text{colonnes : } A_1,\ A_2,\ A_3\end{array}
+\]
+\begin{enumerate}
+  \item Donner le coefficient $n_{23}$ et l'interpréter. \pts{0,5 pt}
+  \item La commande du mois est de $15$ armoires $A_1$, $10$ armoires $A_2$ et $5$ armoires $A_3$. On note $X = \M{15\\10\\5}$. Calculer $NX$ et interpréter. \pts{1,5 pt}
+  \item Un disjoncteur coûte $35$\,€, un relais $12$\,€ et un bornier $3$\,€. On note $P = \M{35 & 12 & 3}$.
+  \begin{enumerate}
+    \item Calculer $PN$ et interpréter chacun de ses coefficients.
+    \item En déduire le coût total des composants de la commande. \pts{2 pts}
+  \end{enumerate}
+  \item \calc{} Déterminer $N^{-1}$ (coefficients sous forme de fractions). \pts{1,5 pt}
+  \item Le magasin contient $108$ disjoncteurs, $196$ relais et $504$ borniers. \calc{} Combien d'armoires de chaque modèle faut-il câbler pour utiliser exactement ce stock ? \pts{2 pts}
+  \item Avec un stock de $110$ disjoncteurs, $200$ relais et $500$ borniers, la calculatrice donne des valeurs non entières. Que peut-on en conclure pour l'atelier ? \pts{0,5 pt}
+\end{enumerate}
+\end{exo}
+
+\end{document}

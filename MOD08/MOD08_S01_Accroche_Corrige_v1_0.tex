@@ -1,0 +1,200 @@
+% ============================================================
+% ACCROCHE MOD08 - Corrige formateur
+% Pole Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{consigne}{%
+  colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newtcolorbox{piege}{%
+  colback=white, colframe=uimmred, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt}
+
+\newtcolorbox{cle}{%
+  colback=uimmlightblue, colframe=uimmblue, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD08 -- CORRIGÉ}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé formateur -- Accroche MOD08}\\[4pt]
+{\color{white}\large Trois problèmes pour entrer dans les probabilités}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Bloc : & [MOD08] Calcul des Probabilités \\
+Séquence : & [S01] Dénombrement et probabilités conditionnelles \\
+Compétences : & [C01] construire un arbre / un tableau \quad [C02] exploiter l'arbre ou le tableau \quad [C03] probabilités totales \\
+Durée : & 35 minutes environ, en ouverture de séance \\
+\end{tabular}
+
+\begin{consigne}
+\textbf{Conduite proposée (35 min).} Problème 1 : 8 min (4 de recherche, 4 de mise en commun). Problème 2 : 10 min. Problème 3 : 15 min, c'est le c{\oe}ur de l'accroche. 2 min de synthèse.
+
+\textbf{Point de méthode.} Faire écrire l'intuition \textbf{avant} le calcul, et la faire annoncer à voix haute. Sans cet écart affiché, l'effet pédagogique tombe. Le groupe est mixte : les anciens de première année reprennent des réflexes, les nouveaux découvrent que l'énoncé se comprend sans que la réponse se devine. Ne pas laisser les premiers donner la réponse tout de suite.
+\end{consigne}
+
+% ============================================================
+\section{Problème 1 : compter, ce n'est pas si simple}
+
+\begin{exo}{Réponses}
+\begin{enumerate}
+  \item \textbf{6 machines} : permutations de 6 objets, $P_6 = 6! = \mathbf{720}$ ordres de tournée.
+  \item \textbf{10 machines} : $10! = \mathbf{3\,628\,800}$. Les estimations orales tournent en général autour de quelques centaines ou quelques milliers. L'écart avec la réalité est le premier choc de la séance.
+  \item \textbf{Vannes} : chaque vanne a 2 états, les choix sont indépendants, c'est une $p$-liste. \\
+  4 vannes : $2^4 = \mathbf{16}$ configurations. \\
+  20 vannes : $2^{20} = \mathbf{1\,048\,576}$ configurations.
+  \item \textbf{Durée d'essai exhaustif} : $1\,048\,576$ minutes $= 17\,476$ heures $\approx \mathbf{2\,497}$ jours d'essai de 7 heures, soit plus de \textbf{11 ans} à 220 jours travaillés par an.
+  \item \textbf{Conclusion} : l'exhaustif est hors de portée dès qu'un système a quelques dizaines de composants. On ne teste pas tout, on \textbf{modélise} et on \textbf{hiérarchise} : c'est exactement la démarche de l'AMDEC (criticité) et celle des probabilités.
+\end{enumerate}
+
+\textit{Bonus} : nombre de paires de vannes parmi 20, l'ordre ne compte pas : $C_{20}^{2} = \dfrac{20 \times 19}{2} = \mathbf{190}$.
+\end{exo}
+
+\begin{piege}
+\textbf{Erreurs attendues.}
+\begin{itemize}
+  \item Confondre $6!$ et $6^6$ : demander «~une machine peut-elle être visitée deux fois ?~»
+  \item Répondre $20 \times 2 = 40$ à la question des 20 vannes : faire dessiner l'arbre des 3 premières vannes au tableau, le doublement apparaît seul.
+  \item Répondre $A_{20}^{2} = 380$ au bonus : demander si «~vanne 3 et vanne 7~» et «~vanne 7 et vanne 3~» sont deux défaillances doubles différentes.
+\end{itemize}
+\end{piege}
+
+\begin{cle}
+\textbf{À retenir, à écrire au tableau.} Trois questions à se poser avant de compter : \textbf{y a-t-il répétition ?} \textbf{l'ordre compte-t-il ?} \textbf{prend-on tout ou une partie ?} Elles donnent $n^p$, $A_n^p$, $C_n^p$.
+\end{cle}
+
+\newpage
+% ============================================================
+\section{Problème 2 : le bon sens suffit-il ?}
+
+\begin{exo}{Réponses}
+Univers : les prélèvements de 2 roulements parmi 12, sans ordre, en situation d'équiprobabilité. Formule de Laplace.
+\begin{enumerate}
+  \item $\mathrm{Card}(\Omega) = C_{12}^{2} = \dfrac{12 \times 11}{2} = \mathbf{66}$ prélèvements possibles.
+  \item Prélèvements sans aucun défectueux : on choisit 2 roulements parmi les 9 bons, $C_{9}^{2} = \dfrac{9 \times 8}{2} = \mathbf{36}$.
+  \item $P(\text{aucun défectueux}) = \dfrac{36}{66} = \dfrac{6}{11} \approx 0{,}5455$. \\[3pt]
+  Donc $P(\text{au moins un défectueux}) = 1 - \dfrac{6}{11} = \dfrac{5}{11} \approx \mathbf{0{,}4545}$, soit \textbf{45,5\,\%}.
+  \item Environ \textbf{45 pompes sur 100} partiraient avec au moins un roulement défectueux.
+  \item Avec 3 roulements : $P(\text{aucun}) = \dfrac{C_{9}^{3}}{C_{12}^{3}} = \dfrac{84}{220} = \dfrac{21}{55} \approx 0{,}3818$, donc \\[3pt]
+  $P(\text{au moins un}) = \dfrac{34}{55} \approx \mathbf{0{,}6182}$, soit \textbf{61,8\,\%}. La probabilité grimpe vite : un lot à 25\,\% de défauts contamine presque deux montages sur trois.
+\end{enumerate}
+\end{exo}
+
+\begin{piege}
+\textbf{Les deux raisonnements faux de l'énoncé.}
+\begin{itemize}
+  \item «~3 sur 12, donc 25\,\%~» : c'est la probabilité qu'\textbf{un seul} roulement tiré soit défectueux. On en tire deux, donc deux occasions de se tromper. Le risque est nécessairement plus élevé.
+  \item «~$\frac{3}{12} + \frac{3}{12} = 50\,\%$~» : additionner deux probabilités revient à compter deux fois le cas où les \textbf{deux} roulements sont défectueux. Cette addition n'est légitime que pour des événements incompatibles. Contre-exemple imparable à donner au tableau : avec 5 tirages, la même méthode donnerait $5 \times \frac{3}{12} = 125\,\%$.
+\end{itemize}
+\end{piege}
+
+\begin{cle}
+\textbf{Réflexe à installer.} Dès qu'un énoncé contient «~\textbf{au moins un}~», on calcule l'événement contraire «~aucun~», puis $P(A) = 1 - P(\overline{A})$. Ce réflexe resservira tout le module, notamment avec la loi binomiale.
+\end{cle}
+
+\newpage
+% ============================================================
+\section{Problème 3 : quand l'intuition se trompe lourdement}
+
+\begin{exo}{Réponses}
+Notations : $D$ = «~le moteur se dégrade~», $A$ = «~le capteur déclenche l'alarme~». \\
+Données : $P(D) = 0{,}01$ \quad ; \quad $P_D(A) = 0{,}95$ \quad ; \quad $P_{\overline{D}}(A) = 0{,}05$.
+
+\begin{enumerate}
+  \item Tableau sur 10\,000 moteurs :
+  \begin{center}
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{|>{\columncolor{uimmlightblue}}l|c|c|c|}
+  \hline
+  \rowcolor{uimmlightblue}
+  \textbf{Sur 10\,000 moteurs} & \textbf{Alarme} & \textbf{Pas d'alarme} & \textbf{Total} \\
+  \hline
+  Moteur en cours de dégradation & \textbf{95} & 5 & 100 \\
+  \hline
+  Moteur sain & \textbf{495} & 9\,405 & 9\,900 \\
+  \hline
+  \textbf{Total} & \textbf{590} & 9\,410 & \textbf{10\,000} \\
+  \hline
+  \end{tabular}
+  \end{center}
+  \item Sur les 590 moteurs qui déclenchent une alarme, seuls 95 se dégradent réellement :
+  \[ \frac{95}{590} \approx \mathbf{0{,}161} \qquad \text{soit environ } \mathbf{16\,\%}. \]
+  Les estimations spontanées du groupe tournent autour de 90 à 95\,\%. L'écart est le point culminant de la séance : \textbf{plus de 8 alarmes sur 10 sont des fausses alertes}, avec un capteur pourtant très performant.
+  \item On a calculé $P_A(D)$, la probabilité de dégradation \textbf{sachant que l'alarme sonne}. L'autre, $P_D(A) = 0{,}95$, est la performance du capteur, donnée par le constructeur. Les deux sont très différentes et c'est là que se loge l'erreur de raisonnement. \\[4pt]
+  Par la formule des probabilités totales :
+  \[ P(A) = P(D)\,P_D(A) + P(\overline{D})\,P_{\overline{D}}(A) = 0{,}01 \times 0{,}95 + 0{,}99 \times 0{,}05 = 0{,}059 \]
+  \[ P_A(D) = \frac{P(A \cap D)}{P(A)} = \frac{0{,}01 \times 0{,}95}{0{,}059} = \frac{0{,}0095}{0{,}059} \approx 0{,}1610 \]
+  \item Sur les moteurs de plus de 8 ans, $P(D) = 0{,}20$, capteur inchangé :
+  \[ P(A) = 0{,}20 \times 0{,}95 + 0{,}80 \times 0{,}05 = 0{,}19 + 0{,}04 = 0{,}23 \]
+  \[ P_A(D) = \frac{0{,}19}{0{,}23} \approx \mathbf{0{,}826} \qquad \text{soit environ } \mathbf{83\,\%}. \]
+  \item \textbf{Conclusion}. Le capteur n'a pas changé d'un iota. En le posant sur une population où la panne est fréquente, la fiabilité de l'alarme passe de 16\,\% à 83\,\%. \textbf{La valeur d'une alarme dépend autant de la machine qu'on surveille que du capteur qu'on achète.} C'est un argument industriel direct : cibler le parc avant d'investir dans un capteur plus précis.
+\end{enumerate}
+\end{exo}
+
+\begin{piege}
+\textbf{L'erreur centrale : l'oubli du taux de base.} Le groupe retient «~95\,\% de détection~» et oublie que les moteurs sains sont 99 fois plus nombreux. $5\,\%$ d'un très grand nombre écrase $95\,\%$ d'un très petit.
+
+\textbf{Relance si le groupe bloque :} «~Sur 10\,000 moteurs, combien se dégradent ? Combien sont sains ? Maintenant compte les alarmes de chaque côté.~» Le tableau d'effectifs débloque presque toujours, là où l'arbre de probabilités reste abstrait.
+
+\textbf{Relance pour les anciens de première année :} leur faire écrire l'arbre pondéré et retrouver le résultat par Bayes pendant que les autres finissent le tableau.
+\end{piege}
+
+\begin{cle}
+\textbf{À retenir.} $P_D(A) \neq P_A(D)$. Confondre les deux, c'est confondre «~le capteur détecte les pannes~» et «~l'alarme signale une panne~». La formule de Bayes sert précisément à passer de l'une à l'autre, et elle exige de connaître $P(D)$, la fréquence de la panne dans le parc.
+\end{cle}
+
+\vspace{6pt}
+\begin{consigne}
+\textbf{Transition vers le cours.} Les trois problèmes ouvrent respectivement sur : le dénombrement ($n^p$, $A_n^p$, $C_n^p$), la formule de Laplace et l'événement contraire, l'arbre pondéré avec probabilités totales et Bayes. C'est le plan de la séquence [S01].
+\end{consigne}
+
+\end{document}

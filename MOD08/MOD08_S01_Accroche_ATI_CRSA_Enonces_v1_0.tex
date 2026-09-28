@@ -1,0 +1,178 @@
+% ============================================================
+% ACCROCHE MOD08 - Trois problemes pour entrer dans les probabilites
+% Version BTS ATI / CRSA (systemes automatises et industrialisation)
+% Pole Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Enonces eleves (sans corrige)
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt, breakable,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{consigne}{%
+  colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newtcolorbox{intuition}{%
+  colback=uimmlightblue, colframe=uimmblue, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS ATI / CRSA -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08 -- Accroche}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Trois problèmes pour entrer dans les probabilités}\\[4pt]
+{\color{white}\large Systèmes automatisés et industrialisation -- compter, estimer, se méfier de son intuition}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Bloc : & [MOD08] Calcul des Probabilités \\
+Public : & BTS ATI et BTS CRSA (groupe commun) \\
+Séquence : & [S01] Dénombrement et probabilités conditionnelles \\
+Compétences : & [C01] construire un arbre / un tableau \quad [C02] exploiter l'arbre ou le tableau \quad [C03] probabilités totales \\
+\end{tabular}
+
+\begin{consigne}
+\textbf{Règle du jeu.} Pour chaque problème, tu écris d'abord ton \textbf{intuition}, en une ligne, \textbf{sans aucun calcul}. Tu calcules ensuite. Tu compares.
+
+Aucune formule n'est exigée au départ. Les trois énoncés se comprennent sans connaissance préalable. Trouver la réponse est une autre affaire.
+\end{consigne}
+
+% ============================================================
+\section{Problème 1 : compter, ce n'est pas si simple}
+
+\begin{exo}{Ordonnancer, configurer, sélectionner \hfill \normalfont\color{uimmlightblue}[Dénombrement]}
+On met en service une cellule automatisée. Plusieurs questions de « combien de possibilités~? » se posent à chaque étape du projet.
+
+\begin{intuition}
+\textbf{Avant tout calcul :} à la question 1, combien de séquences de lancement différentes, à ton avis ? Écris ton estimation. \dotfill
+\end{intuition}
+
+\begin{enumerate}
+  \item \textbf{L'ordre de lancement.} En atelier, on doit lancer \textbf{6 ordres de fabrication (OF)} indépendants sur une même machine. Ces OF n'ont \textbf{aucune contrainte d'antériorité} entre eux : toutes les séquences de passage sont techniquement réalisables, et fixer l'ordre relève de l'ordonnancement. Combien de séquences de production différentes peut-on former ? Reprends la question avec \textbf{10 OF}.
+  \item \textbf{Un code, une table d'entrées.} Le pupitre est protégé par un code de \textbf{4 chiffres} (de 0 à 9), les répétitions étant autorisées. Combien de codes différents existe-t-il ? \\
+  De même, l'automate lit à chaque instant l'état (\textbf{0} ou \textbf{1}) de \textbf{20 capteurs} tout-ou-rien. Combien d'états différents sa table d'entrées peut-elle prendre ?
+  \item \textbf{Le temps d'un test exhaustif.} La recette impose de tester \textbf{toutes} les configurations des 20 capteurs, à raison d'une minute par configuration et de 7 heures d'essai par jour. Combien de jours de travail cela représente-t-il ?
+  \item \textbf{Une séquence d'outils.} Le magasin du centre d'usinage contient \textbf{8 outils}. Une opération sélectionne une \textbf{séquence ordonnée de 4 outils différents}. Combien de séquences peut-on programmer ? \\
+  Et si un même outil pouvait resservir plusieurs fois dans la séquence ? Et si seul comptait le \textbf{choix} des 4 outils, sans tenir compte de l'ordre ?
+  \item Que faut-il en conclure sur la façon de conduire un essai, une mise au point ou une analyse de défaillance sur un système industriel ?
+\end{enumerate}
+
+\vspace{4pt}
+\textit{Bonus.} Pour une analyse de défaillance, on décide de surveiller ensemble \textbf{2 capteurs} choisis parmi les 20. Combien de paires différentes peut-on former ?
+\end{exo}
+
+% ============================================================
+\newpage
+\section{Problème 2 : le bon sens suffit-il ?}
+
+\begin{exo}{Le bac de capteurs \hfill \normalfont\color{uimmlightblue}[Probabilités sur un ensemble fini]}
+Pour équiper une cellule, un technicien dispose d'un bac de \textbf{12 capteurs inductifs} d'apparence identique. \textbf{3 d'entre eux sont défectueux} : rien ne permet de les repérer à l'{\oe}il ni au toucher. Il en prélève \textbf{2 au hasard, simultanément}, pour un poste de la cellule.
+
+\begin{intuition}
+\textbf{Avant tout calcul :} quelle est la probabilité qu'il attrape \textbf{au moins un} capteur défectueux ? Écris ton estimation en pourcentage. \dotfill
+\end{intuition}
+
+\begin{enumerate}
+  \item Combien de prélèvements différents de 2 capteurs peut-on former dans ce bac ?
+  \item Combien de ces prélèvements ne contiennent \textbf{aucun} capteur défectueux ?
+  \item Déduis-en la probabilité de n'avoir aucun défectueux, puis celle d'en avoir \textbf{au moins un}. Compare à ton estimation.
+  \item Sur 100 cellules équipées de cette façon, combien partiront en clientèle avec au moins un capteur défectueux ?
+  \item Le poste suivant demande \textbf{3 capteurs}. La probabilité d'attraper au moins un défectueux augmente-t-elle beaucoup ? Calcule.
+\end{enumerate}
+
+\vspace{4pt}
+\textit{Piège à éviter.} Beaucoup répondent «~3 chances sur 12, donc 25\,\%~», ou bien «~$\frac{3}{12}+\frac{3}{12}=50\,\%$~». Les deux raisonnements sont faux. Sauras-tu dire pourquoi ?
+\end{exo}
+
+\newpage
+% ============================================================
+\section{Problème 3 : quand l'intuition se trompe lourdement}
+
+\begin{exo}{La station de contrôle par vision \hfill \normalfont\color{uimmlightblue}[Probabilités conditionnelles]}
+Sur une ligne automatisée, une \textbf{station de contrôle par vision} inspecte chaque pièce produite et déclenche un rejet lorsqu'elle croit détecter un défaut. On produit \textbf{10\,000 pièces}.
+
+\begin{itemize}
+  \item L'historique montre que \textbf{1\,\% des pièces} produites sont réellement défectueuses.
+  \item La vision déclenche un rejet sur \textbf{95\,\% des pièces réellement défectueuses}.
+  \item La vision déclenche un rejet \textbf{à tort sur 5\,\% des pièces conformes}.
+\end{itemize}
+
+À l'instant présent, la station \textbf{rejette} la pièce \textbf{P127}. Le régleur veut savoir s'il doit vraiment la mettre au rebut.
+
+\begin{intuition}
+\textbf{Avant tout calcul :} quelle est la probabilité que P127 soit réellement défectueuse ? Écris ton estimation. \dotfill
+\end{intuition}
+
+\begin{enumerate}
+  \item Complète ce tableau en raisonnant sur les 10\,000 pièces produites.
+  \begin{center}
+  \renewcommand{\arraystretch}{1.6}
+  \begin{tabular}{|>{\columncolor{uimmlightblue}}l|c|c|c|}
+  \hline
+  \rowcolor{uimmlightblue}
+  \textbf{Sur 10\,000 pièces} & \textbf{Rejetée} & \textbf{Acceptée} & \textbf{Total} \\
+  \hline
+  Pièce réellement défectueuse & \hspace{2.2cm} & \hspace{2.2cm} & \hspace{1.8cm} \\
+  \hline
+  Pièce conforme & & & \\
+  \hline
+  \textbf{Total} & & & \textbf{10\,000} \\
+  \hline
+  \end{tabular}
+  \end{center}
+  \item Parmi toutes les pièces rejetées par la station, quelle proportion est réellement défectueuse ? Compare à ton estimation.
+  \item Écris ce résultat avec les notations du cours. On note $D$ l'événement «~la pièce est défectueuse~» et $R$ l'événement «~la station rejette la pièce~». Quelle probabilité vient-on de calculer : $P_D(R)$ ou $P_R(D)$ ? Quelle est la valeur de l'autre ?
+  \item Le fournisseur change : le nouveau lot est de moins bonne qualité, \textbf{20\,\%} des pièces sont défectueuses. \textbf{La station de vision est exactement la même.} Reprends le calcul.
+  \item Conclusion pour le service industrialisation : qu'est-ce qui a le plus d'effet sur la fiabilité d'un rejet, la performance de la station ou la qualité du flux de pièces qu'on lui présente ?
+\end{enumerate}
+\end{exo}
+
+\vfill
+\begin{consigne}
+\textbf{Ce que ces trois problèmes annoncent.} Dénombrer avant de calculer une probabilité, en distinguant \textbf{permutations}, \textbf{arrangements}, \textbf{p-listes} et \textbf{combinaisons}. Passer par l'événement contraire quand on lit «~au moins un~». Distinguer $P_D(R)$ de $P_R(D)$, ce que fait la formule de Bayes. Ce sont les piliers de la séquence [S01].
+\end{consigne}
+
+\end{document}

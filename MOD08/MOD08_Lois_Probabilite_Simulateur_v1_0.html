@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lois de probabilité : simulateur MOD08</title>
+<meta name="description" content="Simulateur interactif des lois binomiale, de Poisson et normale, et de leurs convergences. Pôle Formation UIMM Centre-Val de Loire, BTS Industriel, MOD08.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<style>
+:root{
+  --blue:#005C85; --blue-d:#00496A; --blue-bg:#E8F1F8; --blue-soft:#B9D3E1;
+  --red:#D31326; --red-d:#B10F20; --red-bg:#FBE7E9;
+  --ink:#333333; --muted:#5E6A72; --line:#D8E0E6; --bg:#F5F5F5; --card:#FFFFFF;
+  --ok:#1E7A46; --ok-bg:#E3F2E9;
+  --font:"Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, sans-serif;
+  --r:10px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--font);-webkit-font-smoothing:antialiased}
+
+/* ---------- En-tête ---------- */
+.band{background:var(--blue);color:#fff}
+.band-in{max-width:1300px;margin:0 auto;padding:16px 20px 14px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.logo{height:46px;background:#fff;border-radius:6px;padding:4px 8px}
+.eyebrow{font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;opacity:.85;font-weight:600}
+h1{margin:2px 0 0;font-size:clamp(1.25rem,2.5vw,1.75rem);font-weight:700;line-height:1.25}
+.band-rule{height:4px;background:var(--red)}
+
+/* ---------- Mise en page ---------- */
+.wrap{max-width:1300px;margin:0 auto;padding:20px;display:grid;grid-template-columns:330px minmax(0,1fr);gap:20px;align-items:start}
+@media (max-width:940px){.wrap{grid-template-columns:minmax(0,1fr);padding:16px}}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 1px 2px rgba(0,40,60,.05)}
+main{display:flex;flex-direction:column;gap:18px;min-width:0}
+
+/* ---------- Panneau de commande ---------- */
+.side{padding:16px;position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}
+@media (max-width:940px){.side{position:static;max-height:none}}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:5px;background:var(--blue-bg);padding:5px;border-radius:9px}
+.tabs button{border:0;background:transparent;padding:9px 6px;border-radius:7px;font:600 .9rem var(--font);color:var(--blue);cursor:pointer}
+.tabs button:hover{background:rgba(0,92,133,.08)}
+.tabs button[aria-selected="true"]{background:var(--blue);color:#fff;box-shadow:0 1px 3px rgba(0,40,60,.25)}
+.seg{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+.seg button{text-align:left;border:1px solid var(--line);border-left:4px solid var(--line);background:#fff;padding:8px 12px;border-radius:8px;font:600 .88rem var(--font);color:var(--ink);cursor:pointer}
+.seg button:hover{border-color:var(--blue);border-left-color:var(--blue)}
+.seg button[aria-pressed="true"]{border-color:var(--blue);border-left-color:var(--red);background:var(--blue-bg);color:var(--blue)}
+.grp-title{font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:18px 0 6px;font-weight:700;border-bottom:1px solid var(--line);padding-bottom:4px}
+.ctl{margin:8px 0 12px}
+.ctl-row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:4px}
+.ctl label{font-size:.9rem;font-weight:600}
+.num{width:84px;font:600 .9rem var(--font);font-variant-numeric:tabular-nums;color:var(--blue);background:var(--blue-bg);border:1px solid transparent;border-radius:6px;padding:3px 6px;text-align:right}
+.num:focus{outline:none;border-color:var(--blue);background:#fff}
+.num:disabled{opacity:.55}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:6px;border-radius:3px;margin:8px 0;cursor:pointer;
+  background:linear-gradient(90deg,var(--blue) var(--pct,50%),var(--line) var(--pct,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:#fff;border:3px solid var(--blue);box-shadow:0 1px 3px rgba(0,0,0,.25)}
+input[type=range]:focus-visible{outline:2px solid var(--red);outline-offset:4px}
+input[type=range]:disabled{opacity:.45;cursor:not-allowed}
+.sw{display:flex;align-items:center;gap:10px;margin:9px 0;cursor:pointer;font-size:.9rem;user-select:none;position:relative}
+.sw input{position:absolute;opacity:0;width:1px;height:1px}
+.sw .knob{flex:none;width:34px;height:20px;border-radius:10px;background:#C5CFD6;position:relative;transition:background .15s}
+.sw .knob::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:transform .15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.sw input:checked + .knob{background:var(--blue)}
+.sw input:checked + .knob::after{transform:translateX(14px)}
+.sw input:focus-visible + .knob{outline:2px solid var(--red);outline-offset:2px}
+.sub{margin:2px 0 8px 6px;padding-left:12px;border-left:2px solid var(--blue-bg)}
+.btn{display:block;width:100%;padding:9px 12px;margin:8px 0;border-radius:8px;border:1px solid var(--blue);background:#fff;color:var(--blue);font:600 .88rem var(--font);cursor:pointer}
+.btn:hover{background:var(--blue-bg)}
+.btn.primary{background:var(--red);border-color:var(--red);color:#fff}
+.btn.primary:hover{background:var(--red-d)}
+.btn:focus-visible,.chip:focus-visible,.tabs button:focus-visible,.seg button:focus-visible{outline:2px solid var(--red);outline-offset:2px}
+.presets{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:4px 12px;font:.84rem var(--font);cursor:pointer;color:var(--ink)}
+.chip:hover{border-color:var(--blue);color:var(--blue);background:var(--blue-bg)}
+
+/* ---------- Graphiques ---------- */
+.chart-card{padding:16px 18px}
+.chart-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px 16px;flex-wrap:wrap;margin-bottom:8px}
+.chart-head h2{font-size:1.08rem;margin:0;color:var(--blue);font-weight:700}
+.sw.small{font-size:.82rem;margin:0;color:var(--muted)}
+.legend{display:flex;gap:6px 14px;flex-wrap:wrap;font-size:.84rem;color:var(--muted)}
+.lg{display:inline-flex;align-items:center;gap:6px}
+.lg i{display:inline-block;width:14px;height:10px;border-radius:2px}
+.lg i.line{height:3px;border-radius:2px}
+.lg i.dash{height:0;border-top:2px dashed;background:none!important}
+.lg i.dot{width:9px;height:9px;border-radius:50%}
+.chart-wrap{position:relative;height:clamp(300px,40vw,440px);overflow:hidden}
+.chart-wrap.small{height:clamp(200px,22vw,250px)}
+.chart-wrap canvas{display:block;width:100%;height:100%;touch-action:pan-y}
+.tip{position:absolute;top:8px;left:0;pointer-events:none;background:rgba(255,255,255,.97);border:1px solid var(--line);border-left:3px solid var(--blue);border-radius:6px;padding:6px 10px;font-size:.82rem;line-height:1.45;box-shadow:0 4px 14px rgba(0,40,60,.14);opacity:0;transition:opacity .1s;white-space:nowrap;font-variant-numeric:tabular-nums}
+.badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.badges:empty{display:none}
+.badge{font-size:.82rem;font-weight:600;padding:4px 11px;border-radius:999px}
+.badge.ok{background:var(--ok-bg);color:var(--ok)}
+.badge.no{background:var(--red-bg);color:var(--red)}
+.badge.info{background:var(--blue-bg);color:var(--blue)}
+.hint{margin:8px 0 0;font-size:.82rem;color:var(--muted)}
+
+/* ---------- Indicateurs ---------- */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:12px}
+.stat{background:#fff;border:1px solid var(--line);border-top:3px solid var(--blue);border-radius:var(--r);padding:9px 14px}
+.stat.hl{border-top-color:var(--red)}
+.stat .k{font-size:.8rem;color:var(--muted)}
+.stat .v{font-size:1.22rem;font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink)}
+.stat .s{font-size:.76rem;color:var(--muted)}
+
+/* ---------- Notes et formulaire ---------- */
+.duo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px}
+@media (max-width:1150px){.duo{grid-template-columns:minmax(0,1fr)}}
+.duo .panel{padding:14px 18px;min-width:0}
+#formula{overflow-x:auto}
+@media (max-width:520px){#formula{font-size:.86rem}.stats{grid-template-columns:1fr 1fr}.stat .v{font-size:1.05rem}}
+.duo h3{margin:0 0 6px;font-size:.8rem;color:var(--blue);text-transform:uppercase;letter-spacing:.08em}
+#notes{margin:0;padding-left:18px}
+#notes li{margin:6px 0}
+#formula .katex-display{margin:.45em 0;overflow-x:auto;overflow-y:hidden;padding:2px 0}
+.tex{font-style:italic}
+footer{max-width:1300px;margin:0 auto;padding:0 20px 24px;color:var(--muted);font-size:.8rem;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<header class="band">
+  <div class="band-in">
+    <!-- Dépose ton logo dans le dépôt sous le nom logo_uimm.png : il s'affichera ici. -->
+    <img class="logo" src="logo_uimm.png" alt="Logo UIMM" onerror="this.remove()">
+    <div>
+      <div class="eyebrow">Pôle Formation UIMM Centre-Val de Loire · BTS Industriel · MOD08 Probabilités</div>
+      <h1>Lois binomiale, de Poisson et normale : simulateur et convergences</h1>
+    </div>
+  </div>
+  <div class="band-rule"></div>
+</header>
+
+<div class="wrap">
+  <!-- ================= PANNEAU DE COMMANDE ================= -->
+  <aside class="panel side" aria-label="Paramètres">
+    <nav class="tabs" role="tablist" aria-label="Choix de la loi">
+      <button role="tab" data-tab="binom">Binomiale</button>
+      <button role="tab" data-tab="pois">Poisson</button>
+      <button role="tab" data-tab="norm">Normale</button>
+      <button role="tab" data-tab="conv">Convergences</button>
+    </nav>
+
+    <div class="seg" data-tabonly="conv">
+      <button data-conv="bn">Binomiale vers normale</button>
+      <button data-conv="pn">Poisson vers normale</button>
+      <button data-conv="bp">Binomiale vers Poisson</button>
+    </div>
+
+    <!-- Binomiale -->
+    <section data-views="binom">
+      <h2 class="grp-title">Paramètres</h2>
+      <div data-c="b_n"></div><div data-c="b_p"></div>
+      <h2 class="grp-title">Options</h2>
+      <div data-t="b_frame"></div>
+      <div data-t="b_norm"></div>
+      <div data-t="b_calc"></div>
+      <div class="sub" data-if="b_calc"><div data-c="b_a"></div><div data-c="b_b"></div></div>
+      <div data-t="b_sim"></div>
+      <div class="sub" data-if="b_sim"><div data-c="b_N"></div><button class="btn" data-act="resim">Nouveau tirage</button></div>
+      <h2 class="grp-title">Exemples du cours</h2>
+      <div class="presets"><button class="chip" data-preset="b1"></button><button class="chip" data-preset="b2"></button></div>
+    </section>
+
+    <!-- Poisson -->
+    <section data-views="pois">
+      <h2 class="grp-title">Paramètre</h2>
+      <div data-c="p_l"></div>
+      <h2 class="grp-title">Options</h2>
+      <div data-t="p_frame"></div>
+      <div data-t="p_norm"></div>
+      <div data-t="p_calc"></div>
+      <div class="sub" data-if="p_calc"><div data-c="p_a"></div><div data-c="p_b"></div></div>
+      <div data-t="p_sim"></div>
+      <div class="sub" data-if="p_sim"><div data-c="p_N"></div><button class="btn" data-act="resim">Nouveau tirage</button></div>
+      <h2 class="grp-title">Exemples du cours</h2>
+      <div class="presets"><button class="chip" data-preset="p1"></button><button class="chip" data-preset="p2"></button></div>
+    </section>
+
+    <!-- Normale -->
+    <section data-views="norm">
+      <h2 class="grp-title">Paramètres</h2>
+      <div data-c="n_mu"></div><div data-c="n_s"></div>
+      <h2 class="grp-title">Options</h2>
+      <div data-t="n_frame"></div>
+      <div data-t="n_ref"></div>
+      <div data-t="n_bands"></div>
+      <div data-t="n_calc"></div>
+      <div class="sub" data-if="n_calc"><div data-c="n_a"></div><div data-c="n_b"></div></div>
+      <div data-t="n_sim"></div>
+      <div class="sub" data-if="n_sim"><div data-c="n_N"></div><button class="btn" data-act="resim">Nouveau tirage</button></div>
+      <h2 class="grp-title">Référence</h2>
+      <div class="presets"><button class="chip" data-preset="n1"></button></div>
+    </section>
+
+    <!-- Binomiale vers normale -->
+    <section data-views="bn">
+      <h2 class="grp-title">Paramètres</h2>
+      <div data-c="bn_n"></div><div data-c="bn_p"></div>
+      <button class="btn primary" data-act="anim">Animer : faire croître n</button>
+      <h2 class="grp-title">Options</h2>
+      <div data-t="bn_std"></div>
+      <div data-t="bn_calc"></div>
+      <div class="sub" data-if="bn_calc"><div data-c="bn_a"></div><div data-c="bn_b"></div></div>
+      <h2 class="grp-title">Exemple du cours</h2>
+      <div class="presets"><button class="chip" data-preset="bn1"></button><button class="chip" data-preset="bn2"></button></div>
+    </section>
+
+    <!-- Poisson vers normale -->
+    <section data-views="pn">
+      <h2 class="grp-title">Paramètre</h2>
+      <div data-c="pn_l"></div>
+      <button class="btn primary" data-act="anim">Animer : faire croître λ</button>
+      <h2 class="grp-title">Options</h2>
+      <div data-t="pn_std"></div>
+      <h2 class="grp-title">Départs suggérés</h2>
+      <div class="presets"><button class="chip" data-preset="pn1"></button><button class="chip" data-preset="pn2"></button></div>
+    </section>
+
+    <!-- Binomiale vers Poisson -->
+    <section data-views="bp">
+      <h2 class="grp-title">Paramètres</h2>
+      <div data-c="bp_n"></div><div data-c="bp_p"></div>
+      <div data-t="bp_fix"></div>
+      <button class="btn primary" data-act="anim">Animer : n croît, λ = np fixe</button>
+      <h2 class="grp-title">Exemple du cours</h2>
+      <div class="presets"><button class="chip" data-preset="bp1"></button></div>
+    </section>
+  </aside>
+
+  <!-- ================= ZONE D'AFFICHAGE ================= -->
+  <main>
+    <section class="panel chart-card">
+      <div class="chart-head"><h2 id="title"></h2><div class="legend" id="legend"></div></div>
+      <div class="chart-wrap"><canvas id="cv1" role="img" aria-label="Graphique de la loi"></canvas><div class="tip" id="tip1"></div></div>
+      <div class="badges" id="badges"></div>
+    </section>
+
+    <section class="stats" id="stats" aria-live="polite"></section>
+
+    <section class="panel chart-card" id="card2" hidden>
+      <div class="chart-head"><h2 id="title2"></h2><label class="sw small"><input type="checkbox" id="t_log"><span class="knob"></span><span>Échelle logarithmique</span></label></div>
+      <div class="chart-wrap small"><canvas id="cv2" role="img" aria-label="Écart maximal"></canvas><div class="tip" id="tip2"></div></div>
+      <p class="hint" id="hint2"></p>
+    </section>
+
+    <div class="duo">
+      <section class="panel"><h3>À observer</h3><ul id="notes"></ul></section>
+      <section class="panel"><h3>Formulaire</h3><div id="formula"></div></section>
+    </div>
+  </main>
+</div>
+
+<footer>
+  <span>Pôle Formation UIMM Centre-Val de Loire · Support MOD08 : lois discrètes et loi normale · S. Jaubert</span>
+  <span>Version 1.0 · calculs exacts côté navigateur, aucune donnée transmise</span>
+</footer>
+
+<script>
+"use strict";
+/* =====================================================================
+   1. OUTILS MATHÉMATIQUES
+   ===================================================================== */
+const SQ2PI = Math.sqrt(2 * Math.PI);
+const LANCZOS = [0.99999999999980993, 676.5203681218851, -1259.1392167224028, 771.32342877765313,
+  -176.61502916214059, 12.507343278686905, -0.13857109526572012, 9.9843695780195716e-6, 1.5056327351493116e-7];
+function lgamma(x) {
+  if (x < 0.5) return Math.log(Math.PI / Math.sin(Math.PI * x)) - lgamma(1 - x);
+  x -= 1; let a = LANCZOS[0]; const t = x + 7.5;
+  for (let i = 1; i < 9; i++) a += LANCZOS[i] / (x + i);
+  return 0.5 * Math.log(2 * Math.PI) + (x + 0.5) * Math.log(t) - t + Math.log(a);
+}
+// Loi binomiale : tableau des P(X = k), k = 0..n (récurrence en logarithmes, sans dépassement)
+function pmfBinom(n, p) {
+  const a = new Float64Array(n + 1);
+  if (p <= 0) { a[0] = 1; return a; }
+  if (p >= 1) { a[n] = 1; return a; }
+  const lr = Math.log(p / (1 - p)); let lp = n * Math.log1p(-p); a[0] = Math.exp(lp);
+  for (let k = 0; k < n; k++) { lp += Math.log((n - k) / (k + 1)) + lr; a[k + 1] = Math.exp(lp); }
+  return a;
+}
+// Loi de Poisson : P(X = k), k = 0..K
+function pmfPois(l, K) {
+  const a = new Float64Array(K + 1); let lp = -l; a[0] = Math.exp(lp);
+  for (let k = 1; k <= K; k++) { lp += Math.log(l / k); a[k] = Math.exp(lp); }
+  return a;
+}
+function cum(a) { const c = new Float64Array(a.length); let s = 0; for (let i = 0; i < a.length; i++) { s += a[i]; c[i] = s; } return c; }
+function erfc(x) { // Numerical Recipes, erreur relative < 1,2e-7
+  const z = Math.abs(x), t = 1 / (1 + 0.5 * z);
+  const r = t * Math.exp(-z * z - 1.26551223 + t * (1.00002368 + t * (0.37409196 + t * (0.09678418 + t * (-0.18628806 +
+    t * (0.27886807 + t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277)))))))));
+  return x >= 0 ? r : 2 - r;
+}
+const Phi = z => 0.5 * erfc(-z / Math.SQRT2);
+const phi = z => Math.exp(-0.5 * z * z) / SQ2PI;
+const dnorm = (x, m, s) => phi((x - m) / s) / s;
+const pnorm = (x, m, s) => Phi((x - m) / s);
+function randn() { let u = 0; while (u === 0) u = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * Math.random()); }
+function rbinom(n, p) { let s = 0; for (let i = 0; i < n; i++) if (Math.random() < p) s++; return s; }
+function rpois(l) {
+  if (l > 30) { let s = 0, r = l; while (r > 30) { s += rpois(30); r -= 30; } return s + rpois(r); }
+  const L = Math.exp(-l); let k = 0, pr = 1; do { k++; pr *= Math.random(); } while (pr > L); return k - 1;
+}
+function drawN(N, f) { const a = new Float64Array(N); for (let i = 0; i < N; i++) a[i] = f(); return a; }
+function meanSd(a) { let s = 0; for (const v of a) s += v; const m = s / a.length; let q = 0; for (const v of a) q += (v - m) * (v - m); return [m, Math.sqrt(q / a.length)]; }
+function counts(sample, K) { const c = new Float64Array(K + 1); for (const v of sample) if (v <= K) c[v]++; for (let i = 0; i <= K; i++) c[i] /= sample.length; return c; }
+const seq = (a, b) => { const r = []; for (let i = a; i <= b; i++) r.push(i); return r; };
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+function maxIn(a, lo, hi) { let m = 0; for (let i = Math.max(0, lo); i <= Math.min(a.length - 1, hi); i++) if (a[i] > m) m = a[i]; return m; }
+function widen(lo, hi, min, max, span) { while (hi - lo < span && (lo > min || hi < max)) { if (lo > min) lo--; if (hi < max) hi++; } return [lo, hi]; }
+const kmaxP = l => Math.max(12, Math.ceil(l + 5 * Math.sqrt(l) + 2));
+
+// Écarts maximaux (mesure de la convergence)
+function distBN(n, p) { // max_k |P(X <= k) - P(Y <= k + 0,5)|
+  const m = n * p, s = Math.sqrt(n * p * (1 - p)), pm = pmfBinom(n, p); let F = 0, D = 0;
+  for (let k = 0; k <= n; k++) { F += pm[k]; D = Math.max(D, Math.abs(F - pnorm(k + 0.5, m, s))); }
+  return D;
+}
+function distPN(l) {
+  const K = Math.ceil(l + 12 * Math.sqrt(l) + 15), pm = pmfPois(l, K), s = Math.sqrt(l); let F = 0, D = 0;
+  for (let k = 0; k <= K; k++) { F += pm[k]; D = Math.max(D, Math.abs(F - pnorm(k + 0.5, l, s))); }
+  return D;
+}
+function distBP(n, p) { // max_k |P(X = k) - P(Y = k)|
+  const l = n * p, K = Math.max(n, Math.ceil(l + 12 * Math.sqrt(l) + 15)), b = pmfBinom(n, p), q = pmfPois(l, K); let D = 0;
+  for (let k = 0; k <= K; k++) D = Math.max(D, Math.abs((k <= n ? b[k] : 0) - q[k]));
+  return D;
+}
+
+/* =====================================================================
+   2. FORMATAGE (virgule décimale, KaTeX avec repli texte)
+   ===================================================================== */
+const R = String.raw;
+function fr(x, d) { let s = Number(x).toFixed(d); if (/^-0(\.0+)?$/.test(s)) s = s.slice(1); return s.replace('.', ',').replace('-', '−'); }
+function tex(x, d) { let s = Number(x).toFixed(d); if (/^-0(\.0+)?$/.test(s)) s = s.slice(1); return s.replace('.', '{,}'); }
+function fmtP(x, d = 4) {
+  if (x === 0) return '0';
+  if (Math.abs(x) < 5e-5) { const e = Math.floor(Math.log10(Math.abs(x))); return fr(x / Math.pow(10, e), 2) + ' × 10<sup>' + String(e).replace('-', '−') + '</sup>'; }
+  return fr(x, d);
+}
+const esc = s => s.replace(/[&<>]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+const PLAIN = [[/\\mathcal\{(\w)\}/g, '$1'], [/\\binom\{([^}]*)\}\{([^}]*)\}/g, 'C($1,$2)'], [/\\frac\{([^}]*)\}\{([^}]*)\}/g, '($1)/($2)'],
+  [/\\sqrt\{([^}]*)\}/g, '√($1)'], [/\\sigma/g, 'σ'], [/\\mu/g, 'μ'], [/\\lambda/g, 'λ'], [/\\pi/g, 'π'], [/\\Phi/g, 'Φ'], [/\\varphi/g, 'φ'],
+  [/\\leq/g, '≤'], [/\\geq/g, '≥'], [/\\approx/g, '≈'], [/\\sim/g, '~'], [/\\times/g, '×'], [/\\text\{([^}]*)\}/g, '$1'], [/\{,\}/g, ','],
+  [/\\left|\\right/g, ''], [/\\[,;:! ]/g, ' '], [/\\quad|\\qquad/g, '   '], [/\\[a-zA-Z]+/g, ''], [/[{}]/g, '']];
+function plainTex(t) { for (const [a, b] of PLAIN) t = t.replace(a, b); return t; }
+function km(t, display) {
+  if (window.katex) { try { return katex.renderToString(t, { displayMode: !!display, throwOnError: false, strict: false }); } catch (e) { /* repli */ } }
+  return '<span class="tex">' + esc(plainTex(t)) + '</span>';
+}
+function mx(s) { return s.split(/(\$[^$]+\$)/g).map(p => (p.length > 1 && p[0] === '$' && p[p.length - 1] === '$') ? km(p.slice(1, -1)) : p).join(''); }
+
+/* =====================================================================
+   3. MOTEUR DE TRACÉ (canvas, sans bibliothèque)
+   ===================================================================== */
+const COL = {
+  blue: '#005C85', blueA: 'rgba(0,92,133,.82)', blueSoft: '#BCD5E3', red: '#D31326', redA: 'rgba(211,19,38,.16)',
+  sim: 'rgba(118,132,143,.42)', grid: '#E4EAEE', axis: '#6B7780', text: '#333333', muted: '#5E6A72', ref: '#8C979F',
+  calc: 'rgba(0,92,133,.26)', band: 'rgba(0,92,133,.07)'
+};
+const FONT = '"Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif';
+function nice(x) { const e = Math.pow(10, Math.floor(Math.log10(x))), f = x / e; return (f < 1.5 ? 1 : f < 3 ? 2 : f < 7 ? 5 : 10) * e; }
+function ticks(a, b, count, isInt) {
+  let step = nice((b - a) / count); if (isInt) step = Math.max(1, Math.round(step));
+  const d = Math.max(0, -Math.floor(Math.log10(step) + 1e-9)), v = [];
+  for (let t = Math.ceil(a / step - 1e-9) * step; t <= b + 1e-9; t += step) v.push(+t.toFixed(10));
+  return { v, d };
+}
+const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+function logTicks(a, b) {
+  const v = []; for (let e = Math.ceil(Math.log10(a) - 1e-9); e <= Math.floor(Math.log10(b) + 1e-9); e++) v.push(Math.pow(10, e));
+  return { v, lab: t => { const e = Math.round(Math.log10(t)); return e === 0 ? '1' : '10' + String(e).split('').map(ch => SUP[ch]).join(''); } };
+}
+function curve(x0, x1, f, color, width, dash) {
+  const xs = [], ys = [], N = 420; for (let i = 0; i <= N; i++) { const x = x0 + (x1 - x0) * i / N; xs.push(x); ys.push(f(x)); }
+  return { type: 'line', xs, ys, color, width: width || 2, dash };
+}
+function areaL(x0, x1, f, color) {
+  const xs = [], ys = [], N = 240; for (let i = 0; i <= N; i++) { const x = x0 + (x1 - x0) * i / N; xs.push(x); ys.push(f(x)); }
+  return { type: 'area', xs, ys, color };
+}
+function arrowHead(c, x, y, dir) { c.beginPath(); c.moveTo(x, y); c.lineTo(x - dir * 7, y - 4); c.lineTo(x - dir * 7, y + 4); c.closePath(); c.fill(); }
+const LAYER = {
+  bars(c, l, g) {
+    for (let i = 0; i < l.xs.length; i++) {
+      const y = l.ys[i]; if (!(y > 0)) continue;
+      const x0 = g.X(l.xs[i] - l.w / 2), x1 = g.X(l.xs[i] + l.w / 2);
+      if (x1 < g.L - 2 || x0 > g.L + g.pw + 2) continue;
+      const py = g.Y(y), w = Math.max(1, x1 - x0);
+      c.fillStyle = l.colorFn ? l.colorFn(i) : l.color;
+      c.fillRect(x0, py, w, g.y0 - py);
+      if (l.edge && w > 4) { c.strokeStyle = '#fff'; c.lineWidth = 1; c.strokeRect(x0 + .5, py + .5, w - 1, g.y0 - py); }
+    }
+  },
+  line(c, l, g) {
+    c.strokeStyle = l.color; c.lineWidth = l.width || 2; c.setLineDash(l.dash || []); c.lineJoin = 'round'; c.beginPath();
+    l.xs.forEach((x, i) => { const px = g.X(x), py = g.Y(l.ys[i]); i ? c.lineTo(px, py) : c.moveTo(px, py); });
+    c.stroke(); c.setLineDash([]);
+  },
+  area(c, l, g) {
+    c.fillStyle = l.color; c.beginPath(); c.moveTo(g.X(l.xs[0]), g.y0);
+    l.xs.forEach((x, i) => c.lineTo(g.X(x), g.Y(l.ys[i]))); c.lineTo(g.X(l.xs[l.xs.length - 1]), g.y0); c.closePath(); c.fill();
+  },
+  stems(c, l, g) {
+    c.lineWidth = 2.2;
+    for (let i = 0; i < l.xs.length; i++) {
+      const px = g.X(l.xs[i]); if (px < g.L - 4 || px > g.L + g.pw + 4) continue;
+      const py = g.Y(l.ys[i]), col = l.colorFn ? l.colorFn(i) : l.color;
+      c.strokeStyle = col; c.fillStyle = col;
+      c.beginPath(); c.moveTo(px, g.y0); c.lineTo(px, py); c.stroke();
+      c.beginPath(); c.arc(px, py, l.r || 3.5, 0, 2 * Math.PI); c.fill();
+    }
+  },
+  points(c, l, g) {
+    c.fillStyle = l.color; c.strokeStyle = '#fff'; c.lineWidth = 1.5;
+    for (let i = 0; i < l.xs.length; i++) {
+      const px = g.X(l.xs[i]); if (px < g.L - 6 || px > g.L + g.pw + 6) continue;
+      c.beginPath(); c.arc(px, g.Y(l.ys[i]), l.r || 4, 0, 2 * Math.PI); c.fill(); c.stroke();
+    }
+  },
+  vline(c, l, g) {
+    const x = g.X(l.x); c.strokeStyle = l.color; c.lineWidth = l.width || 1.5; c.setLineDash(l.dash || [5, 4]);
+    c.beginPath(); c.moveTo(x, g.T); c.lineTo(x, g.T + g.ph); c.stroke(); c.setLineDash([]);
+    if (l.label) { c.fillStyle = l.color; c.font = '600 13px ' + FONT; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText(l.label, x + 5, g.T + 4); }
+  },
+  band(c, l, g) { c.fillStyle = l.color; c.fillRect(g.X(l.x0), g.T, g.X(l.x1) - g.X(l.x0), g.ph); },
+  span(c, l, g) {
+    const x0 = g.X(l.x0), x1 = g.X(l.x1), y = g.Y(l.y);
+    c.strokeStyle = l.color; c.fillStyle = l.color; c.lineWidth = 1.4;
+    c.beginPath(); c.moveTo(x0, y); c.lineTo(x1, y); c.stroke();
+    if (l.both) arrowHead(c, x0, y, -1); arrowHead(c, x1, y, 1);
+    if (l.label) { c.font = '600 12px ' + FONT; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(l.label, (x0 + x1) / 2, y - 4); }
+  }
+};
+function drawPlot(cv, spec, hx) {
+  cv._spec = spec;
+  const wrap = cv.parentElement, dpr = window.devicePixelRatio || 1, W = wrap.clientWidth, H = wrap.clientHeight;
+  if (!W || !H) return;
+  if (cv.width !== Math.round(W * dpr) || cv.height !== Math.round(H * dpr)) { cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); }
+  const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+  const L = 70, Rm = 16, T = 14, B = 46, pw = W - L - Rm, ph = H - T - B;
+  const { xmin, xmax, ymin, ymax } = spec;
+  const lg10 = Math.log10, X = x => L + (x - xmin) / (xmax - xmin) * pw;
+  const Y = spec.logY ? (y => T + ph - (lg10(Math.max(y, ymin)) - lg10(ymin)) / (lg10(ymax) - lg10(ymin)) * ph) : (y => T + ph - (y - ymin) / (ymax - ymin) * ph);
+  const g = { X, Y, L, T, pw, ph, y0: T + ph }; cv._geo = g;
+  // grille et graduations
+  c.font = '12px ' + FONT; c.fillStyle = COL.muted; c.strokeStyle = COL.grid; c.lineWidth = 1;
+  const yt = spec.logY ? logTicks(ymin, ymax) : ticks(ymin, ymax, Math.max(3, Math.floor(ph / 60)), false), xt = ticks(xmin, xmax, Math.max(4, Math.floor(pw / 75)), spec.xInt);
+  c.textAlign = 'right'; c.textBaseline = 'middle';
+  yt.v.forEach(v => { const y = Math.round(Y(v)) + .5; c.beginPath(); c.moveTo(L, y); c.lineTo(L + pw, y); c.stroke(); c.fillText(yt.lab ? yt.lab(v) : fr(v, yt.d), L - 8, y); });
+  c.textAlign = 'center'; c.textBaseline = 'top'; c.strokeStyle = COL.axis;
+  xt.v.forEach(v => { const x = Math.round(X(v)) + .5; c.beginPath(); c.moveTo(x, T + ph); c.lineTo(x, T + ph + 5); c.stroke(); c.fillText(fr(v, xt.d), x, T + ph + 8); });
+  // couches, découpées à la zone de tracé
+  c.save(); c.beginPath(); c.rect(L, T, pw, ph); c.clip();
+  for (const ly of spec.layers) LAYER[ly.type](c, ly, g);
+  if (hx != null) { const x = X(hx); c.strokeStyle = 'rgba(51,51,51,.45)'; c.setLineDash([3, 3]); c.lineWidth = 1; c.beginPath(); c.moveTo(x, T); c.lineTo(x, T + ph); c.stroke(); c.setLineDash([]); }
+  c.restore();
+  // axes et titres d'axes
+  c.strokeStyle = COL.axis; c.lineWidth = 1.2; c.beginPath(); c.moveTo(L, T); c.lineTo(L, T + ph); c.lineTo(L + pw, T + ph); c.stroke();
+  c.fillStyle = COL.text; c.font = '600 12.5px ' + FONT; c.textAlign = 'center'; c.textBaseline = 'bottom';
+  c.fillText(spec.xlabel || '', L + pw / 2, H - 3);
+  c.save(); c.translate(13, T + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(spec.ylabel || '', 0, 0); c.restore();
+}
+function attachHover(cv, tip) {
+  const move = e => {
+    const spec = cv._spec, g = cv._geo; if (!spec || !g || !spec.tooltip) return;
+    const r = cv.getBoundingClientRect(), mxp = e.clientX - r.left;
+    if (mxp < g.L || mxp > g.L + g.pw) { leave(); return; }
+    const xd = spec.xmin + (mxp - g.L) / g.pw * (spec.xmax - spec.xmin), res = spec.tooltip(xd);
+    if (!res) { leave(); return; }
+    drawPlot(cv, spec, res.x);
+    tip.innerHTML = res.html; tip.style.opacity = 1;
+    const px = g.X(res.x), tw = tip.offsetWidth, W = cv.clientWidth;
+    tip.style.left = Math.max(0, px + 14 + tw > W ? px - 14 - tw : px + 14) + 'px';
+  };
+  const leave = () => { tip.style.opacity = 0; tip.style.left = '0px'; if (cv._spec) drawPlot(cv, cv._spec, null); };
+  cv.addEventListener('pointermove', move); cv.addEventListener('pointerdown', move); cv.addEventListener('pointerleave', leave);
+}
+
+/* =====================================================================
+   4. COMMANDES (curseurs, interrupteurs) ET ÉTAT
+   ===================================================================== */
+const C = {
+  b_n: { lab: R`Nombre d'épreuves $n$`, min: 1, max: 200, step: 1, v: 20 },
+  b_p: { lab: R`Probabilité de succès $p$`, min: 0.01, max: 0.99, step: 0.01, v: 0.3 },
+  b_a: { lab: R`Borne $a$`, min: 0, max: 20, step: 1, v: 4 },
+  b_b: { lab: R`Borne $b$`, min: 0, max: 20, step: 1, v: 8 },
+  b_N: { lab: R`Taille de l'échantillon $N$`, min: 100, max: 10000, step: 100, v: 1000 },
+  p_l: { lab: R`Paramètre $\lambda$ (moyenne)`, min: 0.1, max: 60, step: 0.1, v: 3 },
+  p_a: { lab: R`Borne $a$`, min: 0, max: 20, step: 1, v: 1 },
+  p_b: { lab: R`Borne $b$`, min: 0, max: 20, step: 1, v: 4 },
+  p_N: { lab: R`Taille de l'échantillon $N$`, min: 100, max: 10000, step: 100, v: 1000 },
+  n_mu: { lab: R`Moyenne $\mu$`, min: -10, max: 10, step: 0.1, v: 0 },
+  n_s: { lab: R`Écart-type $\sigma$`, min: 0.5, max: 5, step: 0.1, v: 1 },
+  n_a: { lab: R`Borne $a$`, min: -15, max: 15, step: 0.1, v: -1 },
+  n_b: { lab: R`Borne $b$`, min: -15, max: 15, step: 0.1, v: 1 },
+  n_N: { lab: R`Taille de l'échantillon $N$`, min: 100, max: 10000, step: 100, v: 1000 },
+  bn_n: { lab: R`Nombre d'épreuves $n$`, min: 1, max: 500, step: 1, v: 10 },
+  bn_p: { lab: R`Probabilité de succès $p$`, min: 0.01, max: 0.99, step: 0.01, v: 0.3 },
+  bn_a: { lab: R`Borne $a$`, min: 0, max: 10, step: 1, v: 2 },
+  bn_b: { lab: R`Borne $b$`, min: 0, max: 10, step: 1, v: 4 },
+  pn_l: { lab: R`Paramètre $\lambda$`, min: 0.5, max: 100, step: 0.5, v: 2 },
+  bp_n: { lab: R`Nombre d'épreuves $n$`, min: 1, max: 500, step: 1, v: 50 },
+  bp_p: { lab: R`Probabilité de succès $p$`, min: 0.001, max: 0.5, step: 0.001, v: 0.05, dec: 4 }
+};
+const TG = {
+  b_frame: { lab: 'Cadre fixe (figer les axes)', v: false },
+  b_norm: { lab: R`Superposer la courbe normale $\mathcal{N}(np\,;\sqrt{np(1-p)})$`, v: false },
+  b_calc: { lab: R`Calculer $P(a \leq X \leq b)$`, v: false },
+  b_sim: { lab: 'Simuler un échantillon', v: false },
+  p_frame: { lab: 'Cadre fixe (figer les axes)', v: false },
+  p_norm: { lab: R`Superposer la courbe normale $\mathcal{N}(\lambda\,;\sqrt{\lambda})$`, v: false },
+  p_calc: { lab: R`Calculer $P(a \leq X \leq b)$`, v: false },
+  p_sim: { lab: 'Simuler un échantillon', v: false },
+  n_frame: { lab: 'Cadre fixe (recommandé)', v: true },
+  n_ref: { lab: R`Afficher la référence $\mathcal{N}(0\,;1)$`, v: true },
+  n_bands: { lab: 'Afficher la règle 68 - 95 - 99,7', v: false },
+  n_calc: { lab: R`Calculer $P(a \leq X \leq b)$`, v: false },
+  n_sim: { lab: 'Simuler un échantillon', v: false },
+  bn_std: { lab: R`Vue centrée réduite $z = \frac{k-\mu}{\sigma}$`, v: false },
+  bn_calc: { lab: R`Calculer $P(a \leq X \leq b)$ exacte et approchée`, v: false },
+  pn_std: { lab: R`Vue centrée réduite $z = \frac{k-\lambda}{\sqrt{\lambda}}$`, v: false },
+  bp_fix: { lab: R`Garder $\lambda = np$ constant quand $n$ varie`, v: false }
+};
+const V = { tab: 'binom', conv: 'bn', log: false };
+let lamFix = null;
+const $ = s => document.querySelector(s);
+const decOf = id => C[id].dec != null ? C[id].dec : (String(C[id].step).split('.')[1] || '').length;
+
+function syncUI(id) {
+  const d = C[id], r = document.getElementById('r_' + id), x = document.getElementById('x_' + id);
+  r.value = V[id]; x.value = Number(V[id]).toFixed(decOf(id));
+  r.style.setProperty('--pct', (clamp((V[id] - d.min) / (d.max - d.min), 0, 1) * 100) + '%');
+}
+function setVal(id, v) {
+  const d = C[id]; if (!isFinite(v)) v = V[id];
+  v = clamp(v, d.min, d.max); v = d.min + Math.round((v - d.min) / d.step) * d.step;
+  V[id] = +v.toFixed(Math.max(decOf(id), 6)); V[id] = +V[id].toFixed((String(d.step).split('.')[1] || '').length);
+  syncUI(id);
+}
+function setMax(id, max) {
+  C[id].max = max; document.getElementById('r_' + id).max = max; document.getElementById('x_' + id).max = max;
+  if (V[id] > max) setVal(id, max); else syncUI(id);
+}
+function setToggle(id, on) { V[id] = !!on; document.getElementById('t_' + id).checked = !!on; onToggle(id); }
+
+const PAIRS = [['b_a', 'b_b'], ['p_a', 'p_b'], ['n_a', 'n_b'], ['bn_a', 'bn_b']];
+function onParam(id) {
+  if (id === 'b_n') { setMax('b_a', V.b_n); setMax('b_b', V.b_n); }
+  if (id === 'bn_n') { setMax('bn_a', V.bn_n); setMax('bn_b', V.bn_n); }
+  if (id === 'p_l') { const K = kmaxP(V.p_l); setMax('p_a', K); setMax('p_b', K); }
+  for (const [a, b] of PAIRS) {
+    if (id === a && V[a] > V[b]) setVal(b, V[a]);
+    if (id === b && V[b] < V[a]) setVal(a, V[b]);
+  }
+  if (id === 'bp_n' && V.bp_fix) {
+    const nmin = Math.ceil(2 * lamFix - 1e-9); if (V.bp_n < nmin) setVal('bp_n', nmin);
+    V.bp_p = lamFix / V.bp_n; syncUI('bp_p');
+  }
+  if (id === 'bp_p' || id === 'bp_n') { if (!V.bp_fix) lamFix = null; }
+}
+function onToggle(id) {
+  if (id.endsWith('_frame')) FROZEN[id] = null;
+  if (id === 'bp_fix') {
+    const r = document.getElementById('r_bp_p'), x = document.getElementById('x_bp_p');
+    r.disabled = x.disabled = V.bp_fix;
+    if (V.bp_fix) { lamFix = V.bp_n * V.bp_p; onParam('bp_n'); } else lamFix = null;
+  }
+}
+function buildControls() {
+  document.querySelectorAll('[data-c]').forEach(el => {
+    const id = el.dataset.c, d = C[id]; V[id] = d.v; el.className = 'ctl';
+    el.innerHTML = `<div class="ctl-row"><label for="r_${id}">${mx(d.lab)}</label>` +
+      `<input type="number" class="num" id="x_${id}" min="${d.min}" max="${d.max}" step="${d.step}" aria-label="${esc(plainTex(d.lab))}"></div>` +
+      `<input type="range" id="r_${id}" min="${d.min}" max="${d.max}" step="${d.step}">`;
+    const r = el.querySelector('input[type=range]'), x = el.querySelector('input[type=number]');
+    r.addEventListener('input', () => { stopAnim(); setVal(id, parseFloat(r.value)); onParam(id); schedule(); });
+    x.addEventListener('change', () => { stopAnim(); setVal(id, parseFloat(String(x.value).replace(',', '.'))); onParam(id); schedule(); });
+    syncUI(id);
+  });
+  document.querySelectorAll('[data-t]').forEach(el => {
+    const id = el.dataset.t, d = TG[id]; V[id] = d.v;
+    el.outerHTML = `<label class="sw"><input type="checkbox" id="t_${id}" ${d.v ? 'checked' : ''}><span class="knob"></span><span>${mx(d.lab)}</span></label>`;
+  });
+  Object.keys(TG).forEach(id => document.getElementById('t_' + id).addEventListener('change', e => { stopAnim(); V[id] = e.target.checked; onToggle(id); schedule(); }));
+  setMax('b_a', V.b_n); setMax('b_b', V.b_n); setMax('bn_a', V.bn_n); setMax('bn_b', V.bn_n);
+  setMax('p_a', kmaxP(V.p_l)); setMax('p_b', kmaxP(V.p_l));
+}
+
+/* Préréglages : exemples tirés des cours MOD08 */
+const PRESETS = {
+  b1: { lab: R`$\mathcal{B}(10\,;0{,}3)$`, tab: 'binom', v: { b_n: 10, b_p: 0.3 } },
+  b2: { lab: R`$\mathcal{B}(20\,;0{,}05)$`, tab: 'binom', v: { b_n: 20, b_p: 0.05 } },
+  p1: { lab: R`$\mathcal{P}(3)$`, tab: 'pois', v: { p_l: 3 } },
+  p2: { lab: R`$\mathcal{P}(2)$`, tab: 'pois', v: { p_l: 2 } },
+  n1: { lab: R`$\mathcal{N}(0\,;1)$`, tab: 'norm', v: { n_mu: 0, n_s: 1 } },
+  bn1: { lab: R`$\mathcal{B}(100\,;0{,}4)$ et $P(X \leq 45)$`, tab: 'conv', conv: 'bn', v: { bn_n: 100, bn_p: 0.4, bn_a: 0, bn_b: 45 }, t: { bn_calc: true, bn_std: false } },
+  bn2: { lab: R`Cas lent : $p = 0{,}05$`, tab: 'conv', conv: 'bn', v: { bn_n: 10, bn_p: 0.05 }, t: { bn_calc: false } },
+  pn1: { lab: R`$\lambda = 1$`, tab: 'conv', conv: 'pn', v: { pn_l: 1 } },
+  pn2: { lab: R`$\lambda = 30$`, tab: 'conv', conv: 'pn', v: { pn_l: 30 } },
+  bp1: { lab: R`$\mathcal{B}(200\,;0{,}01)$ et $\mathcal{P}(2)$`, tab: 'conv', conv: 'bp', v: { bp_n: 200, bp_p: 0.01 }, t: { bp_fix: false } }
+};
+function applyPreset(k) {
+  stopAnim(); const P = PRESETS[k];
+  if (P.t) for (const [id, on] of Object.entries(P.t)) setToggle(id, on);
+  for (const [id, v] of Object.entries(P.v)) { setVal(id, v); onParam(id); }
+  setTab(P.tab, P.conv);
+}
+
+/* =====================================================================
+   5. CONSTRUCTION DES VUES
+   ===================================================================== */
+const FROZEN = {};
+function frame(key, auto, fixed, preset) {
+  if (!fixed) { FROZEN[key] = null; return auto; }
+  if (!FROZEN[key]) FROZEN[key] = Object.assign({}, preset || auto);
+  return FROZEN[key];
+}
+const SIM = {};
+function getSim(view, key, fn) { if (!SIM[view] || SIM[view].key !== key) SIM[view] = { key, data: fn() }; return SIM[view].data; }
+const CACHE = {};
+function cached(name, key, fn) { if (!CACHE[name] || CACHE[name].key !== key) CACHE[name] = { key, data: fn() }; return CACHE[name].data; }
+const S = (k, v, s, hl) => ({ k, v, s, hl });
+const cond = (txt, ok) => [txt + (ok ? ' : vérifiée' : ' : non vérifiée'), ok ? 'ok' : 'no'];
+const lg = (label, color, kind) => ({ label, color, kind });
+
+function vBinom() {
+  const n = V.b_n, p = V.b_p, m = n * p, s = Math.sqrt(n * p * (1 - p)), a = V.b_a, b = V.b_b, calc = V.b_calc;
+  const pmf = pmfBinom(n, p), cdf = cum(pmf), ks = seq(0, n);
+  let sample = null, freq = null;
+  if (V.b_sim) { sample = getSim('binom', [n, p, V.b_N].join('|'), () => drawN(V.b_N, () => rbinom(n, p))); freq = counts(sample, n); }
+  const [lo, hi] = widen(Math.max(0, Math.floor(m - 5 * s)), Math.min(n, Math.ceil(m + 5 * s)), 0, n, 10);
+  let ym = maxIn(pmf, lo, hi); if (freq) ym = Math.max(ym, maxIn(freq, lo, hi)); if (V.b_norm && s > 0) ym = Math.max(ym, 1 / (s * SQ2PI));
+  const F = frame('b_frame', { xmin: lo - 0.8, xmax: hi + 0.8, ymin: 0, ymax: ym * 1.15 }, V.b_frame);
+  const inR = i => !calc || (i >= a && i <= b), L = [];
+  if (freq) { L.push({ type: 'bars', xs: ks, ys: freq, w: 0.8, color: COL.sim }); L.push({ type: 'stems', xs: ks, ys: pmf, colorFn: i => inR(i) ? COL.blue : COL.blueSoft }); }
+  else L.push({ type: 'bars', xs: ks, ys: pmf, w: 0.7, colorFn: i => inR(i) ? COL.blue : COL.blueSoft });
+  if (V.b_norm && s > 0) L.push(curve(F.xmin, F.xmax, x => dnorm(x, m, s), COL.red, 2.4));
+  const legend = [lg('Probabilité théorique P(X = k)', COL.blue, freq ? 'dot' : 'bar')];
+  if (calc) legend.push(lg('Hors de [a ; b]', COL.blueSoft, 'bar'));
+  if (freq) legend.push(lg('Fréquence observée', 'rgb(160,170,178)', 'bar'));
+  if (V.b_norm) legend.push(lg('Densité normale associée', COL.red, 'line'));
+  const stats = [S(R`$E(X) = np$`, fr(m, 4)), S(R`$\sigma(X) = \sqrt{np(1-p)}$`, fr(s, 4)), S(R`$V(X) = np(1-p)$`, fr(s * s, 4))];
+  if (calc) stats.push(S(`$P(${a} \\leq X \\leq ${b})$`, fr(cdf[b] - (a > 0 ? cdf[a - 1] : 0), 4), 'valeur exacte', true));
+  if (sample) { const [xb, sd] = meanSd(sample); stats.push(S('Moyenne observée', fr(xb, 4), `sur ${sample.length.toLocaleString('fr-FR')} tirages`)); stats.push(S('Écart-type observé', fr(sd, 4))); }
+  const badges = V.b_norm ? [cond(R`$n \geq 30$`, n >= 30), cond(R`$np \geq 5$`, m >= 5), cond(R`$n(1-p) \geq 5$`, n - m >= 5)] : [];
+  return {
+    title: R`Loi binomiale $\mathcal{B}(${n}\,;\,${tex(p, 2)})$`, legend, badges, stats,
+    plot: {
+      ...F, xInt: true, xlabel: 'k (nombre de succès)', ylabel: freq ? 'Probabilité / fréquence' : 'Probabilité', layers: L,
+      tooltip: x => { const k = clamp(Math.round(x), 0, n); return { x: k, html: `<b>k = ${k}</b><br>P(X = ${k}) = ${fmtP(pmf[k])}<br>P(X ≤ ${k}) = ${fmtP(cdf[k])}` + (freq ? `<br>Fréquence observée : ${fmtP(freq[k])}` : '') + (V.b_norm ? `<br>Densité normale en ${k} : ${fmtP(dnorm(k, m, s))}` : '') }; }
+    },
+    formula: [R`X \sim \mathcal{B}(n\,;p) \quad\text{ici}\quad \mathcal{B}(${n}\,;${tex(p, 2)})`,
+      R`P(X = k) = \binom{n}{k}\,p^{k}\,(1-p)^{n-k}, \qquad k = 0, 1, \dots, n`,
+      R`E(X) = np = ${tex(m, 2)} \qquad \sigma(X) = \sqrt{np(1-p)} \approx ${tex(s, 4)}`],
+    notes: [R`Fais varier $p$ à $n$ fixé : la loi est symétrique pour $p = 0{,}5$, étirée vers la droite quand $p$ est petit, vers la gauche quand $p$ est grand.`,
+      R`Augmente $n$ : l'espérance $np$ croît proportionnellement à $n$, l'écart-type $\sqrt{np(1-p)}$ seulement comme $\sqrt{n}$.`,
+      'Coche « Cadre fixe » avant de bouger un curseur : tu compares les lois à échelle constante.',
+      R`Superpose la courbe normale : l'accord s'améliore quand $n$ grandit et que $p$ reste éloigné de 0 et de 1.`,
+      'Active la simulation : la fréquence observée se rapproche de la probabilité quand la taille de l’échantillon augmente.']
+  };
+}
+
+function vPois() {
+  const l = V.p_l, s = Math.sqrt(l), K = kmaxP(l), a = V.p_a, b = V.p_b, calc = V.p_calc;
+  const pmf = pmfPois(l, K), cdf = cum(pmf), ks = seq(0, K);
+  let sample = null, freq = null;
+  if (V.p_sim) { sample = getSim('pois', [l, V.p_N].join('|'), () => drawN(V.p_N, () => rpois(l))); freq = counts(sample, K); }
+  let ym = maxIn(pmf, 0, K); if (freq) ym = Math.max(ym, maxIn(freq, 0, K)); if (V.p_norm) ym = Math.max(ym, 1 / (s * SQ2PI));
+  const F = frame('p_frame', { xmin: -0.8, xmax: K + 0.8, ymin: 0, ymax: ym * 1.15 }, V.p_frame);
+  const inR = i => !calc || (i >= a && i <= b), L = [];
+  if (freq) { L.push({ type: 'bars', xs: ks, ys: freq, w: 0.8, color: COL.sim }); L.push({ type: 'stems', xs: ks, ys: pmf, colorFn: i => inR(i) ? COL.blue : COL.blueSoft }); }
+  else L.push({ type: 'bars', xs: ks, ys: pmf, w: 0.7, colorFn: i => inR(i) ? COL.blue : COL.blueSoft });
+  if (V.p_norm) L.push(curve(F.xmin, F.xmax, x => dnorm(x, l, s), COL.red, 2.4));
+  const legend = [lg('Probabilité théorique P(X = k)', COL.blue, freq ? 'dot' : 'bar')];
+  if (calc) legend.push(lg('Hors de [a ; b]', COL.blueSoft, 'bar'));
+  if (freq) legend.push(lg('Fréquence observée', 'rgb(160,170,178)', 'bar'));
+  if (V.p_norm) legend.push(lg('Densité normale associée', COL.red, 'line'));
+  const stats = [S(R`$E(X) = \lambda$`, fr(l, 4)), S(R`$V(X) = \lambda$`, fr(l, 4)), S(R`$\sigma(X) = \sqrt{\lambda}$`, fr(s, 4)), S(R`$P(X = 0) = e^{-\lambda}$`, fmtP(pmf[0]))];
+  if (calc) stats.push(S(`$P(${a} \\leq X \\leq ${b})$`, fr(cdf[b] - (a > 0 ? cdf[a - 1] : 0), 4), 'valeur exacte', true));
+  if (sample) { const [xb, sd] = meanSd(sample); stats.push(S('Moyenne observée', fr(xb, 4), `sur ${sample.length.toLocaleString('fr-FR')} périodes`)); stats.push(S('Variance observée', fr(sd * sd, 4), 'à comparer à la moyenne')); }
+  return {
+    title: R`Loi de Poisson $\mathcal{P}(${tex(l, 1)})$`, legend, badges: [], stats,
+    plot: {
+      ...F, xInt: true, xlabel: "k (nombre d'événements)", ylabel: freq ? 'Probabilité / fréquence' : 'Probabilité', layers: L,
+      tooltip: x => { const k = clamp(Math.round(x), 0, K); return { x: k, html: `<b>k = ${k}</b><br>P(X = ${k}) = ${fmtP(pmf[k])}<br>P(X ≤ ${k}) = ${fmtP(cdf[k])}` + (freq ? `<br>Fréquence observée : ${fmtP(freq[k])}` : '') }; }
+    },
+    formula: [R`X \sim \mathcal{P}(\lambda) \quad\text{ici}\quad \mathcal{P}(${tex(l, 1)})`,
+      R`P(X = k) = e^{-\lambda}\,\frac{\lambda^{k}}{k!}, \qquad k \in \mathbb{N}`,
+      R`E(X) = V(X) = \lambda \qquad \sigma(X) = \sqrt{\lambda} \approx ${tex(s, 4)}`],
+    notes: [R`Pour $\lambda < 1$, la valeur la plus probable est 0 : la loi est très dissymétrique.`,
+      R`Quand $\lambda$ augmente, la loi se décale vers la droite, s'étale et devient presque symétrique.`,
+      R`Espérance et variance sont égales : $E(X) = V(X) = \lambda$. Sur des données de comptage, une moyenne et une variance proches sont un premier indice en faveur d'un modèle de Poisson.`,
+      R`Superpose la courbe normale $\mathcal{N}(\lambda\,;\sqrt{\lambda})$ : l'accord devient bon pour $\lambda$ grand.`,
+      'Active la simulation et compare la moyenne et la variance observées.']
+  };
+}
+
+function vNorm() {
+  const m = V.n_mu, s = V.n_s, a = V.n_a, b = V.n_b, calc = V.n_calc, peak = 1 / (s * SQ2PI);
+  const F = frame('n_frame', { xmin: m - 4.5 * s, xmax: m + 4.5 * s, ymin: 0, ymax: peak * 1.2 }, V.n_frame, { xmin: -15, xmax: 15, ymin: 0, ymax: 0.9 });
+  const f = x => dnorm(x, m, s), L = [], legend = [lg('Densité f(x)', COL.blue, 'line')];
+  if (V.n_bands) {
+    for (const k of [3, 2, 1]) L.push({ type: 'band', x0: m - k * s, x1: m + k * s, color: COL.band });
+  }
+  let sample = null;
+  if (V.n_sim) {
+    sample = getSim('norm', [m, s, V.n_N].join('|'), () => drawN(V.n_N, () => m + s * randn()));
+    const w = s / 4, x0 = m - 5 * s, nb = 40, h = new Float64Array(nb);
+    for (const v of sample) { const j = Math.floor((v - x0) / w); if (j >= 0 && j < nb) h[j]++; }
+    L.push({ type: 'bars', xs: seq(0, nb - 1).map(j => x0 + (j + 0.5) * w), ys: Array.from(h, c => c / (sample.length * w)), w, edge: true, color: COL.sim });
+    legend.push(lg('Histogramme de l’échantillon', 'rgb(160,170,178)', 'bar'));
+  }
+  if (calc) { L.push(areaL(a, b, f, COL.calc)); L.push({ type: 'vline', x: a, color: COL.blue, dash: [2, 3], width: 1, label: 'a' }); L.push({ type: 'vline', x: b, color: COL.blue, dash: [2, 3], width: 1, label: 'b' }); legend.push(lg('Aire = P(a ≤ X ≤ b)', COL.calc, 'bar')); }
+  if (V.n_ref && !(m === 0 && s === 1)) { L.push(curve(F.xmin, F.xmax, phi, COL.ref, 1.6, [6, 5])); legend.push(lg('Référence N(0 ; 1)', COL.ref, 'dash')); }
+  L.push(curve(F.xmin, F.xmax, f, COL.blue, 2.8));
+  L.push({ type: 'vline', x: m, color: COL.red, label: 'μ' });
+  L.push({ type: 'span', x0: m, x1: m + s, y: peak * Math.exp(-0.5), color: COL.red, label: 'σ' });
+  L.push({ type: 'points', xs: [m - s, m + s], ys: [peak * Math.exp(-0.5), peak * Math.exp(-0.5)], color: COL.red, r: 4.5 });
+  if (V.n_bands) {
+    const lab = k => fr(100 * (Phi(k) - Phi(-k)), 1) + ' %';
+    const top = Math.max(F.ymax, peak * 1.05), gap = 0.085 * F.ymax;
+    [1, 2, 3].forEach((k, i) => L.push({ type: 'span', both: true, x0: m - k * s, x1: m + k * s, y: top - (0.12 * F.ymax) - i * gap, color: COL.blue, label: lab(k) + ' entre μ − ' + (k > 1 ? k : '') + 'σ et μ + ' + (k > 1 ? k : '') + 'σ' }));
+  }
+  legend.push(lg('Moyenne μ et points d’inflexion μ ± σ', COL.red, 'dot'));
+  const stats = [S(R`Moyenne $\mu$`, fr(m, 2)), S(R`Écart-type $\sigma$`, fr(s, 2)), S(R`Hauteur du pic $\frac{1}{\sigma\sqrt{2\pi}}$`, fr(peak, 4))];
+  if (calc) stats.push(S(`$P(${tex(a, 1)} \\leq X \\leq ${tex(b, 1)})$`, fr(pnorm(b, m, s) - pnorm(a, m, s), 4), `z de ${fr((a - m) / s, 2)} à ${fr((b - m) / s, 2)}`, true));
+  if (sample) { const [xb, sd] = meanSd(sample); stats.push(S('Moyenne observée', fr(xb, 4), `sur ${sample.length.toLocaleString('fr-FR')} valeurs`)); stats.push(S('Écart-type observé', fr(sd, 4))); }
+  return {
+    title: R`Loi normale $\mathcal{N}(${tex(m, 1)}\,;\,${tex(s, 1)})$`, legend, badges: [], stats,
+    plot: {
+      ...F, xInt: false, xlabel: 'x', ylabel: 'Densité f(x)', layers: L,
+      tooltip: x => ({ x, html: `<b>x = ${fr(x, 2)}</b> (z = ${fr((x - m) / s, 2)})<br>f(x) = ${fmtP(f(x))}<br>P(X ≤ x) = ${fmtP(pnorm(x, m, s))}` })
+    },
+    formula: [R`f(x) = \frac{1}{\sigma\sqrt{2\pi}}\; e^{-\frac{1}{2}\left(\frac{x-\mu}{\sigma}\right)^{2}}`,
+      R`Z = \frac{X-\mu}{\sigma} \sim \mathcal{N}(0\,;1)`,
+      R`P(a \leq X \leq b) = \Phi\!\left(\frac{b-\mu}{\sigma}\right) - \Phi\!\left(\frac{a-\mu}{\sigma}\right)`],
+    notes: [R`$\mu$ déplace la courbe sans la déformer : c'est une translation. La droite $x = \mu$ est l'axe de symétrie.`,
+      R`$\sigma$ règle l'étalement. L'aire totale sous la courbe vaut toujours 1 : quand la courbe s'élargit, elle s'aplatit. Le pic vaut $\frac{1}{\sigma\sqrt{2\pi}}$.`,
+      R`Les points d'inflexion sont en $\mu - \sigma$ et $\mu + \sigma$ : c'est là qu'on lit $\sigma$ sur le graphique.`,
+      R`Active la règle 68 - 95 - 99,7 : ces pourcentages ne dépendent ni de $\mu$ ni de $\sigma$.`,
+      R`Le second paramètre de $\mathcal{N}(\mu\,;\sigma)$ est l'écart-type, pas la variance.`]
+  };
+}
+
+function vBN() {
+  const n = V.bn_n, p = V.bn_p, m = n * p, s = Math.sqrt(n * p * (1 - p)), std = V.bn_std, calc = V.bn_calc, a = V.bn_a, b = V.bn_b;
+  const pmf = pmfBinom(n, p), cdf = cum(pmf), ks = seq(0, n), inR = i => !calc || (i >= a && i <= b), L = [];
+  let F, tip;
+  if (!std) {
+    const [lo, hi] = widen(Math.max(0, Math.floor(m - 4.5 * s)), Math.min(n, Math.ceil(m + 4.5 * s)), 0, n, 10);
+    F = { xmin: lo - 0.9, xmax: hi + 0.9, ymin: 0, ymax: Math.max(maxIn(pmf, lo, hi), 1 / (s * SQ2PI)) * 1.15 };
+    L.push({ type: 'bars', xs: ks, ys: pmf, w: 1, edge: true, colorFn: i => inR(i) ? COL.blueA : COL.blueSoft });
+    if (calc) L.push(areaL(a - 0.5, b + 0.5, x => dnorm(x, m, s), COL.redA));
+    L.push(curve(F.xmin, F.xmax, x => dnorm(x, m, s), COL.red, 2.6));
+    tip = x => { const k = clamp(Math.round(x), 0, n); return { x: k, html: `<b>k = ${k}</b><br>P(X = ${k}) = ${fmtP(pmf[k])}<br>Densité normale en ${k} : ${fmtP(dnorm(k, m, s))}<br>P(X ≤ ${k}) = ${fmtP(cdf[k])}<br>P(Y ≤ ${fr(k + 0.5, 1)}) = ${fmtP(pnorm(k + 0.5, m, s))}` }; };
+  } else {
+    const zs = ks.map(k => (k - m) / s), hs = Array.from(pmf, v => v * s);
+    F = { xmin: -4.5, xmax: 4.5, ymin: 0, ymax: Math.max(0.5, maxIn(hs, 0, n) * 1.1) };
+    L.push({ type: 'bars', xs: zs, ys: hs, w: 1 / s, edge: true, colorFn: i => inR(i) ? COL.blueA : COL.blueSoft });
+    if (calc) L.push(areaL((a - 0.5 - m) / s, (b + 0.5 - m) / s, phi, COL.redA));
+    L.push(curve(-4.5, 4.5, phi, COL.red, 2.6));
+    tip = z => { const k = clamp(Math.round(m + z * s), 0, n), zk = (k - m) / s; return { x: zk, html: `<b>k = ${k}</b> (z = ${fr(zk, 2)})<br>σ × P(X = ${k}) = ${fmtP(pmf[k] * s)}<br>φ(z) = ${fmtP(phi(zk))}` }; };
+  }
+  const D = distBN(n, p);
+  const curveD = cached('bn', String(p), () => { const xs = seq(1, 500); return { xs, ys: xs.map(k => distBN(k, p)) }; });
+  const legend = [lg(std ? 'Histogramme réduit de B(n ; p)' : 'P(X = k), loi binomiale', COL.blue, 'bar'), lg(std ? 'Densité φ de N(0 ; 1)' : 'Densité de N(np ; √(np(1−p)))', COL.red, 'line')];
+  if (calc) legend.push(lg('Aire approchée (avec correction)', 'rgba(211,19,38,.35)', 'bar'));
+  const stats = [S(R`$\mu = np$`, fr(m, 4)), S(R`$\sigma = \sqrt{np(1-p)}$`, fr(s, 4)), S('Écart maximal', fmtP(D), 'fonctions de répartition, avec correction', true)];
+  if (calc) {
+    const ex = cdf[b] - (a > 0 ? cdf[a - 1] : 0), ac = pnorm(b + 0.5, m, s) - pnorm(a - 0.5, m, s), sc = pnorm(b, m, s) - pnorm(a, m, s);
+    stats.push(S(`$P(${a} \\leq X \\leq ${b})$ exacte`, fr(ex, 4), 'loi binomiale', true));
+    stats.push(S(R`Normale avec correction`, fr(ac, 4), `$P(${tex(a - 0.5, 1)} \\leq Y \\leq ${tex(b + 0.5, 1)})$, erreur ${fr(ac - ex, 4)}`));
+    stats.push(S(R`Normale sans correction`, fr(sc, 4), `$P(${a} \\leq Y \\leq ${b})$, erreur ${fr(sc - ex, 4)}`));
+  }
+  const ok = n >= 30 && m >= 5 && n - m >= 5;
+  return {
+    title: R`$\mathcal{B}(${n}\,;\,${tex(p, 2)})$ et $\mathcal{N}(${tex(m, 2)}\,;\,${tex(s, 3)})$` + (std ? ' en vue centrée réduite' : ''),
+    legend, stats,
+    badges: [cond(R`$n \geq 30$`, n >= 30), cond(R`$np \geq 5$`, m >= 5), cond(R`$n(1-p) \geq 5$`, n - m >= 5), [ok ? 'Approximation normale justifiée (critères du cours)' : 'Approximation normale non justifiée (critères du cours)', ok ? 'ok' : 'no']],
+    plot: { ...F, xInt: !std, xlabel: std ? 'z = (k − μ) / σ' : 'k', ylabel: std ? 'Densité (échelle réduite)' : 'Probabilité et densité', layers: L, tooltip: tip },
+    plot2: secondPlot(curveD, n, D, 'n', true),
+    title2: R`Écart maximal en fonction de $n$, pour $p = ${tex(p, 2)}$ fixé`,
+    hint2: R`Écart maximal $= \max_k \left|P(X \leq k) - P(Y \leq k + 0{,}5)\right|$ avec $Y \sim \mathcal{N}(np\,;\sqrt{np(1-p)})$. Point rouge : valeur actuelle de $n$.`,
+    formula: [R`\mathcal{B}(n\,;p) \approx \mathcal{N}\!\left(np\,;\sqrt{np(1-p)}\right)`,
+      R`\text{si } n \geq 30,\quad np \geq 5,\quad n(1-p) \geq 5`,
+      R`P(X \leq k) \approx P(Y \leq k + 0{,}5) \qquad P(X \geq k) \approx P(Y \geq k - 0{,}5)`,
+      R`P(X = k) \approx P(k - 0{,}5 \leq Y \leq k + 0{,}5)`],
+    notes: [R`Pars de $p = 0{,}5$ et $n = 5$, puis augmente $n$ ou lance l'animation : l'histogramme épouse vite la courbe.`,
+      R`Recommence avec $p = 0{,}05$ : la dissymétrie résiste, il faut un $n$ bien plus grand. Le second graphique le montre.`,
+      R`Active la vue centrée réduite : toutes les binomiales viennent se superposer à la même courbe, celle de $\mathcal{N}(0\,;1)$. C'est le théorème de Moivre-Laplace.`,
+      R`Charge l'exemple du cours $\mathcal{B}(100\,;0{,}4)$ : compare l'erreur avec et sans correction de continuité.`]
+  };
+}
+
+function vPN() {
+  const l = V.pn_l, s = Math.sqrt(l), std = V.pn_std, K = Math.ceil(l + 6 * s + 6), pmf = pmfPois(l, K), cdf = cum(pmf), ks = seq(0, K), L = [];
+  let F, tip;
+  if (!std) {
+    const lo = Math.max(0, Math.floor(l - 4.5 * s)), hi = Math.ceil(l + 4.5 * s) < 10 ? 10 : Math.ceil(l + 4.5 * s);
+    F = { xmin: lo - 0.9, xmax: hi + 0.9, ymin: 0, ymax: Math.max(maxIn(pmf, lo, hi), 1 / (s * SQ2PI)) * 1.15 };
+    L.push({ type: 'bars', xs: ks, ys: pmf, w: 1, edge: true, color: COL.blueA });
+    L.push(curve(F.xmin, F.xmax, x => dnorm(x, l, s), COL.red, 2.6));
+    tip = x => { const k = clamp(Math.round(x), 0, K); return { x: k, html: `<b>k = ${k}</b><br>P(X = ${k}) = ${fmtP(pmf[k])}<br>Densité normale en ${k} : ${fmtP(dnorm(k, l, s))}<br>P(X ≤ ${k}) = ${fmtP(cdf[k])}<br>P(Y ≤ ${fr(k + 0.5, 1)}) = ${fmtP(pnorm(k + 0.5, l, s))}` }; };
+  } else {
+    const zs = ks.map(k => (k - l) / s), hs = Array.from(pmf, v => v * s);
+    F = { xmin: -4.5, xmax: 4.5, ymin: 0, ymax: Math.max(0.5, maxIn(hs, 0, K) * 1.1) };
+    L.push({ type: 'bars', xs: zs, ys: hs, w: 1 / s, edge: true, color: COL.blueA });
+    L.push(curve(-4.5, 4.5, phi, COL.red, 2.6));
+    tip = z => { const k = clamp(Math.round(l + z * s), 0, K), zk = (k - l) / s; return { x: zk, html: `<b>k = ${k}</b> (z = ${fr(zk, 2)})<br>σ × P(X = ${k}) = ${fmtP(pmf[k] * s)}<br>φ(z) = ${fmtP(phi(zk))}` }; };
+  }
+  const D = distPN(l);
+  const curveD = cached('pn', '1', () => { const xs = []; for (let x = 0.5; x <= 100.001; x += 0.5) xs.push(x); return { xs, ys: xs.map(distPN) }; });
+  return {
+    title: R`$\mathcal{P}(${tex(l, 1)})$ et $\mathcal{N}(${tex(l, 1)}\,;\,${tex(s, 3)})$` + (std ? ' en vue centrée réduite' : ''),
+    legend: [lg(std ? 'Histogramme réduit de P(λ)' : 'P(X = k), loi de Poisson', COL.blue, 'bar'), lg(std ? 'Densité φ de N(0 ; 1)' : 'Densité de N(λ ; √λ)', COL.red, 'line')],
+    stats: [S(R`$\mu = \lambda$`, fr(l, 2)), S(R`$\sigma = \sqrt{\lambda}$`, fr(s, 4)), S('Écart maximal', fmtP(D), 'fonctions de répartition, avec correction', true)],
+    badges: [[R`Repère des manuels, hors cours MOD08 : $\lambda$ au moins 15 à 20 selon les auteurs`, 'info']],
+    plot: { ...F, xInt: !std, xlabel: std ? 'z = (k − λ) / √λ' : 'k', ylabel: std ? 'Densité (échelle réduite)' : 'Probabilité et densité', layers: L, tooltip: tip },
+    plot2: secondPlot(curveD, l, D, 'λ', false),
+    title2: R`Écart maximal en fonction de $\lambda$`,
+    hint2: R`Écart maximal $= \max_k \left|P(X \leq k) - P(Y \leq k + 0{,}5)\right|$ avec $Y \sim \mathcal{N}(\lambda\,;\sqrt{\lambda})$. Point rouge : valeur actuelle de $\lambda$.`,
+    formula: [R`\mathcal{P}(\lambda) \approx \mathcal{N}\!\left(\lambda\,;\sqrt{\lambda}\right) \quad \text{pour } \lambda \text{ grand}`,
+      R`P(X \leq k) \approx P(Y \leq k + 0{,}5), \qquad Y \sim \mathcal{N}(\lambda\,;\sqrt{\lambda})`],
+    notes: [R`Pour $\lambda$ petit, la loi de Poisson est très dissymétrique : la courbe normale colle mal.`,
+      R`Augmente $\lambda$ ou lance l'animation : la loi se symétrise et l'écart maximal diminue (second graphique).`,
+      R`En vue centrée réduite, les lois viennent se superposer à $\mathcal{N}(0\,;1)$.`,
+      R`Pourquoi ? Pour $\lambda$ entier, une loi $\mathcal{P}(\lambda)$ est celle d'une somme de $\lambda$ variables indépendantes de loi $\mathcal{P}(1)$ : le théorème de la limite centrée s'applique.`]
+  };
+}
+
+function vBP() {
+  const n = V.bp_n, p = V.bp_p, l = n * p, sb = Math.sqrt(n * p * (1 - p)), sp = Math.sqrt(l);
+  const K = Math.max(10, Math.ceil(l + 5 * sp + 3)), b = pmfBinom(n, p), q = pmfPois(l, Math.max(n, K)), ks = seq(0, n), kp = seq(0, K);
+  const ym = Math.max(maxIn(b, 0, K), maxIn(q, 0, K));
+  const F = { xmin: -0.8, xmax: K + 0.8, ymin: 0, ymax: ym * 1.15 };
+  const L = [{ type: 'bars', xs: ks, ys: b, w: 0.7, color: COL.blueA },
+    { type: 'line', xs: kp, ys: kp.map(k => q[k]), color: 'rgba(211,19,38,.45)', width: 1.2, dash: [4, 4] },
+    { type: 'points', xs: kp, ys: kp.map(k => q[k]), color: COL.red, r: 4.5 }];
+  const D = distBP(n, p);
+  const curveD = cached('bp', l.toFixed(6), () => { const xs = seq(Math.max(2, Math.ceil(2 * l - 1e-9)), 500); return { xs, ys: xs.map(k => distBP(k, l / k)) }; });
+  return {
+    title: R`$\mathcal{B}(${n}\,;\,${tex(p, p < 0.01 ? 4 : 3)})$ et $\mathcal{P}(${tex(l, 2)})$`,
+    legend: [lg('P(X = k), loi binomiale', COL.blue, 'bar'), lg('P(Y = k), loi de Poisson de paramètre np', COL.red, 'dot')],
+    stats: [S(R`$\lambda = np$`, fr(l, 3)), S(R`$\sigma$ binomiale $\sqrt{np(1-p)}$`, fr(sb, 4)), S(R`$\sigma$ Poisson $\sqrt{np}$`, fr(sp, 4)), S('Écart maximal', fmtP(D), 'entre les P(X = k) et les P(Y = k)', true)],
+    badges: [cond(R`$n \geq 30$`, n >= 30), cond(R`$p \leq 0{,}1$`, p <= 0.1 + 1e-12), cond(R`$np \leq 10$`, l <= 10 + 1e-12)],
+    plot: {
+      ...F, xInt: true, xlabel: 'k', ylabel: 'Probabilité', layers: L,
+      tooltip: x => { const k = clamp(Math.round(x), 0, K); const pb = k <= n ? b[k] : 0; return { x: k, html: `<b>k = ${k}</b><br>Binomiale : ${fmtP(pb)}<br>Poisson : ${fmtP(q[k])}<br>Écart : ${fmtP(Math.abs(pb - q[k]))}` }; }
+    },
+    plot2: secondPlot(curveD, n, D, 'n', true),
+    title2: R`Écart maximal en fonction de $n$, à $\lambda = np = ${tex(l, 2)}$ constant`,
+    hint2: R`Pour chaque $n$, on prend $p = \lambda / n$. L'écart tend vers 0 quand $n$ augmente : c'est la loi des petits nombres. Point rouge : valeur actuelle de $n$.`,
+    formula: [R`\mathcal{B}(n\,;p) \approx \mathcal{P}(\lambda) \quad\text{avec}\quad \lambda = np`,
+      R`\text{si } n \geq 30,\quad p \leq 0{,}1,\quad np \leq 10`,
+      R`\binom{n}{k}\,p^{k}(1-p)^{n-k} \;\approx\; e^{-\lambda}\,\frac{\lambda^{k}}{k!}`],
+    notes: [R`Coche « Garder $\lambda = np$ constant », puis augmente $n$ ou lance l'animation : $p = \lambda / n$ diminue et la binomiale rejoint la loi de Poisson. C'est la loi des petits nombres.`,
+      R`Sans cette option, augmente $p$ au-delà de 0,1 : les deux lois se séparent. La variance binomiale $np(1-p)$ devient nettement plus petite que celle de Poisson, $np$.`,
+      R`Exemple du cours : $\mathcal{B}(200\,;0{,}01)$ et $\mathcal{P}(2)$. Survole les barres pour lire les écarts.`,
+      R`À ne pas confondre : $p$ petit donne l'approximation de Poisson, $p$ modéré et $n$ grand donnent l'approximation normale.`]
+  };
+}
+
+function secondPlot(cd, cur, D, xname, isInt) {
+  const hi = Math.max(...cd.ys), lo = Math.min(...cd.ys.filter(y => y > 0)), log = V.log;
+  const ymin = log ? Math.pow(10, Math.floor(Math.log10(lo))) : 0, ymax = log ? Math.pow(10, Math.ceil(Math.log10(hi))) : (hi * 1.12 || 1);
+  return {
+    logY: log, xmin: cd.xs[0], xmax: cd.xs[cd.xs.length - 1], ymin, ymax, xInt: isInt, xlabel: xname, ylabel: 'Écart maximal',
+    layers: [{ type: 'area', xs: cd.xs, ys: cd.ys, color: 'rgba(0,92,133,.08)' }, { type: 'line', xs: cd.xs, ys: cd.ys, color: COL.blue, width: 2 },
+      { type: 'vline', x: cur, color: COL.red, dash: [4, 4], width: 1 }, { type: 'points', xs: [cur], ys: [D], color: COL.red, r: 5.5 }],
+    tooltip: x => { let j = 0, best = Infinity; cd.xs.forEach((v, i) => { const d = Math.abs(v - x); if (d < best) { best = d; j = i; } }); return { x: cd.xs[j], html: `<b>${xname} = ${fr(cd.xs[j], isInt ? 0 : 1)}</b><br>Écart maximal : ${fmtP(cd.ys[j])}` }; }
+  };
+}
+
+/* =====================================================================
+   6. RENDU, ONGLETS, ANIMATION
+   ===================================================================== */
+const BUILD = { binom: vBinom, pois: vPois, norm: vNorm, bn: vBN, pn: vPN, bp: vBP };
+const curView = () => V.tab === 'conv' ? V.conv : V.tab;
+const cv1 = $('#cv1'), cv2 = $('#cv2');
+function applyVisibility(view) {
+  document.querySelectorAll('[data-views]').forEach(el => { el.hidden = !el.dataset.views.split(',').includes(view); });
+  document.querySelectorAll('[data-tabonly]').forEach(el => { el.hidden = el.dataset.tabonly !== V.tab; });
+  document.querySelectorAll('[data-if]').forEach(el => { el.hidden = !V[el.dataset.if]; });
+  document.querySelectorAll('[data-tab]').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === V.tab ? 'true' : 'false'));
+  document.querySelectorAll('[data-conv]').forEach(b => b.setAttribute('aria-pressed', b.dataset.conv === V.conv ? 'true' : 'false'));
+}
+function legendHTML(items) {
+  return items.map(i => `<span class="lg"><i class="${i.kind === 'line' ? 'line' : i.kind === 'dash' ? 'dash' : i.kind === 'dot' ? 'dot' : ''}" style="${i.kind === 'dash' ? 'border-color' : 'background'}:${i.color}"></i>${esc(i.label)}</span>`).join('');
+}
+function render() {
+  raf = 0;
+  const view = curView(); applyVisibility(view);
+  const M = BUILD[view]();
+  $('#title').innerHTML = mx(M.title);
+  $('#legend').innerHTML = legendHTML(M.legend);
+  $('#tip1').style.opacity = 0; drawPlot(cv1, M.plot, null);
+  $('#badges').innerHTML = (M.badges || []).map(b => `<span class="badge ${b[1]}">${mx(b[0])}</span>`).join('');
+  $('#stats').innerHTML = M.stats.map(t => `<div class="stat${t.hl ? ' hl' : ''}"><div class="k">${mx(t.k)}</div><div class="v">${t.v}</div>${t.s ? `<div class="s">${mx(t.s)}</div>` : ''}</div>`).join('');
+  const c2 = $('#card2'); c2.hidden = !M.plot2;
+  if (M.plot2) { $('#title2').innerHTML = mx(M.title2); $('#hint2').innerHTML = mx(M.hint2); $('#tip2').style.opacity = 0; drawPlot(cv2, M.plot2, null); }
+  $('#notes').innerHTML = M.notes.map(t => `<li>${mx(t)}</li>`).join('');
+  $('#formula').innerHTML = M.formula.map(t => km(t, true)).join('');
+}
+let raf = 0;
+function schedule() { if (!raf) raf = requestAnimationFrame(render); }
+function setTab(tab, conv) { stopAnim(); V.tab = tab; if (conv) V.conv = conv; schedule(); }
+
+let anim = null;
+function animLabel() {
+  document.querySelectorAll('[data-act="anim"]').forEach(b => {
+    const base = { bn: 'Animer : faire croître n', pn: 'Animer : faire croître λ', bp: 'Animer : n croît, λ = np fixe' }[b.closest('[data-views]').dataset.views];
+    b.textContent = anim ? 'Arrêter l’animation' : base;
+  });
+}
+function stopAnim() { if (anim) { clearTimeout(anim); anim = null; animLabel(); } }
+function startAnim() {
+  const v = curView();
+  if (v === 'bn' && V.bn_n >= 500) { setVal('bn_n', 1); onParam('bn_n'); }
+  if (v === 'pn' && V.pn_l >= 100) setVal('pn_l', 0.5);
+  if (v === 'bp') { if (!V.bp_fix) setToggle('bp_fix', true); if (V.bp_n >= 500) { setVal('bp_n', 1); onParam('bp_n'); } }
+  const step = () => {
+    let done = false;
+    if (v === 'bn') { const n = V.bn_n; setVal('bn_n', Math.min(500, n + Math.max(1, Math.round(n * 0.05)))); onParam('bn_n'); done = V.bn_n >= 500; }
+    if (v === 'pn') { setVal('pn_l', Math.min(100, V.pn_l + (V.pn_l < 10 ? 0.5 : V.pn_l < 40 ? 1 : 2))); done = V.pn_l >= 100; }
+    if (v === 'bp') { const n = V.bp_n; setVal('bp_n', Math.min(500, n + Math.max(1, Math.round(n * 0.05)))); onParam('bp_n'); done = V.bp_n >= 500; }
+    render();
+    if (done) stopAnim(); else anim = setTimeout(step, 90);
+  };
+  anim = setTimeout(step, 0); animLabel();
+}
+
+/* =====================================================================
+   7. DÉMARRAGE
+   ===================================================================== */
+function init() {
+  buildControls();
+  document.querySelectorAll('[data-preset]').forEach(b => { b.innerHTML = mx(PRESETS[b.dataset.preset].lab); b.addEventListener('click', () => applyPreset(b.dataset.preset)); });
+  document.querySelectorAll('[data-tab]').forEach(b => b.addEventListener('click', () => setTab(b.dataset.tab)));
+  document.querySelectorAll('[data-conv]').forEach(b => b.addEventListener('click', () => setTab('conv', b.dataset.conv)));
+  document.querySelectorAll('[data-act="resim"]').forEach(b => b.addEventListener('click', () => { delete SIM[curView()]; schedule(); }));
+  document.querySelectorAll('[data-act="anim"]').forEach(b => b.addEventListener('click', () => anim ? stopAnim() : startAnim()));
+  $('#t_log').addEventListener('change', e => { V.log = e.target.checked; schedule(); });
+  attachHover(cv1, $('#tip1')); attachHover(cv2, $('#tip2'));
+  window.addEventListener('resize', schedule);
+  render();
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+% ============================================================
+% ACCROCHE MOD08 - Trois problemes pour entrer dans les probabilites
+% Pole Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Enonces eleves (sans corrige)
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{consigne}{%
+  colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newtcolorbox{intuition}{%
+  colback=uimmlightblue, colframe=uimmblue, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08 -- Accroche}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Trois problèmes pour entrer dans les probabilités}\\[4pt]
+{\color{white}\large Maintenance industrielle -- compter, estimer, se méfier de son intuition}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{12.5cm}@{}}
+Bloc : & [MOD08] Calcul des Probabilités \\
+Séquence : & [S01] Dénombrement et probabilités conditionnelles \\
+Compétences : & [C01] construire un arbre / un tableau \quad [C02] exploiter l'arbre ou le tableau \quad [C03] probabilités totales \\
+\end{tabular}
+
+\begin{consigne}
+\textbf{Règle du jeu.} Pour chaque problème, tu écris d'abord ton \textbf{intuition}, en une ligne, \textbf{sans aucun calcul}. Tu calcules ensuite. Tu compares.
+
+Aucune formule n'est exigée au départ. Les trois énoncés se comprennent sans connaissance préalable. Trouver la réponse est une autre affaire.
+\end{consigne}
+
+% ============================================================
+\section{Problème 1 : compter, ce n'est pas si simple}
+
+\begin{exo}{Le planning du jeudi et le banc d'essai \hfill \normalfont\color{uimmlightblue}[Dénombrement]}
+Un technicien de maintenance doit visiter \textbf{6 machines} dans la journée, une seule fois chacune. Il est libre de l'ordre.
+
+\begin{intuition}
+\textbf{Avant tout calcul :} combien d'ordres de tournée différents, à ton avis ? Écris ton estimation. \dotfill
+\end{intuition}
+
+\begin{enumerate}
+  \item Calcule le nombre exact d'ordres de tournée possibles pour ces 6 machines.
+  \item L'atelier s'agrandit : \textbf{10 machines}. Estime d'abord à main levée, puis calcule.
+  \item Sur un banc d'essai, chaque vanne est soit \textbf{ouverte}, soit \textbf{fermée}. Combien de configurations différentes du banc avec 4 vannes ? Avec \textbf{20 vannes} ?
+  \item Le protocole de recette impose de vérifier \textbf{toutes} les configurations, à raison d'une minute par configuration et de 7 heures d'essai par jour. Combien de jours de travail pour un banc à 20 vannes ?
+  \item Que faut-il en conclure sur la façon de conduire un essai, ou une analyse de défaillance, sur un système industriel ?
+\end{enumerate}
+
+\vspace{4pt}
+\textit{Bonus.} Une AMDEC s'intéresse aussi aux défaillances \textbf{doubles}. Combien de paires de vannes différentes peut-on former parmi les 20 ?
+\end{exo}
+
+% ============================================================
+\newpage
+\section{Problème 2 : le bon sens suffit-il ?}
+
+\begin{exo}{Le bac de roulements \hfill \normalfont\color{uimmlightblue}[Probabilités sur un ensemble fini]}
+Un bac contient \textbf{12 roulements} d'apparence identique. \textbf{3 d'entre eux sont défectueux} : rien ne permet de les repérer à l'{\oe}il. Le technicien en prélève \textbf{2 au hasard, simultanément}, pour équiper une pompe.
+
+\begin{intuition}
+\textbf{Avant tout calcul :} quelle est la probabilité qu'il attrape \textbf{au moins un} roulement défectueux ? Écris ton estimation en pourcentage. \dotfill
+\end{intuition}
+
+\begin{enumerate}
+  \item Combien de prélèvements différents de 2 roulements peut-on former dans ce bac ?
+  \item Combien de ces prélèvements ne contiennent \textbf{aucun} roulement défectueux ?
+  \item Déduis-en la probabilité de n'avoir aucun défectueux, puis celle d'en avoir \textbf{au moins un}. Compare à ton estimation.
+  \item Sur 100 pompes montées de cette façon, combien partiront en clientèle avec au moins un roulement défectueux ?
+  \item La pompe suivante demande \textbf{3 roulements}. La probabilité d'attraper au moins un défectueux augmente-t-elle beaucoup ? Calcule.
+\end{enumerate}
+
+\vspace{4pt}
+\textit{Piège à éviter.} Beaucoup répondent «~3 chances sur 12, donc 25\,\%~», ou bien «~$\frac{3}{12}+\frac{3}{12}=50\,\%$~». Les deux raisonnements sont faux. Sauras-tu dire pourquoi ?
+\end{exo}
+
+\newpage
+% ============================================================
+\section{Problème 3 : quand l'intuition se trompe lourdement}
+
+\begin{exo}{L'alarme du capteur de vibration \hfill \normalfont\color{uimmlightblue}[Probabilités conditionnelles]}
+Un service de maintenance prévisionnelle équipe un parc de \textbf{10\,000 moteurs} de capteurs de vibration.
+
+\begin{itemize}
+  \item L'historique montre que \textbf{1\,\% des moteurs} du parc développent une dégradation grave de roulement dans le mois.
+  \item Le capteur déclenche une alarme sur \textbf{95\,\% des moteurs réellement en cours de dégradation}.
+  \item Le capteur déclenche une alarme \textbf{à tort sur 5\,\% des moteurs sains}.
+\end{itemize}
+
+Ce matin, l'alarme sonne sur le moteur \textbf{M12}. Le chef d'atelier veut savoir s'il doit programmer un arrêt.
+
+\begin{intuition}
+\textbf{Avant tout calcul :} quelle est la probabilité que M12 soit réellement en train de se dégrader ? Écris ton estimation. \dotfill
+\end{intuition}
+
+\begin{enumerate}
+  \item Complète ce tableau en raisonnant sur les 10\,000 moteurs du parc.
+  \begin{center}
+  \renewcommand{\arraystretch}{1.6}
+  \begin{tabular}{|>{\columncolor{uimmlightblue}}l|c|c|c|}
+  \hline
+  \rowcolor{uimmlightblue}
+  \textbf{Sur 10\,000 moteurs} & \textbf{Alarme} & \textbf{Pas d'alarme} & \textbf{Total} \\
+  \hline
+  Moteur en cours de dégradation & \hspace{2.2cm} & \hspace{2.2cm} & \hspace{1.8cm} \\
+  \hline
+  Moteur sain & & & \\
+  \hline
+  \textbf{Total} & & & \textbf{10\,000} \\
+  \hline
+  \end{tabular}
+  \end{center}
+  \item Parmi tous les moteurs qui déclenchent une alarme, quelle proportion se dégrade réellement ? Compare à ton estimation.
+  \item Écris ce résultat avec les notations du cours. On note $D$ l'événement «~le moteur se dégrade~» et $A$ l'événement «~le capteur déclenche l'alarme~». Quelle probabilité vient-on de calculer : $P_D(A)$ ou $P_A(D)$ ? Quelle est la valeur de l'autre ?
+  \item Le service change de stratégie : il n'équipe plus que les moteurs de \textbf{plus de 8 ans}, dont \textbf{20\,\%} se dégradent dans le mois. \textbf{Le capteur est exactement le même.} Reprends le calcul.
+  \item Conclusion pour le service maintenance : qu'est-ce qui a le plus d'effet sur la fiabilité d'une alarme, la qualité du capteur ou le choix des machines sur lesquelles on le pose ?
+\end{enumerate}
+\end{exo}
+
+\vfill
+\begin{consigne}
+\textbf{Ce que ces trois problèmes annoncent.} Dénombrer avant de calculer une probabilité. Passer par l'événement contraire quand on lit «~au moins un~». Distinguer $P_D(A)$ de $P_A(D)$, ce que fait la formule de Bayes. Ce sont les trois piliers de la séquence [S01].
+\end{consigne}
+
+\end{document}

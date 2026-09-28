@@ -1,0 +1,198 @@
+% ============================================================
+% Corrigé et barème de l'évaluation : Calcul matriciel
+% Pôle Formation UIMM - CVDL - BTS ATI / CRSA - S. JAUBERT
+% Compiler d'abord le cours et l'évaluation (fichiers .aux), puis ce corrigé (deux passes).
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{xr-hyper}
+\usepackage{hyperref}
+\externaldocument[C-]{MOD12_Calcul_Matriciel_Cours_v1_0}
+\externaldocument[E-]{MOD12_Calcul_Matriciel_Evaluation_v1_0}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newtcolorbox{piege}{%
+  colback=uimmred!5, colframe=uimmred!80!black, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt, before skip=6pt, after skip=6pt}
+
+\newcommand{\M}[1]{\begin{pmatrix}#1\end{pmatrix}}
+% Référence vers le cours : §section, page
+\newcommand{\cours}[1]{§\ref{C-#1} p.~\pageref{C-#1}}
+% Ligne de références en tête de chaque correction
+\newcommand{\source}[2]{{\footnotesize\color{uimmgray}\textbf{Réf.} \enspace Énoncé : Évaluation MOD12 p.~\pageref{E-#1} \enspace$\bullet$\enspace Cours MOD12 : #2}\par\smallskip}
+\newcommand{\annexe}[1]{annexe p.~\pageref{C-#1}}
+\newcommand{\q}[1]{\textbf{\color{uimmblue}#1}\ }
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS ATI / CRSA -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD12 -- Corrigé Éval}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\newcommand{\pts}[1]{\hfill{\color{white}\small\textbf{#1}}}
+\newcommand{\bareme}[1]{\par\smallskip{\footnotesize\color{uimmred}\textbf{Barème :} #1}}
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé et barème -- Évaluation MOD12}\\[4pt]
+{\color{white}\large Calcul matriciel \hfill Total : 20 points}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Principes de notation.} Les points de méthode (format vérifié, produit ligne $\times$ colonne posé, ordre $A^{-1}C$) sont accordés même en cas d'erreur de calcul. Une erreur de calcul n'est sanctionnée qu'une fois : la suite, cohérente avec le résultat faux, est notée normalement. Une conclusion sans phrase ni unité perd au plus $0{,}25$\,pt par question.
+\end{tcolorbox}
+
+\needspace{5cm}
+\section{Exercice 1 -- Calculs matriciels (6 points)}
+
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{ev:1}{\cours{sec:addition}}
+$2A - B = \M{2 & 6\\ -4 & 2} - \M{2 & 0\\ 1 & -1} = \M{0 & 6\\ -5 & 3}$.
+\bareme{$2A$ : 0,5 \quad résultat : 0,5}
+\end{correction}
+
+\begin{correction}[-- Question 2 \pts{2,5 pts}]
+\source{ev:1}{\cours{meth:croix} et \cours{att:noncommut}}
+\[
+AB = \M{1\times 2 + 3\times 1 & 1\times 0 + 3\times(-1)\\ -2\times 2 + 1\times 1 & -2\times 0 + 1\times(-1)} = \M{5 & -3\\ -3 & -1}
+\]
+\[
+BA = \M{2 & 6\\ 1+2 & 3-1} = \M{2 & 6\\ 3 & 2}
+\]
+$AB\neq BA$ : le produit matriciel n'est pas commutatif.
+\bareme{$AB$ : 1 \quad $BA$ : 1 \quad conclusion : 0,5}
+\end{correction}
+
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{ev:1}{\cours{subsec:defpuissance}}
+$A^2 = A\times A = \M{1 - 6 & 3 + 3\\ -2 - 2 & -6 + 1} = \M{-5 & 6\\ -4 & -5}$.
+\bareme{0 point si les coefficients sont élevés au carré}
+\end{correction}
+
+\begin{correction}[-- Question 4 \pts{1,5 pt}]
+\source{ev:1}{\cours{subsec:defproduit} (règle des dimensions)}
+$A$ est $2\times 2$ et $M$ est $2\times 3$. $AM$ existe ($2 = 2$) et il est $2\times 3$. $MA$ n'existe pas ($3\neq 2$).
+\[
+AM = \M{1 + 9 & 0 + 3 & 2 + 0\\ -2 + 3 & 0 + 1 & -4 + 0} = \M{10 & 3 & 2\\ 1 & 1 & -4}.
+\]
+\bareme{existence justifiée : 0,5 \quad calcul : 1}
+\end{correction}
+
+\needspace{5cm}
+\section{Exercice 2 -- Inverse et système (6 points)}
+
+\begin{correction}[-- Question 1 \pts{1,5 pt}]
+\source{ev:2}{\cours{subsec:ecriture}}
+$\left\{\begin{array}{ll} 4x + 3y = 380 & \text{(découpe)}\\ 3x + 2y = 270 & \text{(pliage)}\end{array}\right.$
+\qquad
+$\underbrace{\M{4 & 3\\ 3 & 2}}_{A}\underbrace{\M{x\\y}}_{X} = \underbrace{\M{380\\270}}_{C}$.
+\bareme{système : 1 \quad forme matricielle : 0,5}
+\end{correction}
+
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{ev:2}{\cours{meth:montrerinverse}}
+$AB = \M{4\times(-2) + 3\times 3 & 4\times 3 + 3\times(-4)\\ 3\times(-2) + 2\times 3 & 3\times 3 + 2\times(-4)} = \M{1 & 0\\ 0 & 1} = I_2$. Donc $A$ est inversible et $A^{-1} = B$.
+\bareme{calcul : 1 \quad conclusion : 0,5}
+\end{correction}
+
+\begin{correction}[-- Question 3 \pts{2 pts}]
+\source{ev:2}{\cours{th:resolution} et \cours{meth:systeme}}
+$X = A^{-1}C = \M{-2 & 3\\ 3 & -4}\M{380\\270} = \M{-760 + 810\\ 1\,140 - 1\,080} = \M{50\\60}$.\\
+Vérification : $4\times 50 + 3\times 60 = 380$ et $3\times 50 + 2\times 60 = 270$.\\
+L'atelier fabrique $50$ supports $S_1$ et $60$ supports $S_2$.
+\bareme{calcul : 1 \quad vérification : 0,5 \quad conclusion : 0,5}
+\end{correction}
+
+\begin{correction}[-- Question 4 \pts{1 pt}]
+\source{ev:2}{\cours{th:resolution} (encadré « Attention »)}
+On part de $AX = C$ et on multiplie \textbf{à gauche} par $A^{-1}$ : $A^{-1}AX = A^{-1}C$, soit $X = A^{-1}C$. Le produit n'étant pas commutatif, on ne peut pas changer l'ordre. De plus, $C\times A^{-1}$ n'existe pas : $C$ est $2\times 1$ et $A^{-1}$ est $2\times 2$ ($1\neq 2$).
+\bareme{un argument sur les deux suffit pour 1 pt}
+\end{correction}
+
+\needspace{5cm}
+\section{Exercice 3 -- Armoires électriques (8 points)}
+
+\begin{correction}[-- Question 1 \pts{0,5 pt}]
+\source{ev:3}{\cours{ex:lire}}
+$n_{23} = 6$ : il faut $6$ relais (ligne 2) pour câbler une armoire $A_3$ (colonne 3).
+\end{correction}
+
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{ev:3}{\cours{ex:besoins}}
+\[
+NX = \M{2\times 15 + 3\times 10 + 4\times 5\\ 5\times 15 + 4\times 10 + 6\times 5\\ 10\times 15 + 12\times 10 + 20\times 5} = \M{80\\145\\370}.
+\]
+Il faut $80$ disjoncteurs, $145$ relais et $370$ borniers pour la commande.
+\bareme{calcul : 1 \quad interprétation : 0,5}
+\end{correction}
+
+\begin{correction}[-- Question 3 \pts{2 pts}]
+\source{ev:3}{\cours{ex:besoins} (associativité)}
+\q{a)} $PN = \M{70 + 60 + 30 & 105 + 48 + 36 & 140 + 72 + 60} = \M{160 & 189 & 272}$.\\
+Coût des composants d'une armoire : $160$\,€ pour $A_1$, $189$\,€ pour $A_2$, $272$\,€ pour $A_3$.
+
+\q{b)} Coût total $= (PN)X = 160\times 15 + 189\times 10 + 272\times 5 = 2\,400 + 1\,890 + 1\,360 = 5\,650$\,€.\\
+On accepte aussi $P(NX) = 35\times 80 + 12\times 145 + 3\times 370 = 2\,800 + 1\,740 + 1\,110 = 5\,650$\,€.
+\bareme{a) : 1 \quad b) : 1}
+\end{correction}
+
+\begin{correction}[-- Question 4 \pts{1,5 pt}]
+\source{ev:3}{\cours{meth:inversecalc} et \annexe{fiche:calc}}
+\[
+N^{-1} = \M{-\frac13 & \frac12 & -\frac{1}{12}\\[3pt] \frac53 & 0 & -\frac13\\[3pt] -\frac56 & -\frac14 & \frac{7}{24}}.
+\]
+\bareme{matrice saisie recopiée : 0,5 \quad résultat : 1}
+\end{correction}
+
+\begin{correction}[-- Question 5 \pts{2 pts}]
+\source{ev:3}{\cours{ex:stock}}
+On cherche $Y$ tel que $NY = S$ avec $S = \M{108\\196\\504}$, donc $Y = N^{-1}S = \M{20\\12\\8}$.\\
+Vérification : $NY = \M{40 + 36 + 32\\ 100 + 48 + 48\\ 200 + 144 + 160} = \M{108\\196\\504}$.\\
+Il faut câbler $20$ armoires $A_1$, $12$ armoires $A_2$ et $8$ armoires $A_3$.
+\bareme{écriture $NY = S$ : 0,5 \quad calcul : 1 \quad conclusion : 0,5}
+\end{correction}
+
+\begin{correction}[-- Question 6 \pts{0,5 pt}]
+\source{ev:3}{\cours{ex:stock}}
+$N^{-1}\M{110\\200\\500} = \M{\frac{65}{3}\\[2pt] \frac{50}{3}\\[2pt] \frac{25}{6}}\approx\M{21{,}67\\ 16{,}67\\ 4{,}17}$. Un nombre d'armoires est entier : il est impossible d'utiliser \textbf{exactement} ce stock. L'atelier câble un nombre entier d'armoires et il restera des composants en stock.
+\end{correction}
+
+\end{document}

@@ -1,0 +1,259 @@
+% ============================================================
+% Corrigé et barème -- Évaluation MOD08, Sujet A
+% Lois discrètes, loi normale, probabilités conditionnelles
+% BTS MS 2e année -- Pôle Formation UIMM - CVDL - S. JAUBERT
+% Énoncé : MOD08_Evaluation_MS2_Sujet_A_v1_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=10pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newcommand{\pts}[1]{\hfill\mbox{\color{uimmred}\small\textbf{(#1)}}}
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.85*\i) -- (\linewidth-1pt,-0.85*\i);}
+  \end{tikzpicture}\par\medskip}
+% Cadre vide (arbre pondéré) : #1 = hauteur
+\newcommand{\cadre}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \draw[uimmgray!40, rounded corners=3pt] (0,0) rectangle (\linewidth-1pt,-#1);
+  \end{tikzpicture}\par\medskip}
+\newcommand{\EnTete}[2]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS MS 2\textsuperscript{e} année -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{Corrigé Sujet A}{Corrigé A}
+\renewcommand{\pts}[1]{\hfill\mbox{\color{white}\small\textbf{#1}}}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\bareme}[1]{\par\smallskip{\footnotesize\color{uimmred}\textbf{Barème~:} #1}}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\LD}{Cours MOD08 \textit{Lois discrètes}}
+\newcommand{\LN}{Cours MOD08 \textit{Loi normale}}
+\newcommand{\VM}{Vade-mecum MOD08 S01 \textit{Dénombrement et probabilités conditionnelles}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé et barème -- Évaluation MOD08 \hfill Sujet A}\\[4pt]
+{\color{white}\large Lois discrètes, loi normale, probabilités conditionnelles \hfill Total~: 20 points}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Principes de notation.} Les points de méthode (évènements nommés, formule écrite, traduction avec la variable aléatoire) sont accordés même en cas d'erreur de calcul. Une erreur n'est sanctionnée qu'une fois : la suite, cohérente avec un résultat faux, est notée normalement. Un résultat de calculatrice sans la probabilité écrite avec la variable aléatoire perd la moitié des points de la question. Une loi citée sans ses paramètres perd $0{,}25$\,pt.\\[3pt]
+\textbf{Repères de durée (estimation).} Exercice 1 : 17 min \quad Exercice 2 : 11 min \quad Exercice 3 : 15 min.\\[3pt]
+\textbf{Références.} Les pages citées sont celles des PDF \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0} et \texttt{MOD08\_Loi\_Normale\_Cours\_v1\_0} (numérotation imprimée en pied de page).
+\end{tcolorbox}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 1 -- Stock de roulements (8 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\VM{} (arbre pondéré, probabilités conditionnelles)}
+On note $A$ l'évènement «~le roulement provient du fournisseur Alpha~», $\overline{A}$ son contraire («~le roulement provient du fournisseur Bêta~») et $N$ l'évènement «~le roulement est non conforme~».
+\[
+P(A) = 0{,}6,\qquad P(\overline{A}) = 0{,}4,\qquad P_{A}(N) = 0{,}02,\qquad P_{\overline{A}}(N) = 0{,}05.
+\]
+\bareme{évènements définis en phrase : 0,5 \quad probabilités conditionnelles correctement notées : 0,5}
+\piege{écrire $P(A\cap N) = 0{,}02$ au lieu de $P_{A}(N) = 0{,}02$ ; oublier de définir les évènements.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\VM{} (formule des probabilités totales)}
+$A$ et $\overline{A}$ forment une partition de l'univers. D'après la formule des probabilités totales :
+\[
+P(N) = P(A)\,P_{A}(N) + P(\overline{A})\,P_{\overline{A}}(N) = 0{,}6\times 0{,}02 + 0{,}4\times 0{,}05 = 0{,}012 + 0{,}02 = 0{,}032.
+\]
+\bareme{partition ou formule citée : 0,5 \quad calcul : 1}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1,5 pt}]
+\source{\VM{} (probabilité conditionnelle «~inversée~»)}
+On cherche $P_N(\overline{A})$ :
+\[
+P_N(\overline{A}) = \frac{P(\overline{A}\cap N)}{P(N)} = \frac{0{,}02}{0{,}032} \approx 0{,}625.
+\]
+Un roulement non conforme provient du fournisseur Bêta avec une probabilité d'environ $0{,}625$ : Bêta fournit $40\,\%$ du stock mais $62{,}5\,\%$ des non conformes.
+\bareme{formule : 0,5 \quad numérateur $P(\overline{A}\cap N)$ : 0,5 \quad résultat et phrase : 0,5}
+\piege{répondre $0{,}05$, c'est-à-dire confondre $P_N(\overline{A})$ et $P_{\overline{A}}(N)$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1,5 pt}]
+\source{\LD{}, §2.2 Schéma de Bernoulli p.~5 et §3.1 Définition p.~7}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Épreuve de Bernoulli : on prélève un roulement et on regarde s'il est conforme. Deux issues. Succès : «~le roulement est conforme~», de probabilité $p = 1 - 0{,}032 = 0{,}968$.
+  \item L'épreuve est répétée $25$ fois, de façon identique et indépendante (tirage assimilé à un tirage avec remise).
+  \item $X$ compte le nombre de succès.
+\end{itemize}
+Donc $X$ suit la loi binomiale $\mathcal{B}(25\,;0{,}968)$.
+\bareme{Bernoulli, succès et $p$ : 0,5 \quad répétitions identiques et indépendantes : 0,5 \quad loi et paramètres : 0,5}
+\piege{prendre $p = 0{,}032$ alors que $X$ compte les \textbf{conformes} ; oublier l'indépendance.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 5 \pts{1,5 pt}]
+\source{\LD{}, §3.3 Calcul des probabilités p.~7 (encadré «~À la calculatrice~»)}
+«~Au plus $2$ non conformes~» $\iff$ «~au moins $25 - 2 = 23$ conformes~» $\iff X \geq 23$.
+\[
+P(X\geq 23) = 1 - P(X\leq 22) = 1 - \texttt{binomFRép}(25,\,0{,}968,\,22) \approx 1 - 0{,}0446 = 0{,}9554.
+\]
+Variante acceptée : $Y = 25 - X$ suit $\mathcal{B}(25\,;0{,}032)$ et $P(Y\leq 2) \approx 0{,}9554$, à condition que $Y$ soit défini.
+\bareme{traduction $X\geq 23$ : 0,75 \quad passage au complémentaire et résultat : 0,75}
+\piege{calculer $P(X\leq 2)$ (résultat quasi nul, qui devrait alerter) ; écrire $1 - P(X\leq 23)$ ; traduire par $X \geq 22$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 6 \pts{1 pt}]
+\source{\LD{}, §3.3 p.~8 (propriété «~Espérance et écart-type~»)}
+Le nombre de non conformes est $Y = 25 - X$, donc $E(Y) = 25 - E(X) = 25 - 25\times 0{,}968 = 25 - 24{,}2 = 0{,}8$.\\
+On peut aussi dire que $Y$ suit $\mathcal{B}(25\,;0{,}032)$, donc $E(Y) = 25\times 0{,}032 = 0{,}8$.\\
+En moyenne, un prélèvement de $25$ roulements contient $0{,}8$ roulement non conforme.
+\bareme{justification ($E = np$ appliquée au bon $p$) : 0,5 \quad valeur et phrase : 0,5}
+\piege{répondre $E(X) = 24{,}2$, qui est le nombre moyen de \textbf{conformes}.}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 2 -- Pannes de capteurs (5 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §5.1 Principe p.~11}
+$n = 150 \geq 30$, $p = 0{,}01 \leq 0{,}1$ et $np = 1{,}5 \leq 10$. On peut approcher la loi de $N$ par la loi de Poisson $\mathcal{P}(\lambda)$ avec $\lambda = np = 1{,}5$.
+\bareme{les trois conditions : 0,5 \quad $\lambda = np$ : 0,5}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\LD{}, §4.1 Définition p.~9 (encadré «~À la calculatrice~»)}
+$P(N = 0) = e^{-1{,}5} \approx 0{,}2231$.
+\qquad
+$P(N\leq 2) = \texttt{poissonFRép}(1{,}5,\,2) \approx 0{,}8088$.\\
+Calcul à la main accepté : $P(N\leq 2) = e^{-1{,}5}\left(1 + 1{,}5 + \dfrac{1{,}5^2}{2}\right) \approx 0{,}8088$.
+\bareme{$P(N=0)$ : 0,5 \quad $P(N\leq 2)$ : 1}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1,5 pt}]
+\source{\VM{} (définition de $P_B(A)$) et \LD{}, §4.1 p.~9}
+On cherche $P_{\{N\geq 1\}}(N\leq 2)$. Or $\{N\leq 2\}\cap\{N\geq 1\} = \{1\leq N\leq 2\}$.
+\[
+P_{\{N\geq 1\}}(N\leq 2) = \frac{P(1\leq N\leq 2)}{P(N\geq 1)} = \frac{P(N\leq 2) - P(N=0)}{1 - P(N=0)} \approx \frac{0{,}8088 - 0{,}2231}{1 - 0{,}2231} \approx 0{,}7539.
+\]
+Sachant qu'il y a eu au moins une panne, la probabilité qu'il y en ait eu au plus deux vaut environ $0{,}7539$.
+\bareme{formule de la probabilité conditionnelle : 0,5 \quad intersection $\{1\leq N\leq 2\}$ : 0,5 \quad résultat : 0,5}
+\piege{répondre $P(N\leq 2)$ sans conditionner ; faire le produit $P(N\leq 2)\times P(N\geq 1)$ ; garder $P(N=0)$ au numérateur.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9}
+La réserve suffit si $N \leq k$. On cherche le plus petit $k$ tel que $P(N\leq k)\geq 0{,}95$.\\
+$P(N\leq 3) \approx 0{,}9344 < 0{,}95$ \quad et \quad $P(N\leq 4) \approx 0{,}9814 \geq 0{,}95$. Donc $k = 4$.
+\bareme{les deux valeurs encadrantes : 0,5 \quad conclusion : 0,5}
+\piege{s'arrêter à la première valeur calculée sans montrer que la précédente ne convient pas.}
+\end{correction}
+
+\noindent{\footnotesize\color{uimmgray}\textit{Contrôle : avec la loi binomiale exacte $\mathcal{B}(150\,;0{,}01)$, on trouve $P(N\leq 3)\approx 0{,}9353$ et $P(N\leq 4)\approx 0{,}982$ : la valeur de $k$ est la même.}}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 3 -- Diamètre d'arbres rectifiés (7 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1,5 pt}]
+\source{\LN{}, §3.2 Calcul d'une probabilité p.~6}
+$D$ suit $\mathcal{N}(25\,;0{,}015)$.
+\[
+P(24{,}97 \leq D \leq 25{,}03) = \texttt{normalFRép}(24{,}97,\,25{,}03,\,25,\,0{,}015) \approx 0{,}9545.
+\]
+Ces bornes valent $\mu \pm 2\sigma$.
+\bareme{probabilité écrite avec $D$ : 0,5 \quad commande et paramètres : 0,5 \quad résultat : 0,5}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1 pt}]
+\source{\LN{}, §3.2 p.~6 et §3.3 Standardisation p.~7}
+$P(D > 25{,}02) = \texttt{normalFRép}(25{,}02,\,10^{99},\,25,\,0{,}015) \approx 0{,}0912$.\\ Par standardisation : $\dfrac{25{,}02 - 25}{0{,}015}\approx 1{,}3333$ et $P(D > 25{,}02) = 1 - P(Z\leq 1{,}3333)\approx 0{,}0912$.
+\bareme{écriture correcte (sens de l'inégalité) : 0,5 \quad résultat : 0,5}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{2 pts}]
+\source{\VM{} (définition de $P_B(A)$) et \LN{}, §3.2 p.~6}
+Soit $R$ l'évènement «~l'arbre est rebuté~» et $\mathcal{A}$ l'évènement «~l'arbre est en zone d'alerte~». On cherche $P_{\mathcal{A}}(R)$.\\
+$R = \{D < 24{,}97\} \cup \{D > 25{,}03\}$ et $\mathcal{A} = \{D > 25{,}02\}$. Donc $R\cap \mathcal{A} = \{D > 25{,}03\}$.
+\[
+P_{\mathcal{A}}(R) = \frac{P(R\cap \mathcal{A})}{P(\mathcal{A})} = \frac{P(D > 25{,}03)}{P(D > 25{,}02)} \approx \frac{0{,}0228}{0{,}0912} \approx 0{,}2494.
+\]
+Environ un arbre sur quatre en zone d'alerte est rebuté ($P_{\mathcal{A}}(R)\approx 0{,}2494$). Avec les valeurs arrondies $0{,}0228$ et $0{,}0912$, on trouve $0{,}25$ : accepté. La zone d'alerte joue bien son rôle de signal.
+\bareme{évènements et formule : 0,5 \quad intersection $R\cap \mathcal{A} = \{D > 25{,}03\}$ : 0,75 \quad calcul et phrase : 0,75}
+\piege{répondre $P(R) \approx 0{,}0455$ sans conditionner ; oublier que la zone d'alerte ne contient qu'une des deux queues de rebut.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{2,5 pts}]
+\source{\LN{}, §3.3 Standardisation p.~7 et §4.2 Retrouver un paramètre p.~8}
+On pose $Z = \dfrac{D - 25}{\sigma}$, qui suit $\mathcal{N}(0\,;1)$. La tolérance vaut $\pm 0{,}03$ autour de la moyenne.
+\begin{align*}
+P(24{,}97\leq D\leq 25{,}03)\geq 0{,}99
+&\iff P\!\left(-\frac{0{,}03}{\sigma}\leq Z\leq \frac{0{,}03}{\sigma}\right)\geq 0{,}99\\
+&\iff 2\,P\!\left(Z\leq \frac{0{,}03}{\sigma}\right) - 1\geq 0{,}99\\
+&\iff P\!\left(Z\leq \frac{0{,}03}{\sigma}\right)\geq 0{,}995.
+\end{align*}
+$\texttt{FracNormale}(0{,}995)\approx 2{,}5758$, donc $\dfrac{0{,}03}{\sigma}\geq 2{,}5758$, soit $\sigma\leq \dfrac{0{,}03}{2{,}5758}\approx 0{,}01165$.\\
+L'écart-type maximal est $\sigma\approx 0{,}0116$\,mm (arrondi \textbf{par défaut}, pour respecter l'exigence).
+\bareme{standardisation : 0,75 \quad symétrie, passage à $0{,}995$ : 0,75 \quad $z = 2{,}5758$ : 0,5 \quad $\sigma$ et arrondi par défaut : 0,5}
+\piege{utiliser $\texttt{FracNormale}(0{,}99)\approx 2{,}3263$ (oubli de la symétrie), ce qui donne $\sigma\approx 0{,}0129$ ; arrondir $\sigma$ par excès.}
+\end{correction}
+
+\end{document}

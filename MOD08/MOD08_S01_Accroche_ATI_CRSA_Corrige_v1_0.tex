@@ -1,0 +1,270 @@
+% ============================================================
+% CORRIGE - Accroche MOD08 - BTS ATI / CRSA
+% Pole Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}}
+\setlist[enumerate,2]{label=\alph*)}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{%
+  colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=8pt, before skip=10pt, after skip=8pt}
+
+\newtcolorbox{notion}{%
+  colback=uimmlightblue, colframe=uimmblue, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt, before skip=8pt, after skip=8pt}
+
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt}
+
+\newtcolorbox{piege}{%
+  colback=uimmred!5, colframe=uimmred!80!black, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt, before skip=8pt, after skip=8pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS ATI / CRSA -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08 -- Corrigé}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé -- Trois problèmes pour entrer dans les probabilités}\\[4pt]
+{\color{white}\large BTS ATI / CRSA -- Systèmes automatisés et industrialisation}
+\end{tcolorbox}
+
+\vspace{4pt}
+\begin{notion}
+\textbf{Boîte à outils du dénombrement.} Soit $n$ objets.
+\begin{itemize}
+  \item \textbf{Permutation} (ordonner les $n$ objets) : $n! = n\times(n-1)\times\dots\times 2\times 1$.
+  \item \textbf{Arrangement} de $p$ parmi $n$ (choisir \emph{et} ordonner $p$ objets \textbf{distincts}, sans répétition) : $A_n^p = \dfrac{n!}{(n-p)!} = n\times(n-1)\times\dots\times(n-p+1)$.
+  \item \textbf{$p$-liste} ($p$-uplet, choix ordonné \textbf{avec répétition} possible) : $n^p$.
+  \item \textbf{Combinaison} de $p$ parmi $n$ (choisir $p$ objets \textbf{sans} tenir compte de l'ordre) : $\displaystyle \binom{n}{p} = \dfrac{n!}{p!\,(n-p)!}$.
+\end{itemize}
+\textbf{La bonne question :} l'ordre compte-t-il ? \; Y a-t-il répétition ?
+\end{notion}
+
+% ============================================================
+\section{Problème 1 : compter, ce n'est pas si simple}
+
+\begin{correction}[-- Q1 : l'ordre de lancement (permutations)]
+On ordonne les $6$ OF, tous distincts, sans répétition : c'est une \textbf{permutation} de $6$ éléments.
+\[
+6! = 720 \text{ séquences de production.}
+\]
+Pour $10$ OF : $10! = 3\,628\,800$ séquences. Passer de $6$ à $10$ OF multiplie le nombre de séquences par plus de $5000$ : l'ordonnancement « à la main » devient vite ingérable.
+\end{correction}
+
+\begin{correction}[-- Q2 : code et table d'entrées ($p$-listes)]
+\textbf{Code du pupitre :} $4$ positions, chacune parmi $10$ chiffres, \textbf{avec répétition} : c'est une \textbf{$4$-liste} de l'ensemble $\{0,1,\dots,9\}$.
+\[
+10^4 = 10\,000 \text{ codes.}
+\]
+\textbf{Table d'entrées :} $20$ capteurs, chacun dans $2$ états ($0$ ou $1$) : c'est une \textbf{$20$-liste} de $\{0,1\}$.
+\[
+2^{20} = 1\,048\,576 \text{ états possibles.}
+\]
+\end{correction}
+
+\begin{correction}[-- Q3 : durée d'un test exhaustif]
+Une minute par configuration, $7$ h par jour $= 7\times 60 = 420$ configurations testables par jour.
+\[
+\frac{1\,048\,576}{420} \approx 2\,497 \text{ jours de travail, soit environ } 11 \text{ ans (à } 220 \text{ jours/an).}
+\]
+Tester \emph{toutes} les configurations est matériellement impossible : c'est le sens de la démarche.
+\end{correction}
+
+\begin{correction}[-- Q4 : la séquence d'outils (arrangement, $p$-liste, combinaison)]
+On choisit $4$ outils \textbf{différents} parmi $8$ et l'\textbf{ordre compte} (c'est une séquence) : \textbf{arrangement}.
+\[
+A_8^4 = 8\times 7\times 6\times 5 = 1\,680 \text{ séquences.}
+\]
+\textbf{Si un outil pouvait resservir} (répétition autorisée), l'ordre comptant toujours : \textbf{$4$-liste}, $8^4 = 4\,096$. \\
+\textbf{Si seul comptait le choix des 4 outils}, sans l'ordre : \textbf{combinaison}, $\dbinom{8}{4} = 70$.
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|l|c|c|c|}
+\hline
+\rowcolor{uimmlightblue}
+\textbf{Situation} & \textbf{Ordre ?} & \textbf{Répétition ?} & \textbf{Nombre} \\
+\hline
+Séquence de 4 outils distincts & oui & non & $A_8^4 = 1\,680$ \\
+\hline
+Séquence avec outils réutilisables & oui & oui & $8^4 = 4\,096$ \\
+\hline
+Choix de 4 outils (sans ordre) & non & non & $\binom{8}{4} = 70$ \\
+\hline
+\end{tabular}
+\end{center}
+\end{correction}
+
+\begin{correction}[-- Q5 : conclusion]
+Le nombre de cas explose (factorielle, puissance). On ne teste jamais tout : on \textbf{échantillonne}, on \textbf{modélise} et on \textbf{raisonne en probabilités}. C'est exactement l'objet du module.
+\end{correction}
+
+\begin{correction}[-- Bonus : paires de capteurs (combinaison)]
+On choisit $2$ capteurs parmi $20$, l'ordre n'ayant pas de sens (une paire) : \textbf{combinaison}.
+\[
+\binom{20}{2} = \frac{20\times 19}{2} = 190 \text{ paires.}
+\]
+\end{correction}
+
+% ============================================================
+\newpage
+\section{Problème 2 : le bon sens suffit-il ?}
+
+\begin{correction}[-- Q1 : nombre de prélèvements]
+On prélève $2$ capteurs \textbf{simultanément} parmi $12$ : l'ordre n'intervient pas, c'est une \textbf{combinaison}.
+\[
+\binom{12}{2} = \frac{12\times 11}{2} = 66 \text{ prélèvements possibles.}
+\]
+\end{correction}
+
+\begin{correction}[-- Q2 : prélèvements sans aucun défectueux]
+Il y a $12 - 3 = 9$ capteurs sains. On en choisit $2$ :
+\[
+\binom{9}{2} = \frac{9\times 8}{2} = 36 \text{ prélèvements sans défectueux.}
+\]
+\end{correction}
+
+\begin{correction}[-- Q3 : les probabilités]
+\[
+P(\text{aucun défectueux}) = \frac{36}{66} = \frac{6}{11} \approx 0{,}5455.
+\]
+Par l'\textbf{événement contraire} :
+\[
+P(\text{au moins un défectueux}) = 1 - \frac{6}{11} = \frac{5}{11} \approx 0{,}4545 \;\; (\approx 45{,}5\,\%).
+\]
+Bien plus que les « 25\,\% » souvent avancés.
+\end{correction}
+
+\begin{correction}[-- Q4 : sur 100 cellules]
+$100 \times 0{,}4545 \approx 45$ cellules partiraient avec au moins un capteur défectueux. C'est considérable.
+\end{correction}
+
+\begin{correction}[-- Q5 : prélèvement de 3 capteurs]
+\[
+P(\text{aucun défectueux}) = \frac{\dbinom{9}{3}}{\dbinom{12}{3}} = \frac{84}{220} = \frac{21}{55} \approx 0{,}3818,
+\]
+donc
+\[
+P(\text{au moins un}) = 1 - \frac{21}{55} = \frac{34}{55} \approx 0{,}6182 \;\; (\approx 61{,}8\,\%).
+\]
+Prélever un capteur de plus fait bondir le risque de $45{,}5\,\%$ à $61{,}8\,\%$.
+\end{correction}
+
+\begin{piege}
+\textbf{Pourquoi « 25\,\% » et « 50\,\% » sont faux.} \\
+« $3/12 = 25\,\%$ » est la probabilité qu'\emph{un} capteur tiré soit défectueux, pas celle d'en avoir au moins un sur \emph{deux} tirages. \\
+« $\frac{3}{12} + \frac{3}{12} = 50\,\%$ » additionne deux événements qui \textbf{se recouvrent} (les deux capteurs peuvent être défectueux en même temps) : on compte deux fois ce cas. On ne somme des probabilités que pour des événements \textbf{incompatibles}. La méthode sûre passe par l'événement contraire « aucun défectueux ».
+\end{piege}
+
+% ============================================================
+\newpage
+\section{Problème 3 : quand l'intuition se trompe lourdement}
+
+\begin{correction}[-- Q1 : le tableau sur 10\,000 pièces]
+$1\,\%$ de $10\,000 = 100$ pièces défectueuses, donc $9\,900$ conformes.
+\begin{itemize}
+  \item Défectueuses rejetées : $95\,\%$ de $100 = 95$ ; acceptées à tort : $5$.
+  \item Conformes rejetées à tort : $5\,\%$ de $9\,900 = 495$ ; acceptées : $9\,405$.
+\end{itemize}
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{|>{\columncolor{uimmlightblue}}l|c|c|c|}
+\hline
+\rowcolor{uimmlightblue}
+\textbf{Sur 10\,000 pièces} & \textbf{Rejetée} & \textbf{Acceptée} & \textbf{Total} \\
+\hline
+Réellement défectueuse & $95$ & $5$ & $100$ \\
+\hline
+Conforme & $495$ & $9\,405$ & $9\,900$ \\
+\hline
+\textbf{Total} & $\mathbf{590}$ & $9\,410$ & \textbf{10\,000} \\
+\hline
+\end{tabular}
+\end{center}
+\end{correction}
+
+\begin{correction}[-- Q2 : proportion réellement défectueuse parmi les rejets]
+Sur $590$ pièces rejetées, $95$ sont réellement défectueuses :
+\[
+\frac{95}{590} \approx 0{,}161 \;\; (\approx 16{,}1\,\%).
+\]
+Une pièce rejetée n'a qu'\textbf{environ 16\,\% de chances} d'être vraiment défectueuse : l'immense majorité des rejets sont de fausses alertes. Résultat très contre-intuitif.
+\end{correction}
+
+\begin{correction}[-- Q3 : notations]
+On a calculé $P_R(D)$ = probabilité d'être défectueuse \emph{sachant} que la pièce est rejetée : $P_R(D) \approx 0{,}161$. \\
+À ne pas confondre avec $P_D(R)$ = probabilité d'être rejetée \emph{sachant} que la pièce est défectueuse, qui est la performance annoncée de la station : $P_D(R) = 0{,}95$. \\
+Passer de l'une à l'autre, c'est exactement ce que fait la \textbf{formule de Bayes}.
+\end{correction}
+
+\begin{correction}[-- Q4 : flux à 20\,\% de défauts, même station]
+$20\,\%$ de $10\,000 = 2\,000$ défectueuses, $8\,000$ conformes.
+\begin{itemize}
+  \item Défectueuses rejetées : $95\,\%$ de $2\,000 = 1\,900$.
+  \item Conformes rejetées à tort : $5\,\%$ de $8\,000 = 400$.
+  \item Total des rejets : $1\,900 + 400 = 2\,300$.
+\end{itemize}
+\[
+P_R(D) = \frac{1\,900}{2\,300} \approx 0{,}826 \;\; (\approx 82{,}6\,\%).
+\]
+Avec la \textbf{même} station, un rejet est maintenant fiable à $83\,\%$.
+\end{correction}
+
+\begin{correction}[-- Q5 : conclusion pour l'industrialisation]
+La fiabilité d'un rejet dépend surtout de la \textbf{proportion de défauts dans le flux présenté} à la station, pas seulement de la performance de la station. Une excellente station appliquée à un flux très sain génère surtout des fausses alertes ($16\,\%$ de vrais défauts) ; la même station sur un flux dégradé devient fiable ($83\,\%$). \\
+\textbf{Leçon métier :} on règle un contrôle automatique \emph{en fonction du taux de défaut attendu}, et on se méfie d'un taux de rejet élevé quand la production est bonne.
+\end{correction}
+
+\vfill
+\begin{notion}
+\textbf{Les trois piliers de la séquence [S01].} Dénombrer (permutation, arrangement, $p$-liste, combinaison) avant de calculer une probabilité ; passer par l'événement contraire pour « au moins un » ; distinguer $P_D(R)$ de $P_R(D)$ (formule de Bayes).
+\end{notion}
+
+\vspace{4pt}
+\begin{center}
+\color{uimmgray}\small
+\textit{Corrigé -- Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}
