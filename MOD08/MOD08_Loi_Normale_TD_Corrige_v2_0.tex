@@ -1,0 +1,481 @@
+% ============================================================
+% Corrigé -- TD v2 : La loi normale, problèmes industriels
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Énoncé : MOD08_Loi_Normale_TD_v2_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+% Préambule commun TD / corrigé -- MOD08 Loi normale v2_0
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace,booktabs}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\titleformat{\subsection}{\large\bfseries\color{uimmblue}}{}{0pt}{}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=10pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+\newtcolorbox{rappel}[1]{colback=uimmlightblue, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=0.8pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt, before skip=8pt, after skip=8pt}
+
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+\newcommand{\duree}[1]{\hfill{\normalsize\color{uimmred}#1}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.85*\i) -- (\linewidth-1pt,-0.85*\i);}
+  \end{tikzpicture}\par\medskip}
+% Cadre vide (arbre pondéré, schéma) : #1 = hauteur
+\newcommand{\cadre}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \draw[uimmgray!40, rounded corners=3pt] (0,0) rectangle (\linewidth-1pt,-#1);
+  \end{tikzpicture}\par\medskip}
+\newcommand{\EnTete}[1]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}}
+\EnTete{Corrigé TD v2}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\LN}{Cours MOD08 \textit{Loi normale}}
+\newcommand{\LD}{Cours MOD08 \textit{Lois discrètes}}
+\newcommand{\LE}{Cours MOD08 \textit{Loi exponentielle}}
+\newcommand{\VM}{Vade-mecum MOD08 S01 \textit{Dénombrement et probabilités conditionnelles}}
+\newcommand{\OM}{TD v2, encadré \textit{Outils mobilisés} p.~1}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé -- TD MOD08 v2}\\[4pt]
+{\color{white}\large La loi normale~: problèmes industriels \hfill Document formateur}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Conventions.} Les calculs sont menés avec les valeurs exactes de la calculatrice~; les valeurs affichées sont arrondies. Un stagiaire qui arrondit à chaque étape peut obtenir un écart sur le dernier chiffre~: ce n'est pas une erreur de méthode. $\Phi$ désigne la fonction de répartition de $Z \sim \mathcal{N}(0\,;1)$~; $z_q = \texttt{FracNormale}(q)$ est le réel tel que $\Phi(z_q) = q$.\\[3pt]
+\textbf{Références.} Les pages citées sont celles des PDF \texttt{MOD08\_Loi\_Normale\_Cours\_v1\_0}, \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0} et \texttt{MOD08\_Loi\_Exponentielle\_Cours\_v1\_0} (numérotation imprimée en pied de page). Le vade-mecum est un document Word sans pagination stable~: seule la notion est citée.\\[3pt]
+\textbf{Fil rouge pédagogique.} Chaque problème contient un résultat contre-intuitif à faire verbaliser~: centrer n'est pas toujours optimal (P1), une machine minoritaire peut produire presque tous les défauts (P2), une exigence client a un prix chiffrable (P3), décaler un réglage ne réduit pas une dispersion (P4), une pièce d'usure vieillit (P5), resserrer un seuil déplace le coût vers l'autre risque (P6).
+\end{tcolorbox}
+
+% ============================================================
+\needspace{8cm}
+\section{Problème 1 -- Reprise ou rebut}
+
+\needspace{5cm}
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 Calcul d'une probabilité p.~6 et §3.3 Standardisation p.~7}
+$D \sim \mathcal{N}(40{,}005\,;0{,}010)$. Les bornes correspondent à des valeurs centrées réduites entières~:
+\[
+\frac{39{,}975 - 40{,}005}{0{,}010} = -3, \qquad \frac{40{,}025 - 40{,}005}{0{,}010} = 2.
+\]
+\[
+P(S) = P(D < 39{,}975) = \Phi(-3) \approx 0{,}0013, \qquad P(R) = P(D > 40{,}025) = 1 - \Phi(2) \approx 0{,}0228,
+\]
+\[
+P(C) = P(39{,}975 \leq D \leq 40{,}025) \approx 0{,}9759.
+\]
+Cohérence~: $C$, $R$, $S$ forment une partition, et $0{,}9759 + 0{,}0228 + 0{,}0013 = 1$.
+\piege{oublier que le procédé est décentré et calculer $2\,P(Z > 2{,}5)$~; confondre reprise et rebut.}
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 2]
+\source{\VM{} (probabilité conditionnelle)}
+L'évènement «~bague écartée~» est $\overline{C} = R \cup S$. Comme $R \subset \overline{C}$~:
+\[
+P_{\overline{C}}(R) = \frac{P(R)}{P(R) + P(S)} = \frac{0{,}02275}{0{,}02410} \approx 0{,}9440.
+\]
+$94\,\%$ des bagues écartées sont récupérables~: le décentrage vers le haut protège contre le rebut.
+\piege{répondre $P(R) = 0{,}0228$ sans conditionner.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3]
+\source{\LD{}, §1.2 Loi de probabilité et §1.3 Espérance p.~3}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|c|c|c|}\hline
+$k$ (\texteuro) & $0$ & $1{,}50$ & $9{,}00$ \\ \hline
+$P(K = k)$ & $0{,}9759$ & $0{,}0228$ & $0{,}0013$ \\ \hline
+\end{tabular}
+\end{center}
+\[
+E(K) = 0 \times 0{,}9759 + 1{,}50 \times 0{,}02275 + 9{,}00 \times 0{,}00135 \approx 0{,}0463 \text{ \texteuro}.
+\]
+Sur un grand nombre de bagues, la non-qualité coûte en moyenne $4{,}6$ centimes par bague. Sur un mois~: $12\,000 \times 0{,}0463 \approx 555$ \texteuro.
+\piege{calculer une moyenne simple des trois coûts~; oublier la valeur $0$ dans la loi de $K$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4]
+\source{\LN{}, §3.2 p.~6~; \LD{}, §1.3 p.~3}
+Pour $\mu = 40{,}000$, les bornes sont à $\pm 2{,}5$ écarts-types~: $P(R) = P(S) = 1 - \Phi(2{,}5) \approx 0{,}0062$.
+\[
+E(K) = (1{,}50 + 9{,}00) \times 0{,}00621 \approx 0{,}0652 \text{ \texteuro}, \quad\text{soit environ } 782 \text{ \texteuro{} par mois.}
+\]
+Le centrage augmente le coût de $41\,\%$. Il minimise le nombre de bagues écartées ($1{,}24\,\%$ contre $2{,}41\,\%$), mais pas le coût~: un rebut coûte six fois plus qu'une reprise. Quand les coûts sont dissymétriques, on règle «~côté matière~», du côté où l'erreur se rattrape.
+\piege{conclure que le centrage est meilleur parce que le taux de conformes augmente.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 5]
+\source{\LN{}, §4.2 Retrouver un paramètre $\mu$ ou $\sigma$ p.~8 (méthode)}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item $P(D < 39{,}975) \leq 0{,}0005$.
+  \item $P\!\left(Z < \dfrac{39{,}975 - \mu}{0{,}010}\right) \leq 0{,}0005 \iff \dfrac{39{,}975 - \mu}{0{,}010} \leq z_{0{,}0005} \approx -3{,}2905 \iff \mu \geq 39{,}975 + 0{,}032905 = 40{,}007905$.
+
+  Arrondi au micromètre \textbf{par excès}~: $\mu = 40{,}008$ mm. (Avec $40{,}007$ on obtiendrait environ $690$ ppm~: l'exigence ne serait pas tenue.)
+  \item Pour $\mu = 40{,}008$~: $P(R) \approx 0{,}0446$, $P(S) \approx 0{,}00048$ ($483$ ppm), $E(K) \approx 1{,}50 \times 0{,}04457 + 9 \times 0{,}00048 \approx 0{,}0712$ \texteuro.
+
+  Le coût moyen passe de $0{,}0463$ à $0{,}0712$ \texteuro{} ($+54\,\%$, environ $854$ \texteuro{} par mois). L'exigence n'est pas neutre~: elle se paie en reprises. C'est un argument de négociation chiffré, ou une incitation à réduire $\sigma$.
+\end{enumerate}
+\piege{arrondir $\mu$ au plus proche (40,008 ici par chance, mais la démarche doit être justifiée)~; écrire $\geq$ au lieu de $\leq$ après standardisation.}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 6]
+\source{\LN{}, §3.2 p.~6~; \LD{}, §1.3 p.~3}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|*{6}{c|}}\hline
+$\mu$ (mm) & $40{,}000$ & $40{,}002$ & $40{,}004$ & $40{,}006$ & $40{,}008$ & $40{,}010$ \\ \hline
+$P(R)$ & $0{,}0062$ & $0{,}0107$ & $0{,}0179$ & $0{,}0287$ & $0{,}0446$ & $0{,}0668$ \\ \hline
+$P(S)$ (ppm) & $6\,210$ & $3\,467$ & $1\,866$ & $968$ & $483$ & $233$ \\ \hline
+$E(K)$ (\texteuro) & $0{,}0652$ & $0{,}0473$ & $0{,}0436$ & $0{,}0518$ & $0{,}0712$ & $0{,}1023$ \\ \hline
+\end{tabular}
+\end{center}
+Sans contrainte, le coût minimal du tableau est atteint vers $\mu = 40{,}004$. Avec l'exigence client ($P(S) \leq 500$ ppm), seuls $40{,}008$ et $40{,}010$ sont admissibles~: on recommande $\mu = 40{,}008$, le moins coûteux des réglages admissibles. Pour faire baisser le coût, il faut réduire $\sigma$~: le réglage seul ne suffit plus.
+\end{correction}
+
+% ============================================================
+\needspace{8cm}
+\section{Problème 2 -- Deux tours, un seul bac}
+
+\needspace{5cm}
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 p.~6 et §3.3 p.~7}
+Tour $A$, centré~: $P_A(N) = 1 - P(29{,}90 \leq L \leq 30{,}10) = 2\,P\!\left(Z > \tfrac{0{,}10}{0{,}035}\right) \approx 0{,}0043$.
+
+Tour $B$, décentré~: $P(L < 29{,}90) = \Phi(-2{,}8) \approx 0{,}0026$ et $P(L > 30{,}10) = 1 - \Phi(1{,}2) \approx 0{,}1151$, d'où $P_B(N) \approx 0{,}1176$.
+\piege{utiliser la formule symétrique pour $B$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 2]
+\source{\VM{} (arbre pondéré, formule des probabilités totales)}
+Arbre~: premier niveau $A$ ($0{,}65$) et $B$ ($0{,}35$)~; second niveau $N$ ou $\overline{N}$ avec les probabilités de la question 1. $A$ et $B$ forment une partition~:
+\[
+P(N) = 0{,}65 \times 0{,}004275 + 0{,}35 \times 0{,}117625 \approx 0{,}00278 + 0{,}04117 \approx 0{,}0439.
+\]
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 3]
+\source{\VM{} (probabilité conditionnelle «~inversée~»)}
+\[
+P_N(B) = \frac{P(B \cap N)}{P(N)} = \frac{0{,}04117}{0{,}04395} \approx 0{,}9368.
+\]
+Le tour $B$ fait $35\,\%$ de la production mais $94\,\%$ des non-conformes. La révision de $B$ est prioritaire~: décentrage de $0{,}04$ mm et dispersion plus forte.
+\piege{répondre $P_B(N) = 0{,}1176$~; confondre «~part de la production~» et «~part des défauts~».}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4]
+\source{\LN{}, §3.2 p.~6~; \VM{} (formule de Bayes)}
+$P_A(H) = P(30{,}05 < L \leq 30{,}10) \approx 0{,}0744$ pour le tour $A$~; $P_B(H) \approx 0{,}3057$ pour le tour $B$.
+\[
+P(H) = 0{,}65 \times 0{,}07443 + 0{,}35 \times 0{,}30567 \approx 0{,}1554, \qquad
+P_H(B) = \frac{0{,}35 \times 0{,}30567}{0{,}1554} \approx 0{,}6886.
+\]
+Une pièce en zone d'alerte vient de $B$ avec une probabilité de $69\,\%$, contre $35\,\%$ sans information. Une mesure même conforme renseigne sur l'origine.
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 5]
+\source{\VM{} (probabilités totales)~; \LN{}, §4.2 p.~8 et §2.3 Problème inverse p.~5}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item $P(N) = 0{,}65\,P_A(N) + 0{,}35\,P_B(N) \leq 0{,}01 \iff P_B(N) \leq \dfrac{0{,}01 - 0{,}65 \times 0{,}004275}{0{,}35} \approx 0{,}0206$.
+  \item $B$ est centré~: $P_B(N) = 2\,P\!\left(Z > \tfrac{0{,}10}{\sigma_B}\right) \leq 0{,}020633 \iff \Phi\!\left(\tfrac{0{,}10}{\sigma_B}\right) \geq 0{,}98968 \iff \dfrac{0{,}10}{\sigma_B} \geq 2{,}3146$.
+
+  D'où $\sigma_B \leq 0{,}0432$ mm, soit $\sigma_B = 0{,}043$ mm arrondi \textbf{par défaut}. Le recentrage seul ne suffit pas~: avec $\sigma_B = 0{,}05$, on aurait $P_B(N) \approx 4{,}6\,\%$.
+\end{enumerate}
+\piege{oublier le facteur 2 (deux queues)~; inverser le sens de l'inégalité en isolant $\sigma_B$.}
+\end{correction}
+
+% ============================================================
+\needspace{8cm}
+\section{Problème 3 -- Remplissage, audit client et investissement}
+
+\needspace{3.5cm}
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 p.~6}
+$p = P(V < 5{,}00) = \Phi\!\left(\tfrac{5{,}00 - 5{,}05}{0{,}03}\right) = \Phi(-1{,}667) \approx 0{,}0478$.
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2]
+\source{\LD{}, §2.2 Schéma de Bernoulli p.~5, §3.1 Définition et §3.3 Calcul des probabilités p.~7}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item Épreuve~: examiner un bidon~; succès «~sous-rempli~», probabilité $p$. $12$ répétitions identiques et indépendantes. $X$ compte les succès~: $X \sim \mathcal{B}(12\,;0{,}0478)$.
+  \item $P(X = 0) = (1 - p)^{12} \approx 0{,}5556$~; $P(X = 1) \approx 0{,}3346$~; $P(X \geq 2) = 1 - P(X=0) - P(X=1) \approx 0{,}1097$.
+  \item $P(\text{refus}) = P(X \geq 1) = 1 - P(X = 0) \approx 0{,}4444$. Près d'un carton sur deux est refusé~: le réglage à $5{,}05$ L, qui paraît généreux, est inacceptable dès qu'on raisonne au niveau du carton.
+\end{enumerate}
+\piege{calculer $P(X \geq 2)$ comme $1 - P(X \leq 2)$~; oublier l'hypothèse d'indépendance.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3]
+\source{\LD{}, §3.3 p.~7~; \LN{}, §4.2 p.~8}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item $1 - (1-p)^{12} \leq 0{,}02 \iff (1-p)^{12} \geq 0{,}98 \iff 1 - p \geq 0{,}98^{1/12}$ (la fonction $x \mapsto x^{1/12}$ est croissante sur $[0\,;+\infty[$) $\iff p \leq 1 - 0{,}98^{1/12} \approx 0{,}001682$.
+  \item $\Phi\!\left(\tfrac{5 - \mu}{0{,}03}\right) \leq 0{,}001682 \iff \dfrac{5 - \mu}{0{,}03} \leq z_{0{,}001682} \approx -2{,}9323 \iff \mu \geq 5{,}0880$.
+
+  Arrondi au millilitre \textbf{par excès}~: $\mu = 5{,}088$ L.
+\end{enumerate}
+\piege{imposer $p \leq 0{,}02$ (confusion bidon / carton)~; arrondir $\mu$ par défaut.}
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 4]
+\source{\LN{}, §3.1 rôle des paramètres p.~6 ($\mu$ est le volume moyen)}
+Volume donné par an~: $0{,}088 \times 150\,000 = 13\,200$ L. Coût~: $13\,200 \times 3{,}20 = 42\,240$ \texteuro{} par an.
+\piege{comparer au coût du réglage actuel ($24\,000$ \texteuro) comme s'il était une option~: ce réglage ne respecte pas l'exigence du client.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 5]
+\source{\LN{}, §4.2 p.~8}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item Le majorant de $p$ ne dépend pas de $\sigma$~: $\mu \geq 5 + 2{,}9323 \times 0{,}012 \approx 5{,}0352$, soit $\mu = 5{,}036$ L.
+  \item Surremplissage~: $0{,}036 \times 150\,000 = 5\,400$ L, soit $17\,280$ \texteuro. Économie~: $42\,240 - 17\,280 = 24\,960$ \texteuro{} par an.
+  \item $\dfrac{18\,000}{24\,960} \times 12 \approx 8{,}7$~: l'investissement est remboursé en moins de $9$ mois. Réduire la dispersion permet de rapprocher le réglage de la cote~: c'est là que se trouve le gain.
+\end{enumerate}
+\end{correction}
+
+% ============================================================
+\needspace{8cm}
+\section{Problème 4 -- Jeu d'assemblage et empilement de cotes}
+
+\needspace{4cm}
+\begin{correction}[-- Question 1]
+\source{\OM{} (résultat admis)}
+$A$ et $B$ sont indépendantes~: $J = A - B \sim \mathcal{N}\!\left(0{,}028\,;\sqrt{0{,}006^2 + 0{,}005^2}\right)$, soit $\sigma_J = \sqrt{6{,}1 \times 10^{-5}} \approx 0{,}00781$ mm.
+
+L'affirmation est fausse~: les dispersions ne se compensent pas, elles se cumulent. Les \textbf{variances} s'ajoutent, même pour une différence, et $\sigma_J$ est supérieur à $\sigma_A$ et à $\sigma_B$.
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 2]
+\source{\LN{}, §3.2 p.~6}
+$P(0{,}010 \leq J \leq 0{,}050) \approx 0{,}9870$~; $P(J < 0{,}010) \approx 0{,}0106$~; $P(J > 0{,}050) \approx 0{,}0024$.
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 3]
+\source{\VM{} (probabilité conditionnelle)}
+\[
+P_{\text{NF}}(J < 0{,}010) = \frac{0{,}010593}{0{,}010593 + 0{,}002425} \approx 0{,}8137.
+\]
+Le jeu moyen ($0{,}028$) est plus proche de la borne basse~: $81\,\%$ des refus sont des jeux insuffisants.
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 4]
+\source{\LN{}, §3.2 p.~6~; \LD{}, §3, espérance d'une loi binomiale p.~8}
+$P(J < 0) \approx 0{,}000169$, soit environ $169$ ppm. Sur $50\,000$ montages~: $50\,000 \times 0{,}000169 \approx 8{,}4$, soit environ $8$ montages impossibles par an.
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 5]
+\source{\LN{}, §4.2 p.~8}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item $\dfrac{0{,}010 - \mu_J}{0{,}00781} \leq z_{0{,}001} \approx -3{,}0902 \iff \mu_J \geq 0{,}03414$. Or $\mu_J = \mu_A - 19{,}997$, donc $\mu_A \geq 20{,}03114$, soit $\mu_A = 20{,}032$ mm par excès.
+  \item Avec $\mu_J = 0{,}035$~: $P(J < 0{,}010) \approx 0{,}0007$ et $P(J > 0{,}050) \approx 0{,}0274$. Non fonctionnels~: $2{,}81\,\%$ contre $1{,}30\,\%$ au départ.
+
+  Décaler le réglage transfère les défauts d'une borne à l'autre et, ici, en augmente le total. Le problème est la dispersion de $J$, pas son centrage.
+\end{enumerate}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 6]
+\source{\OM{}~; \LN{}, §2.3 p.~5 et §4.2 p.~8}
+$J$ centré sur $0{,}030$~: $2\,P\!\left(Z > \tfrac{0{,}020}{\sigma_J}\right) \leq 0{,}005 \iff \dfrac{0{,}020}{\sigma_J} \geq z_{0{,}9975} \approx 2{,}8070 \iff \sigma_J \leq 0{,}007125$.
+
+$\sigma_B^2 = \sigma_J^2 - \sigma_A^2 \leq 0{,}007125^2 - 0{,}006^2 \approx 1{,}476 \times 10^{-5}$, d'où $\sigma_B \leq 0{,}00384$, soit $\sigma_B = 0{,}0038$ mm par défaut.
+
+Il faut réduire la dispersion des arbres d'environ $24\,\%$.
+\piege{écrire $\sigma_B = \sigma_J - \sigma_A$~; oublier le facteur 2.}
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 7]
+\source{Notion de chaîne de cotes, hors cours de mathématiques}
+Au pire des cas, chaque rondelle est à $\pm 0{,}03$~: $H \in [9{,}85\,;10{,}15]$. L'intervalle dépasse $[9{,}94\,;10{,}06]$~: la méthode au pire des cas ne permet pas de garantir l'exigence.
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 8]
+\source{\OM{} (somme de $n$ variables)~; \LN{}, §3.2 p.~6}
+$H \sim \mathcal{N}(10\,;0{,}010\sqrt{5})$, soit $\sigma_H \approx 0{,}02236$. $P(9{,}94 \leq H \leq 10{,}06) \approx 0{,}9927$.
+
+Le pire des cas suppose les cinq rondelles à la même extrémité, évènement de probabilité négligeable. La méthode statistique est bien plus réaliste, mais elle laisse ici $0{,}73\,\%$ d'empilements hors exigence.
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 9]
+\source{\LN{}, §4.2 p.~8}
+$\dfrac{0{,}06}{\sigma\sqrt{5}} \geq z_{0{,}9995} \approx 3{,}2905 \iff \sigma \leq \dfrac{0{,}06}{3{,}2905\sqrt{5}} \approx 0{,}008155$, soit $\sigma = 0{,}0081$ mm par défaut.
+\end{correction}
+
+% ============================================================
+\needspace{8cm}
+\section{Problème 5 -- Durée de vie de pompes}
+
+\needspace{3.5cm}
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 p.~6}
+$P(T < 6\,000) = \Phi(-2) \approx 0{,}0228$.
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2]
+\source{\OM{}~; \LE{}, §4.1 La propriété d'absence de mémoire p.~7}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item $P_{T > 7000}(T > 10\,000) = \dfrac{P(T > 10\,000)}{P(T > 7\,000)} = \dfrac{0{,}25249}{0{,}90879} \approx 0{,}2778$.
+  \item $P(T > 3\,000) = 1 - \Phi(-4) \approx 1{,}0000$. Une pompe neuve tient presque sûrement $3\,000$ h~; une pompe de $7\,000$ h n'a que $28\,\%$ de chances de tenir $3\,000$ h de plus. Elle a vieilli.
+  \item Avec une loi exponentielle, $P_{T > 7000}(T > 10\,000) = P(T > 3\,000)$~: le composant «~oublie~» son âge. Ce modèle convient aux défaillances aléatoires (électronique), pas à l'usure. Pour une pièce d'usure, la loi normale est plus pertinente.
+\end{enumerate}
+\piege{calculer $P(T > 10\,000)$ sans conditionner~; appliquer l'absence de mémoire à la loi normale.}
+\end{correction}
+
+\needspace{3.5cm}
+\begin{correction}[-- Question 3]
+\source{\LN{}, §4.1 Trouver un seuil sur $X$ p.~8 (application «~Durée de garantie~»)}
+$t_0 = \texttt{FracNormale}(0{,}05\,;9000\,;1500) \approx 6\,532{,}7$ h. Sens prudent~: on remplace plus tôt, $t_0 = 6\,532$ h.
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4]
+\source{\VM{} (probabilité conditionnelle)~; \LN{}, §4.1 p.~8}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item $P_{T > 7000}(T \leq 7\,000 + d) \leq 0{,}10$.
+  \item Cette probabilité vaut $1 - \dfrac{P(T > 7\,000 + d)}{P(T > 7\,000)}$. La condition s'écrit $\dfrac{P(T > 7000 + d)}{P(T > 7000)} \geq 0{,}9$, d'où le résultat ($P(T > 7000) > 0$).
+  \item $P(T > 7\,000 + d) \geq 0{,}9 \times 0{,}908789 \approx 0{,}81791$, soit $P(T \leq 7\,000 + d) \leq 0{,}18209$.
+
+  $7\,000 + d \leq \texttt{FracNormale}(0{,}18209\,;9000\,;1500) \approx 7\,638{,}9$, d'où $d \leq 638{,}9$~: $d = 638$ h par défaut.
+\end{enumerate}
+Remarque~: cette pompe a déjà dépassé l'âge de remplacement préventif $t_0$. La question 4 chiffre le risque qu'on accepte en la laissant tourner.
+\piege{résoudre $P(T \leq 7000 + d) = 0{,}10$ sans conditionner (on trouverait $7000 + d \approx 7078$, soit $d \approx 78$ h, par un raisonnement faux).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 5]
+\source{\VM{} (évènements indépendants)}
+On note $q = P(T < 6\,000) \approx 0{,}02275$.
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item Redondance~: panne si les deux pompes tombent en panne. $q^2 \approx 0{,}00052$ (environ $518$ ppm).
+  \item Série~: panne dès qu'une pompe tombe en panne. $1 - (1-q)^2 \approx 0{,}0450$.
+  \item L'indépendance devient discutable~: une huile polluée ou une surtension peut détruire les deux pompes (mode commun). Le résultat du a) est \textbf{optimiste}~: la probabilité réelle de panne simultanée est plus grande.
+\end{enumerate}
+\end{correction}
+
+% ============================================================
+\needspace{8cm}
+\section{Problème 6 -- Test d'étanchéité}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 p.~6~; \VM{} (arbre pondéré, probabilités totales)}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item $\alpha = P(\Delta > 3{,}5)$ avec $\Delta \sim \mathcal{N}(2\,;0{,}5)$~: $\alpha = 1 - \Phi(3) \approx 0{,}0013$.
+
+  $\beta = P(\Delta \leq 3{,}5)$ avec $\Delta \sim \mathcal{N}(5\,;1)$~: $\beta = \Phi(-1{,}5) \approx 0{,}0668$.
+  \item Arbre~: $E$ ($0{,}96$) puis $R$ ($\alpha$) / $\overline{R}$~; $F$ ($0{,}04$) puis $R$ ($1 - \beta$) / $\overline{R}$ ($\beta$).
+  \[
+  P(R) = 0{,}96 \times 0{,}00135 + 0{,}04 \times 0{,}93319 \approx 0{,}00130 + 0{,}03733 \approx 0{,}0386.
+  \]
+\end{enumerate}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 2]
+\source{\VM{} (formule de Bayes)}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item $P_{\overline{R}}(F) = \dfrac{0{,}04 \times 0{,}06681}{1 - 0{,}03862} \approx 0{,}00278$, soit environ $2\,780$ ppm. Ce risque est supporté par le \textbf{client}~: ce sont des carters fuyards livrés.
+  \item $P_R(E) = \dfrac{0{,}96 \times 0{,}00135}{0{,}03862} \approx 0{,}0336$. Seuls $3{,}4\,\%$ des carters rejetés sont étanches.
+\end{enumerate}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 3]
+\source{\LN{}, §4.1 p.~8~; \VM{} (formule de Bayes)}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item $\beta = \Phi(s - 5) \leq 0{,}005 \iff s - 5 \leq z_{0{,}005} \approx -2{,}5758 \iff s \leq 2{,}4242$. Arrondi \textbf{par défaut}~: $s = 2{,}42$ mbar ($\beta$ croît avec $s$).
+  \item $\alpha = 1 - \Phi(0{,}84) \approx 0{,}2005$~; $\beta \approx 0{,}0049$~; $P(R) \approx 0{,}2322$~; $P_{\overline{R}}(F) \approx 257$ ppm~; $P_R(E) \approx 0{,}8286$.
+  \item \begin{center}
+  \renewcommand{\arraystretch}{1.3}
+  \begin{tabular}{|l|c|c|c|c|c|}\hline
+  Seuil $s$ & $\alpha$ & $\beta$ & $P(R)$ & $P_{\overline{R}}(F)$ (ppm) & $P_R(E)$ \\ \hline
+  $3{,}5$ & $0{,}0013$ & $0{,}0668$ & $0{,}0386$ & $2\,780$ & $0{,}0336$ \\ \hline
+  $2{,}42$ & $0{,}2005$ & $0{,}0049$ & $0{,}2322$ & $257$ & $0{,}8286$ \\ \hline
+  \end{tabular}
+  \end{center}
+  Le client reçoit environ $11$ fois moins de fuyards. En contrepartie, $23\,\%$ des carters sont rejetés, dont $83\,\%$ sont étanches. Abaisser le seuil réduit $\beta$ et augmente $\alpha$~: on ne peut pas réduire les deux risques en jouant sur le seuil seul.
+\end{enumerate}
+\piege{arrondir $s$ par excès (2,43 donne $\beta \approx 0{,}0051$)~; confondre $P_R(E)$ et $\alpha = P_E(R)$.}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 4]
+\source{\VM{} (indépendance, arbre à deux niveaux)}
+\begin{enumerate}[label=\alph*), leftmargin=14pt, itemsep=2pt]
+  \item Carter étanche rebuté~: rejeté deux fois, $\alpha^2 \approx 0{,}2005^2 \approx 0{,}0402$. Carter fuyard rebuté~: $(1 - \beta)^2 \approx 0{,}9901$.
+  \item Un fuyard est livré s'il n'est pas rejeté deux fois~: $1 - (1 - \beta)^2 \approx 0{,}0099$, soit presque $2\beta$. Le risque de non-détection passe à $0{,}99\,\%$~: l'exigence ($0{,}5\,\%$) n'est plus respectée.
+
+  Le retest divise par $5$ le rebut de carters étanches ($20\,\%$ à $4\,\%$), mais il donne une deuxième chance aux fuyards. La proposition est refusée en l'état.
+\end{enumerate}
+\textbf{Pour aller plus loin} (à proposer aux plus rapides). Pour garder le retest, il faut $1 - (1-\beta)^2 \leq 0{,}005$, soit $\beta \leq 1 - \sqrt{0{,}995} \approx 0{,}0025$ par test, d'où $s \leq 5 + z_{0{,}0025} \approx 2{,}19$. Alors $\alpha \approx 0{,}352$ et $\alpha^2 \approx 0{,}124$~: on rebute $12\,\%$ des étanches au lieu de $20\,\%$, en respectant l'exigence. Le retest reste intéressant, à condition de resserrer le seuil.
+\end{correction}
+
+\vfill
+\begin{center}\color{uimmgray}\small
+\textit{Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}

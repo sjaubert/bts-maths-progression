@@ -1,0 +1,423 @@
+% ============================================================
+% TD v2 : La loi normale -- Problèmes industriels
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Six problèmes, deux séances de 2 h. Corrigé : MOD08_Loi_Normale_TD_Corrige_v2_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+% Préambule commun TD / corrigé -- MOD08 Loi normale v2_0
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace,booktabs}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\titleformat{\subsection}{\large\bfseries\color{uimmblue}}{}{0pt}{}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=10pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+\newtcolorbox{rappel}[1]{colback=uimmlightblue, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=0.8pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=5pt, before skip=8pt, after skip=8pt}
+
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+\newcommand{\duree}[1]{\hfill{\normalsize\color{uimmred}#1}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.85*\i) -- (\linewidth-1pt,-0.85*\i);}
+  \end{tikzpicture}\par\medskip}
+% Cadre vide (arbre pondéré, schéma) : #1 = hauteur
+\newcommand{\cadre}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \draw[uimmgray!40, rounded corners=3pt] (0,0) rectangle (\linewidth-1pt,-#1);
+  \end{tikzpicture}\par\medskip}
+\newcommand{\EnTete}[1]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}}
+\EnTete{TD v2}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Travaux Dirigés -- MOD08}\\[4pt]
+{\color{white}\large La loi normale~: problèmes industriels \hfill 2 séances de 2 h}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{10pt}}p{13cm}@{}}
+Séquence~: & [S02] Variables aléatoires et lois usuelles \\
+Compétences~: & [C04] calcul de probabilités (loi normale, loi binomiale, probabilités conditionnelles) \quad [C05] espérance, écart-type \\
+Prérequis~: & cours MOD08 \textit{Loi normale}, \textit{Lois discrètes}, vade-mecum \textit{Probabilités conditionnelles} \\
+\end{tabular}
+
+\begin{consigne}
+\textbf{Consignes.}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Nommer chaque évènement par une lettre et l'écrire en phrase. Écrire la probabilité cherchée avec la variable aléatoire \textbf{avant} tout calcul.
+  \item Probabilités arrondies à $10^{-4}$, autres résultats à la précision indiquée. Dans les calculs enchaînés, \textbf{conserver les valeurs exactes} de la calculatrice.
+  \item Quand le résultat est un réglage qui doit garantir une exigence (moyenne, écart-type, seuil, durée), l'arrondir \textbf{dans le sens qui respecte l'exigence}, et le dire.
+  \item Calculatrice~: \texttt{normalFRép} / \texttt{Ncd} pour une probabilité, \texttt{FracNormale} / \texttt{InvN} pour un seuil (TI / Casio).
+\end{itemize}
+\end{consigne}
+
+\begin{rappel}{Outils mobilisés}
+\begin{itemize}[leftmargin=12pt, itemsep=2pt, topsep=2pt]
+  \item \textbf{Probabilité conditionnelle}~: $P_A(B) = \dfrac{P(A\cap B)}{P(A)}$. \textbf{Probabilités totales}~: si $A$ et $\overline{A}$ forment une partition, $P(B) = P(A)\,P_A(B) + P(\overline{A})\,P_{\overline{A}}(B)$.
+  \item Pour une variable continue $X$ et des réels $a < b$~: $P_{X > a}(X > b) = \dfrac{P(X > b)}{P(X > a)}$, car $\{X > b\} \subset \{X > a\}$.
+  \item \textbf{Somme et différence de variables normales indépendantes (résultat admis)}. Si $X \sim \mathcal{N}(\mu_1\,;\sigma_1)$ et $Y \sim \mathcal{N}(\mu_2\,;\sigma_2)$ sont indépendantes, alors
+  \[
+  X + Y \sim \mathcal{N}\!\left(\mu_1 + \mu_2\,;\sqrt{\sigma_1^2 + \sigma_2^2}\right)
+  \qquad\text{et}\qquad
+  X - Y \sim \mathcal{N}\!\left(\mu_1 - \mu_2\,;\sqrt{\sigma_1^2 + \sigma_2^2}\right).
+  \]
+  Ce sont les \textbf{variances} qui s'additionnent, y compris pour une différence. Pour $n$ variables indépendantes de même loi $\mathcal{N}(\mu\,;\sigma)$, la somme suit $\mathcal{N}(n\mu\,;\sigma\sqrt{n})$.
+\end{itemize}
+\end{rappel}
+
+\begin{center}
+\small
+\begin{tabular}{llll}
+\toprule
+\textbf{Séance} & \textbf{Problème} & \textbf{Thème} & \textbf{Durée indicative} \\
+\midrule
+1 & 1 & Reprise ou rebut~: coût d'un réglage & 40 min \\
+1 & 2 & Deux tours, un seul bac (Bayes) & 35 min \\
+1 & 3 & Remplissage, audit client, investissement & 45 min \\
+\midrule
+2 & 4 & Jeu d'assemblage et empilement de cotes & 50 min \\
+2 & 5 & Durée de vie de pompes~: l'âge compte & 35 min \\
+2 & 6 & Test d'étanchéité~: régler un seuil & 35 min \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\newpage
+\section{Séance 1}
+
+% ------------------------------------------------------------
+\subsection{Problème 1 -- Reprise ou rebut~: ce que coûte un réglage \duree{[C04] [C05] -- 40 min}}
+
+\begin{exo}{Contexte}
+Une rectifieuse produit des bagues de roulement. Le diamètre extérieur $D$, en mm, suit la loi normale $\mathcal{N}(\mu\,;0{,}010)$. Le réglage actuel est $\mu = 40{,}005$. La tolérance est $40{,}000 \pm 0{,}025$ mm.
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=3pt]
+  \item $D > 40{,}025$~: la bague est en \textbf{surcote}. Une nouvelle passe la rend conforme. Coût de la reprise~: $1{,}50$ \texteuro.
+  \item $D < 39{,}975$~: la bague est en \textbf{sous-cote}. La matière enlevée ne se remet pas~: \textbf{rebut}, coût $9{,}00$ \texteuro.
+  \item Une bague conforme n'engendre aucun coût de non-qualité.
+\end{itemize}
+On note $C$, $R$ et $S$ les évènements «~la bague est conforme~», «~la bague est reprise~», «~la bague est rebutée~», et $K$ le coût de non-qualité d'une bague, en euros.
+\end{exo}
+
+\begin{enumerate}
+  \needspace{5cm}
+  \item Calculer $P(C)$, $P(R)$ et $P(S)$. Vérifier la cohérence des trois résultats. \calc
+  \zone{5}
+  \needspace{4cm}
+  \item Une bague est écartée au contrôle final. Quelle est la probabilité qu'elle soit récupérable par une reprise~?
+  \zone{4}
+  \needspace{6cm}
+  \item \begin{enumerate}
+    \item Donner la loi de probabilité de $K$ sous forme de tableau.
+    \item Calculer $E(K)$ et interpréter ce nombre.
+    \item L'atelier produit $12\,000$ bagues par mois. Estimer le coût mensuel moyen de non-qualité.
+  \end{enumerate}
+  \zone{7}
+  \needspace{5cm}
+  \item Le régleur propose de centrer la machine sur la cote nominale, $\mu = 40{,}000$, «~parce que c'est la cote du plan~». Calculer $E(K)$ pour ce réglage et commenter sa proposition.
+  \zone{6}
+  \needspace{6cm}
+  \item Le client impose que la proportion de bagues en sous-cote ne dépasse pas $500$ ppm.
+  \begin{enumerate}
+    \item Traduire cette exigence par une inégalité portant sur $D$.
+    \item Déterminer la valeur minimale de $\mu$, arrondie au micromètre dans le sens qui respecte l'exigence.
+    \item Calculer $E(K)$ pour ce réglage. L'exigence du client est-elle économiquement neutre pour l'atelier~?
+  \end{enumerate}
+  \zone{8}
+  \needspace{6cm}
+  \item Compléter le tableau suivant, puis recommander un réglage à l'atelier en tenant compte de l'exigence du client. \calc
+
+  \smallskip
+  \begin{center}
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{|>{\bfseries}l|*{6}{>{\centering\arraybackslash}p{1.7cm}|}}
+  \hline
+  $\mu$ (mm) & $40{,}000$ & $40{,}002$ & $40{,}004$ & $40{,}006$ & $40{,}008$ & $40{,}010$ \\ \hline
+  $P(R)$ & & & & & & \\ \hline
+  $P(S)$ (ppm) & & & & & & \\ \hline
+  $E(K)$ (\texteuro) & & & & & & \\ \hline
+  \end{tabular}
+  \end{center}
+  \zone{4}
+\end{enumerate}
+
+% ------------------------------------------------------------
+\newpage
+\subsection{Problème 2 -- Deux tours, un seul bac \duree{[C04] -- 35 min}}
+
+\begin{exo}{Contexte}
+Des axes sont décolletés sur deux tours. La longueur $L$ d'un axe, en mm, doit respecter la tolérance $30{,}00 \pm 0{,}10$.
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=3pt]
+  \item Le tour $A$, récent, fournit $65\,\%$ de la production. Pour ses axes, $L \sim \mathcal{N}(30{,}00\,;0{,}035)$.
+  \item Le tour $B$, plus ancien, fournit $35\,\%$ de la production. Pour ses axes, $L \sim \mathcal{N}(30{,}04\,;0{,}05)$.
+\end{itemize}
+Les axes des deux tours tombent dans le même bac. On prélève un axe au hasard dans le bac. On note $A$~: «~l'axe vient du tour $A$~», $B$~: «~l'axe vient du tour $B$~», $N$~: «~l'axe est non conforme~».
+\end{exo}
+
+\begin{enumerate}
+  \needspace{5cm}
+  \item Calculer $P_A(N)$ et $P_B(N)$. \calc
+  \zone{5}
+  \needspace{7cm}
+  \item Construire l'arbre pondéré de la situation, puis calculer $P(N)$.
+  \cadre{4.5}
+  \zone{3}
+  \needspace{5cm}
+  \item Un axe prélevé est non conforme. Quelle est la probabilité qu'il vienne du tour $B$~? Comparer à la part du tour $B$ dans la production. Quelle conclusion le service maintenance doit-il en tirer~?
+  \zone{5}
+  \needspace{6cm}
+  \item Un opérateur mesure un axe \textbf{conforme} mais en zone d'alerte~: $30{,}05 < L \leq 30{,}10$. On note $H$ cet évènement. Calculer $P_A(H)$, $P_B(H)$, puis la probabilité que cet axe vienne du tour $B$.
+  \zone{7}
+  \needspace{7cm}
+  \item Après révision, le tour $B$ est recentré~: $\mu_B = 30{,}00$ mm. Son écart-type $\sigma_B$ dépend du soin apporté à la révision. L'objectif est une proportion globale de non-conformes $P(N) \leq 1\,\%$.
+  \begin{enumerate}
+    \item Montrer que cet objectif impose $P_B(N) \leq \dfrac{0{,}01 - 0{,}65\,P_A(N)}{0{,}35}$ et calculer ce majorant.
+    \item En déduire l'écart-type maximal $\sigma_B$, arrondi à $10^{-3}$ mm dans le sens qui respecte l'objectif.
+  \end{enumerate}
+  \zone{9}
+\end{enumerate}
+
+% ------------------------------------------------------------
+\newpage
+\subsection{Problème 3 -- Remplissage, audit client et investissement \duree{[C04] [C05] -- 45 min}}
+
+\begin{exo}{Contexte}
+Une ligne remplit des bidons d'huile hydraulique étiquetés $5$ L. Le volume $V$ d'un bidon, en litres, suit la loi normale $\mathcal{N}(\mu\,;0{,}03)$. Le réglage actuel est $\mu = 5{,}05$. Un bidon est \textbf{sous-rempli} si $V < 5{,}00$.
+
+Les bidons sont conditionnés par cartons de $12$. Les volumes des bidons sont indépendants. Le client audite des cartons à réception~: un carton est \textbf{refusé} s'il contient au moins un bidon sous-rempli.
+\end{exo}
+
+\begin{enumerate}
+  \needspace{3.5cm}
+  \item Calculer la probabilité $p$ qu'un bidon soit sous-rempli. \calc
+  \zone{3}
+  \needspace{7cm}
+  \item On note $X$ le nombre de bidons sous-remplis dans un carton.
+  \begin{enumerate}
+    \item Justifier que $X$ suit une loi binomiale dont on donnera les paramètres.
+    \item Calculer $P(X = 0)$ et $P(X \geq 2)$.
+    \item Quelle est la probabilité qu'un carton audité soit refusé~? Commenter.
+  \end{enumerate}
+  \zone{8}
+  \needspace{7cm}
+  \item Le client exige que la probabilité de refus d'un carton ne dépasse pas $2\,\%$.
+  \begin{enumerate}
+    \item Montrer que cette exigence équivaut à $p \leq 1 - 0{,}98^{1/12}$, puis calculer ce majorant.
+    \item En déduire le réglage minimal $\mu$, arrondi au millilitre dans le sens qui respecte l'exigence.
+  \end{enumerate}
+  \zone{8}
+  \needspace{5cm}
+  \item L'usine remplit $150\,000$ bidons par an. L'huile lui revient à $3{,}20$ \texteuro{} le litre. Le volume moyen «~donné~» au client par bidon vaut $\mu - 5$. Calculer le coût annuel moyen de ce surremplissage pour le réglage trouvé à la question 3.
+  \zone{4}
+  \needspace{7cm}
+  \item Un fournisseur propose une vanne doseuse plus précise~: avec elle, l'écart-type passe à $0{,}012$ L. Elle coûte $18\,000$ \texteuro{} installée.
+  \begin{enumerate}
+    \item Déterminer le nouveau réglage minimal $\mu$ qui respecte l'exigence du client (au millilitre).
+    \item Calculer l'économie annuelle réalisée sur le surremplissage.
+    \item Au bout de combien de mois l'investissement est-il remboursé~? Conclure.
+  \end{enumerate}
+  \zone{8}
+\end{enumerate}
+
+% ============================================================
+\newpage
+\section{Séance 2}
+
+% ------------------------------------------------------------
+\subsection{Problème 4 -- Jeu d'assemblage et empilement de cotes \duree{[C04] [C05] -- 50 min}}
+
+\begin{exo}{Contexte -- Partie A~: jeu arbre / alésage}
+Un arbre est monté dans l'alésage d'un palier. Le diamètre de l'alésage $A$ suit $\mathcal{N}(20{,}025\,;0{,}006)$, le diamètre de l'arbre $B$ suit $\mathcal{N}(19{,}997\,;0{,}005)$, en mm. Les deux pièces viennent de fournisseurs différents~: $A$ et $B$ sont indépendantes. Le jeu est $J = A - B$.
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=3pt]
+  \item Le montage est \textbf{fonctionnel} si $0{,}010 \leq J \leq 0{,}050$.
+  \item Si $J < 0$, l'arbre n'entre pas~: le montage est \textbf{impossible}.
+\end{itemize}
+Utiliser le résultat admis de l'encadré \textit{Outils mobilisés}.
+\end{exo}
+
+\begin{enumerate}
+  \needspace{5cm}
+  \item Donner la loi de $J$. Un technicien affirme que $\sigma_J = \sigma_A - \sigma_B = 0{,}001$ mm. Que penser de cette affirmation~?
+  \zone{5}
+  \needspace{5cm}
+  \item Calculer la probabilité qu'un montage soit fonctionnel, puis $P(J < 0{,}010)$ et $P(J > 0{,}050)$. \calc
+  \zone{5}
+  \needspace{4cm}
+  \item Un montage est non fonctionnel. Quelle est la probabilité que ce soit par jeu insuffisant~?
+  \zone{4}
+  \needspace{4cm}
+  \item Calculer $P(J < 0)$ en ppm. L'atelier réalise $50\,000$ montages par an~: combien de montages impossibles attend-on en moyenne~?
+  \zone{4}
+  \needspace{7cm}
+  \item Pour réduire les jeux insuffisants, le méthodiste veut $P(J < 0{,}010) \leq 0{,}1\,\%$ en agissant uniquement sur le réglage $\mu_A$ de l'alésage.
+  \begin{enumerate}
+    \item Déterminer la valeur minimale de $\mu_A$, arrondie au micromètre dans le sens qui respecte l'objectif.
+    \item Pour ce réglage, calculer $P(J > 0{,}050)$ puis la probabilité qu'un montage soit non fonctionnel. Comparer à la question 2 et conclure.
+  \end{enumerate}
+  \zone{8}
+  \needspace{6cm}
+  \item Autre stratégie~: on recentre le jeu ($\mu_J = 0{,}030$ mm) et on demande au fournisseur d'arbres de réduire sa dispersion, $\sigma_A$ restant égal à $0{,}006$ mm. Déterminer l'écart-type maximal $\sigma_B$ pour que la probabilité d'un montage non fonctionnel ne dépasse pas $0{,}5\,\%$ (arrondi à $10^{-4}$ mm).
+  \zone{8}
+\end{enumerate}
+
+\begin{exo}{Contexte -- Partie B~: empilement de rondelles}
+Cinq rondelles sont empilées sur un axe. L'épaisseur de chaque rondelle, en mm, suit $\mathcal{N}(2{,}00\,;0{,}010)$, et les épaisseurs sont indépendantes. Chaque rondelle est tolérancée à $2{,}00 \pm 0{,}03$ mm. On note $H$ la hauteur de l'empilement. La fonction exige $9{,}94 \leq H \leq 10{,}06$.
+\end{exo}
+
+\begin{enumerate}[resume]
+  \needspace{4cm}
+  \item \textbf{Méthode «~au pire des cas~».} Si chaque rondelle est seulement supposée dans sa tolérance, dans quel intervalle peut se trouver $H$~? Peut-on garantir l'exigence fonctionnelle~?
+  \zone{4}
+  \needspace{5cm}
+  \item \textbf{Méthode statistique.} Donner la loi de $H$, puis calculer la probabilité que l'exigence soit respectée. Comparer avec la conclusion de la question 7.
+  \zone{5}
+  \needspace{5cm}
+  \item Quel écart-type maximal faut-il imposer à chaque rondelle pour que l'exigence soit respectée avec une probabilité d'au moins $0{,}999$~? (arrondi à $10^{-4}$ mm)
+  \zone{5}
+\end{enumerate}
+
+% ------------------------------------------------------------
+\newpage
+\subsection{Problème 5 -- Durée de vie de pompes~: l'âge compte \duree{[C04] [C05] -- 35 min}}
+
+\begin{exo}{Contexte}
+Des pompes hydrauliques tombent en panne principalement par usure. Leur durée de vie $T$, en heures, est modélisée par la loi normale $\mathcal{N}(9\,000\,;1\,500)$.
+\end{exo}
+
+\begin{enumerate}
+  \needspace{3.5cm}
+  \item Calculer la probabilité qu'une pompe neuve tombe en panne avant $6\,000$ h. \calc
+  \zone{3}
+  \needspace{7cm}
+  \item Une pompe fonctionne depuis $7\,000$ h sans panne.
+  \begin{enumerate}
+    \item Calculer la probabilité qu'elle dépasse $10\,000$ h, c'est-à-dire $P_{T > 7000}(T > 10\,000)$.
+    \item Calculer $P(T > 3\,000)$ pour une pompe neuve et comparer~: les $3\,000$ heures restantes ont-elles la même valeur pour une pompe neuve et pour une pompe de $7\,000$ h~?
+    \item Avec une loi exponentielle, que vaudrait $P_{T > 7000}(T > 10\,000)$ en fonction de $P(T > 3\,000)$~? Quel modèle convient à une pièce d'usure~? Justifier.
+  \end{enumerate}
+  \zone{9}
+  \needspace{4cm}
+  \item Le service maintenance remplace préventivement toute pompe à l'âge $t_0$ tel que $5\,\%$ seulement des pompes tombent en panne avant. Déterminer $t_0$, arrondi à l'heure dans le sens prudent.
+  \zone{4}
+  \needspace{8cm}
+  \item Une pompe atteint $7\,000$ h. Le planificateur veut savoir combien d'heures supplémentaires $d$ il peut la laisser tourner en gardant un risque de panne d'au plus $10\,\%$ sur cette période.
+  \begin{enumerate}
+    \item Traduire la condition par une probabilité conditionnelle.
+    \item Montrer qu'elle équivaut à $P(T > 7000 + d) \geq 0{,}9 \times P(T > 7000)$.
+    \item En déduire la valeur maximale de $d$, arrondie à l'heure dans le sens prudent.
+  \end{enumerate}
+  \zone{9}
+  \needspace{6cm}
+  \item Deux pompes neuves identiques, de durées de vie indépendantes, équipent une centrale hydraulique.
+  \begin{enumerate}
+    \item Montage \textbf{en redondance}~: une seule pompe suffit. Calculer la probabilité que la centrale soit en panne avant $6\,000$ h.
+    \item Montage \textbf{en série}~: les deux pompes sont nécessaires. Même question.
+    \item Les deux pompes partagent la même huile et la même alimentation électrique. Quelle hypothèse du calcul devient discutable~? Dans quel sens le résultat du a) est-il faussé~?
+  \end{enumerate}
+  \zone{8}
+\end{enumerate}
+
+% ------------------------------------------------------------
+\newpage
+\subsection{Problème 6 -- Test d'étanchéité~: où placer le seuil~? \duree{[C04] -- 35 min}}
+
+\begin{exo}{Contexte}
+Des carters de boîte de vitesses passent un test d'étanchéité~: on les met sous pression et on mesure la chute de pression $\Delta$, en mbar, au bout de $30$ s.
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=3pt]
+  \item Pour un carter \textbf{étanche} (évènement $E$), $\Delta \sim \mathcal{N}(2{,}0\,;0{,}5)$.
+  \item Pour un carter \textbf{fuyard} (évènement $F = \overline{E}$), $\Delta \sim \mathcal{N}(5{,}0\,;1{,}0)$.
+  \item $4\,\%$ des carters sont fuyards.
+\end{itemize}
+Un carter est \textbf{rejeté} (évènement $R$) si $\Delta > s$, où $s$ est le seuil réglé sur le banc.
+\end{exo}
+
+\begin{enumerate}
+  \needspace{8cm}
+  \item On règle $s = 3{,}5$ mbar.
+  \begin{enumerate}
+    \item Calculer $\alpha = P_E(R)$, risque de \textbf{fausse alarme}, et $\beta = P_F(\overline{R})$, risque de \textbf{non-détection}. \calc
+    \item Construire l'arbre pondéré et calculer $P(R)$.
+  \end{enumerate}
+  \cadre{4}
+  \zone{5}
+  \needspace{6cm}
+  \item Toujours avec $s = 3{,}5$~:
+  \begin{enumerate}
+    \item Calculer $P_{\overline{R}}(F)$, proportion de fuyards parmi les carters acceptés, en ppm. Qui supporte ce risque~?
+    \item Calculer $P_R(E)$, proportion de carters étanches parmi les carters rejetés.
+  \end{enumerate}
+  \zone{6}
+  \needspace{9cm}
+  \item Le client exige $\beta \leq 0{,}5\,\%$.
+  \begin{enumerate}
+    \item Déterminer le seuil maximal $s$, arrondi à $10^{-2}$ mbar dans le sens qui respecte l'exigence.
+    \item Pour ce seuil, calculer $\alpha$, $P(R)$, $P_{\overline{R}}(F)$ et $P_R(E)$.
+    \item Récapituler dans le tableau ci-dessous et commenter.
+  \end{enumerate}
+  \smallskip
+  \begin{center}
+  \renewcommand{\arraystretch}{1.5}
+  \begin{tabular}{|>{\bfseries}l|*{6}{>{\centering\arraybackslash}p{1.65cm}|}}
+  \hline
+  Seuil $s$ & $\alpha$ & $\beta$ & $P(R)$ & $P_{\overline{R}}(F)$ (ppm) & $P_R(E)$ \\ \hline
+  $3{,}5$ & & & & & \\ \hline
+  \phantom{$3{,}5$} & & & & & \\ \hline
+  \end{tabular}
+  \end{center}
+  \zone{6}
+  \needspace{8cm}
+  \item Pour ne pas rebuter trop de carters étanches, on propose de \textbf{retester} tout carter rejeté, avec le seuil de la question 3. Un carter n'est rebuté que s'il est rejeté deux fois. On admet que, pour un carter donné (étanche ou fuyard), les deux mesures sont indépendantes.
+  \begin{enumerate}
+    \item Calculer la probabilité qu'un carter étanche soit rebuté, puis celle qu'un carter fuyard soit rebuté.
+    \item En déduire le nouveau risque de non-détection. L'exigence du client est-elle encore respectée~? Conclure sur la proposition.
+  \end{enumerate}
+  \zone{8}
+\end{enumerate}
+
+\vfill
+\begin{center}\color{uimmgray}\small
+\textit{Pôle Formation UIMM -- Centre-Val de Loire $\bullet$ S. JAUBERT}
+\end{center}
+
+\end{document}
