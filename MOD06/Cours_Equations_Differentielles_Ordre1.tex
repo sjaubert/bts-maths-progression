@@ -34,6 +34,15 @@
 
 % ----- Code / algorithmes -----
 \usepackage{listings}
+% Police machine à écrire vectorielle (Latin Modern Mono) : le code copié
+% depuis le PDF est restitué en vrai texte (et non en image bitmap).
+\renewcommand{\ttdefault}{lmtt}
+% Table de correspondance glyphes -> Unicode pour le copier-coller.
+% Le glyphe « espace visible » (uni2423) est restitué comme une espace
+% ordinaire : l'indentation Python survit au copier-coller.
+\input{glyphtounicode}
+\pdfglyphtounicode{uni2423}{0020}
+\pdfgentounicode=1
 
 % ----- En-tête et pied de page -----
 \usepackage{fancyhdr}
@@ -80,11 +89,18 @@
   keywordstyle=\color{uimmblue}\bfseries,
   commentstyle=\color{green!50!black}\itshape,
   stringstyle=\color{uimmred},
-  numbers=left, numberstyle=\tiny\color{uimmgray}, numbersep=8pt,
-  showstringspaces=false, breaklines=true, frame=single,
+  numbers=none,
+  columns=fullflexible, keepspaces=true, upquote=true,
+  showspaces=true, showstringspaces=false,
+  breaklines=true, frame=single,
   rulecolor=\color{uimmblue}, backgroundcolor=\color{uimmlightgray},
   language=Python
 }
+% Chaque espace du code est un vrai caractère, peint dans la couleur du fond :
+% invisible à l'écran et à l'impression, mais conservé au copier-coller.
+\makeatletter
+\def\lst@visiblespace{\textcolor{uimmlightgray}{\char32}}
+\makeatother
 
 % ============================================================
 % BOÎTES TCOLORBOX
@@ -636,6 +652,12 @@ for n in range(5):
     t = t + h
     print(round(t, 1), round(y, 4))
 \end{lstlisting}
+
+\begin{remarque}[-- Tester le programme]
+Sans rien installer : ouvrir \href{https://basthon.fr}{\texttt{https://basthon.fr}} dans un navigateur, lancer la console Python, coller le code puis l'exécuter.
+
+Après le collage, vérifier que les trois lignes sous \texttt{for} sont décalées de 4~espaces. En Python, ce décalage (l'\textbf{indentation}) désigne les instructions répétées par la boucle. Le programme affiche alors une ligne par pas, de $t = 0{,}1$ à $t = 0{,}5$.
+\end{remarque}
 
 \begin{exemple}[-- Comparaison avec la solution exacte]
 Pour $y' + 2y = 6$, $y(0) = 0$, la solution exacte est $y(t) = 3(1 - e^{-2t})$. Avec $h = 0{,}1$ :
