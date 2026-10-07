@@ -353,6 +353,7 @@ Pôle Formation UIMM Centre-Val de Loire. Programme de mathématiques des BTS in
 - [TD Activites Equations Differentielles](MOD06/TD_Activites_Equations_Differentielles.pdf)
 - [TD EDL1 MOD06](MOD06/TD_EDL1_MOD06.pdf)
 - [TD EDL1 MOD06 app](MOD06/TD_EDL1_MOD06_app.pdf)
+- [MOD06 EDL1 TD v2 0](MOD06/MOD06_EDL1_TD_v2_0.pdf)
 
 [Retour au sommaire](#sommaire)
 
