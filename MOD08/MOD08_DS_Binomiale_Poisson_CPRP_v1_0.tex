@@ -1,0 +1,219 @@
+% ============================================================
+% DS MOD08 : loi binomiale, loi de Poisson, dénombrement
+% BTS CPRP 1re année -- durée 1 h
+% Pôle Formation UIMM - CVDL - S. JAUBERT
+% Corrigé et barème : MOD08_DS_Binomiale_Poisson_CPRP_Corrige_v1_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=10pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newcommand{\pts}[1]{\hfill\mbox{\color{uimmred}\small\textbf{(#1)}}}
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.85*\i) -- (\linewidth-1pt,-0.85*\i);}
+  \end{tikzpicture}\par\medskip}
+% Cadre vide (arbre pondéré) : #1 = hauteur
+\newcommand{\cadre}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \draw[uimmgray!40, rounded corners=3pt] (0,0) rectangle (\linewidth-1pt,-#1);
+  \end{tikzpicture}\par\medskip}
+\newcommand{\EnTete}[2]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS CPRP 1\textsuperscript{re} année\\ Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{DS Binomiale -- Poisson}{DS 1 h}
+\newtcolorbox{rappel}{colback=uimmlightblue, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={Rappels de cours}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=8pt, after skip=8pt}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Devoir surveillé -- MOD08}\\[4pt]
+{\color{white}\large Loi binomiale, loi de Poisson, dénombrement \hfill Durée~: 1 heure}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent{\small\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{8pt}}p{13.8cm}@{}}
+Nom, prénom~: & \dotfill \hspace{1cm}{\bfseries\color{uimmblue}Note~:}\ \dots\dots\ / 20 \\
+\end{tabular}}
+
+\begin{consigne}
+\textbf{Consignes.} Calculatrice autorisée en mode examen, aucun document. Répondre sur le sujet, dans les zones prévues.
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Toute loi utilisée doit être \textbf{nommée avec ses paramètres}.
+  \item Pour chaque probabilité demandée~: écrire l'évènement à l'aide de la variable aléatoire, \textbf{puis} le résultat. Un résultat seul ne rapporte pas tous les points.
+  \item Probabilités arrondies à $10^{-4}$. Le barème est donné à titre indicatif.
+\end{itemize}
+\end{consigne}
+
+\begin{rappel}
+\textbf{Coefficient binomial.} Nombre de façons de choisir $k$ objets parmi $n$, sans tenir compte de l'ordre~:
+\[
+\binom{n}{k} = \frac{n!}{k!\,(n-k)!}.
+\]
+\textbf{Loi binomiale $\mathcal{B}(n\,;p)$.} On répète $n$ fois, de façon identique et indépendante, une épreuve à deux issues (succès de probabilité $p$, échec de probabilité $1-p$). La variable $X$ qui compte le nombre de succès suit la loi $\mathcal{B}(n\,;p)$. Elle prend les valeurs $0, 1, \dots, n$.
+\[
+P(X = k) = \binom{n}{k}\,p^{k}\,(1-p)^{n-k},\qquad E(X) = np,\qquad \sigma(X) = \sqrt{np(1-p)}.
+\]
+\textbf{Loi de Poisson $\mathcal{P}(\lambda)$.} Elle modélise un nombre d'évènements rares (pannes, défauts, arrivées) sur une durée ou une zone donnée. Elle prend les valeurs $0, 1, 2, \dots$
+\[
+P(X = k) = e^{-\lambda}\,\frac{\lambda^{k}}{k!},\qquad E(X) = \lambda,\qquad \sigma(X) = \sqrt{\lambda}.
+\]
+\textbf{Approximation.} Si $n \geq 30$, $p \leq 0{,}1$ et $np \leq 10$, la loi $\mathcal{B}(n\,;p)$ peut être approchée par la loi $\mathcal{P}(\lambda)$ avec $\lambda = np$.
+
+\smallskip
+\textbf{Calculatrice.} La commande «~Fdp~» (ou «~pd~») donne $P(X = k)$. La commande «~FRép~» (ou «~cd~») donne $P(X \leq k)$.\\
+{\small TI~: \texttt{binomFdp(n,p,k)}, \texttt{binomFRép(n,p,k)}, \texttt{poissonFdp($\lambda$,k)}, \texttt{poissonFRép($\lambda$,k)}. \quad Casio~: \texttt{Bpd}, \texttt{Bcd}, \texttt{Ppd}, \texttt{Pcd}.}
+\end{rappel}
+
+% ------------------------------------------------------------
+\newpage
+\section{Exercice 1 -- Contrôle d'usure des outils \hfill {\normalsize\color{uimmred}4 points}}
+\begin{exo}{Contexte}
+Le magasin d'outils d'un centre d'usinage contient $14$ outils de coupe~: $6$ \textbf{fraises} carbure et $8$ \textbf{forets}. Pour un contrôle d'usure au microscope d'atelier, le régleur tire au sort $4$ outils différents. Tous les groupes de $4$ outils ont la même probabilité d'être tirés.
+\end{exo}
+\begin{enumerate}
+  \needspace{4.8cm}
+  \item Combien de groupes de $4$ outils peut-on former~? \pts{0,75 pt}
+  \zone{3}
+  \needspace{5.6cm}
+  \item Combien de groupes contiennent au moins $3$ fraises~? \pts{1 pt}
+  \zone{4}
+  \needspace{5.6cm}
+  \item Calculer la probabilité que le groupe tiré contienne au plus $2$ fraises. \pts{1 pt}
+  \zone{4}
+  \needspace{5.6cm}
+  \item Un collègue affirme~: «~\textit{Le groupe contient au moins $3$ fraises} et \textit{le groupe contient au plus $2$ forets}, c'est la même chose.~» A-t-il raison~? Justifier. \pts{0,75 pt}
+  \zone{4}
+  \needspace{4.8cm}
+  \item Les $4$ outils tirés sont ensuite montés dans les postes $1$, $2$, $3$ et $4$ du magasin de la machine. Combien de montages différents (choix des outils et attribution des postes) peut-on réaliser à partir des $14$ outils~? \pts{0,5 pt}
+  \zone{3}
+\end{enumerate}
+
+% ------------------------------------------------------------
+\newpage
+\section{Exercice 2 -- Arbres tournés \hfill {\normalsize\color{uimmred}8 points}}
+\begin{exo}{Contexte}
+Un tour à commande numérique usine des arbres de transmission. On sait que $6\,\%$ des arbres usinés sont \textbf{hors tolérance} sur le diamètre de portée de roulement. Le contrôleur prélève $25$ arbres dans la production. La production est assez importante pour assimiler ce prélèvement à un tirage avec remise.\\
+On note $X$ le nombre d'arbres \textbf{hors tolérance} dans le prélèvement.
+\end{exo}
+\begin{enumerate}
+  \needspace{6.5cm}
+  \item Justifier que $X$ suit une loi binomiale. Préciser ses paramètres. \pts{1,5 pt}
+  \zone{5}
+  \needspace{5.6cm}
+  \item Calculer l'espérance $E(X)$ et l'écart-type $\sigma(X)$. Interpréter $E(X)$ dans le contexte. \pts{1,5 pt}
+  \zone{4}
+  \needspace{4cm}
+  \item Les arbres sont numérotés dans l'ordre du prélèvement, de $1$ à $25$.
+  \begin{enumerate}
+    \needspace{3.2cm}
+    \item De combien de façons peut-on placer $3$ arbres hors tolérance parmi les $25$ arbres du prélèvement~? \pts{0,5 pt}
+    \zone{2}
+    \needspace{4.8cm}
+    \item En déduire la probabilité que le prélèvement contienne exactement $3$ arbres hors tolérance. Détailler le calcul \textbf{sans} utiliser les fonctions de loi de la calculatrice. \pts{1 pt}
+    \zone{3}
+  \end{enumerate}
+  \needspace{4cm}
+  \item Pour chacun des évènements suivants, traduire l'évènement à l'aide de $X$, puis calculer sa probabilité.
+  \begin{enumerate}
+    \needspace{3.2cm}
+    \item Le prélèvement contient au moins un arbre hors tolérance. \pts{0,5 pt}
+    \zone{2}
+    \needspace{4.8cm}
+    \item Au moins $23$ arbres du prélèvement sont conformes. \pts{1 pt}
+    \zone{3}
+    \needspace{4.8cm}
+    \item Moins de $22$ arbres du prélèvement sont conformes. \pts{1 pt}
+    \zone{3}
+    \needspace{4.8cm}
+    \item Le nombre d'arbres hors tolérance est strictement compris entre $1$ et $4$. \pts{1 pt}
+    \zone{3}
+  \end{enumerate}
+\end{enumerate}
+
+% ------------------------------------------------------------
+\needspace{12cm}
+\section{Exercice 3 -- Bris d'outils sur un îlot de fraisage \hfill {\normalsize\color{uimmred}6 points}}
+\begin{exo}{Contexte}
+Sur un îlot de fraisage, les bris d'outils (casse de fraise ou de foret en cours d'usinage) surviennent de façon aléatoire et indépendante. Le suivi de production montre qu'il se produit \textbf{en moyenne $4{,}5$ bris d'outils par mois}. On admet que le nombre de bris d'outils au cours d'un mois suit une loi de Poisson.
+\end{exo}
+\begin{enumerate}
+  \needspace{4.8cm}
+  \item Définir une variable aléatoire adaptée à la situation. Donner sa loi et justifier la valeur de son paramètre. \pts{1 pt}
+  \zone{3}
+  \needspace{3.2cm}
+  \item Calculer l'écart-type de cette variable aléatoire. \pts{0,5 pt}
+  \zone{2}
+  \needspace{4.8cm}
+  \item Calculer la probabilité qu'il se produise au plus un bris d'outil dans le mois. Détailler le calcul à l'aide de la formule. \pts{1 pt}
+  \zone{3}
+  \needspace{4.8cm}
+  \item Calculer la probabilité qu'il se produise au moins $7$ bris d'outils dans le mois. \pts{1 pt}
+  \zone{3}
+  \needspace{7.4cm}
+  \item Le responsable de production juge un mois «~normal~» lorsque le nombre de bris reste dans l'intervalle $[E - \sigma\,;E + \sigma]$, où $E$ est l'espérance et $\sigma$ l'écart-type de la variable aléatoire. Donner les nombres de bris possibles pour un mois normal, puis calculer la probabilité qu'un mois soit normal. \pts{1,5 pt}
+  \zone{6}
+  \needspace{5.6cm}
+  \item On observe l'îlot pendant $3$ mois. On admet que les nombres de bris d'un mois à l'autre sont indépendants. Calculer la probabilité qu'\textbf{exactement un} de ces $3$ mois compte au moins $7$ bris d'outils. \pts{1 pt}
+  \zone{4}
+\end{enumerate}
+
+% ------------------------------------------------------------
+\needspace{10cm}
+\section{Exercice 4 -- Contrôle de plaquettes de coupe \hfill {\normalsize\color{uimmred}2 points}}
+\begin{exo}{Contexte}
+Un fabricant produit des plaquettes de coupe carbure en grande série. $0{,}2\,\%$ des plaquettes produites présentent un défaut d'arête. On prélève $2000$ plaquettes dans la production. Le prélèvement est assimilé à un tirage avec remise. On s'intéresse au nombre de plaquettes défectueuses dans le prélèvement.
+\end{exo}
+\begin{enumerate}
+  \needspace{4.8cm}
+  \item Donner la loi exacte du nombre de plaquettes défectueuses. Justifier qu'on peut l'approcher par une loi de Poisson, dont on précisera le paramètre. \pts{1 pt}
+  \zone{3}
+  \needspace{4.8cm}
+  \item À l'aide de cette loi de Poisson, calculer la probabilité que le prélèvement contienne plus d'une plaquette défectueuse. \pts{1 pt}
+  \zone{3}
+\end{enumerate}
+
+\end{document}

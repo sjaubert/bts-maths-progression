@@ -1,0 +1,344 @@
+% ============================================================
+% Corrigé et barème -- DS MOD08 Binomiale -- Poisson (1 h)
+% Loi binomiale, loi de Poisson, dénombrement
+% BTS ATI / CRSA 1re année -- Pôle Formation UIMM - CVDL - S. JAUBERT
+% Énoncé : MOD08_DS_Binomiale_Poisson_ATI_CRSA_v1_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=10pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newcommand{\pts}[1]{\hfill\mbox{\color{uimmred}\small\textbf{(#1)}}}
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.85*\i) -- (\linewidth-1pt,-0.85*\i);}
+  \end{tikzpicture}\par\medskip}
+% Cadre vide (arbre pondéré) : #1 = hauteur
+\newcommand{\cadre}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \draw[uimmgray!40, rounded corners=3pt] (0,0) rectangle (\linewidth-1pt,-#1);
+  \end{tikzpicture}\par\medskip}
+\newcommand{\EnTete}[2]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS ATI / CRSA 1\textsuperscript{re} année\\ Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{Corrigé DS Bin.--Poisson}{Corrigé DS 1 h}
+\renewcommand{\pts}[1]{\hfill\mbox{\color{white}\small\textbf{#1}}}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\bareme}[1]{\par\smallskip{\footnotesize\color{uimmred}\textbf{Barème~:} #1}}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\LD}{Cours MOD08 \textit{Lois discrètes}}
+\newcommand{\CD}{Cours MOD08 \textit{Dénombrement et probabilités élémentaires}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé et barème -- DS MOD08}\\[4pt]
+{\color{white}\large Loi binomiale, loi de Poisson, dénombrement \hfill Total~: 20 points}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Principes de notation.} Les points de méthode (variable aléatoire définie, évènement traduit avec la variable, formule écrite) sont accordés même en cas d'erreur de calcul. Une erreur n'est sanctionnée qu'une fois~: la suite, cohérente avec un résultat faux, est notée normalement. Un résultat de calculatrice sans l'évènement écrit avec la variable aléatoire perd la moitié des points de la question. Une loi citée sans ses paramètres perd $0{,}25$\,pt.\\[3pt]
+\textbf{Repères de durée (estimation).} Exercice 1~: 12 min \quad Exercice 2~: 22 min \quad Exercice 3~: 18 min \quad Exercice 4~: 6 min. Le sujet est dense pour une heure~: la traduction des évènements est le c\oe ur de l'évaluation.\\[3pt]
+\textbf{Références.} \LD{}~: PDF \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0} (numérotation imprimée en pied de page). \CD{}~: PDF \texttt{Cours\_Dénombrement\_\_\_Probabilités} (numérotation imprimée en pied de page). Les formules utiles figurent aussi dans l'encadré «~Rappels de cours~» p.~1 du sujet.
+\end{tcolorbox}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 1 -- Test de cartes d'entrées/sorties (4 points)}
+
+\needspace{5cm}
+\begin{correction}[-- Question 1 \pts{0,75 pt}]
+\source{\CD{}, §1.3 Combinaisons p.~1}
+On choisit $4$ cartes parmi $15$, sans répétition et sans ordre~: ce sont des combinaisons.
+\[
+\binom{15}{4} = \frac{15\times 14\times 13\times 12}{4\times 3\times 2\times 1} = \frac{32\,760}{24} = 1365.
+\]
+On peut former $1365$ groupes de $4$ cartes.
+\bareme{reconnaître une combinaison : 0,25 \quad calcul : 0,5}
+\piege{calculer $15\times 14\times 13\times 12 = 32\,760$ (l'ordre ne compte pas ici) ; calculer $15^4$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1 pt}]
+\source{\CD{}, §1.1 Principe multiplicatif p.~1 et §1.3 Combinaisons p.~1}
+«~Au plus une carte de sécurité~» signifie «~$0$ ou $1$ carte de sécurité~». On compte les deux cas, qui sont disjoints.
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item $0$ carte de sécurité~: les $4$ cartes sont standard~: $\dbinom{10}{4} = 210$ groupes.
+  \item $1$ carte de sécurité~: $1$ parmi $5$ \textbf{et} $3$ standard parmi $10$~: $\dbinom{5}{1}\times\dbinom{10}{3} = 5\times 120 = 600$ groupes.
+\end{itemize}
+Total~: $210 + 600 = 810$ groupes contiennent au plus une carte de sécurité.
+\bareme{traduction «~0 ou 1~» : 0,25 \quad cas 0 : 0,25 \quad cas 1 (produit) : 0,25 \quad somme : 0,25}
+\piege{oublier le cas $0$ ; additionner $\binom{5}{1}+\binom{10}{3}$ au lieu de multiplier ; compter seulement «~exactement une~» ($600$).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\CD{}, §2.1 Définitions et propriétés p.~3 (formule de Laplace, évènement contraire)}
+L'évènement contraire de «~au moins une carte de sécurité~» est «~aucune carte de sécurité~», qui compte $210$ groupes (question 2). Les groupes sont équiprobables~:
+\[
+P(\text{au moins une carte de sécurité}) = 1 - \frac{210}{1365} = \frac{1155}{1365} = \frac{11}{13} \approx 0{,}8462.
+\]
+\bareme{contraire «~aucune~» : 0,5 \quad Laplace et résultat : 0,5}
+\piege{prendre «~au plus une~» comme contraire, soit $1 - \frac{810}{1365}\approx 0{,}4066$ ; donner $\frac{600}{1365}$ («~exactement une~»).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{0,75 pt}]
+\source{\CD{}, §2.1 p.~3 (évènement contraire)}
+Le collègue a tort. «~Au moins deux~» correspond à $2$, $3$ ou $4$ cartes de sécurité. Son contraire est «~$0$ ou $1$~», c'est-à-dire «~au plus une carte de sécurité~».\\
+Les deux évènements cités ont une partie commune~: «~exactement deux cartes de sécurité~» ($\binom{5}{2}\times\binom{10}{2} = 10\times 45 = 450$ groupes). Ils ne sont donc pas contraires.\\
+Contrôle numérique~: «~au moins deux~» compte $1365 - 810 = 555$ groupes, «~au plus deux~» en compte $810 + 450 = 1260$. Or $555 + 1260 = 1815 \neq 1365$ ; l'excédent $1815 - 1365 = 450$ correspond aux groupes comptés deux fois.
+\bareme{réponse «~non~» : 0,25 \quad contraire correct «~au plus une~» : 0,25 \quad justification (intersection non vide) : 0,25}
+\piege{répondre «~oui~» parce que «~au moins~» et «~au plus~» semblent opposés. La formulation «~moins de deux~» est acceptée comme contraire correct.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 5 \pts{0,5 pt}]
+\source{\CD{}, §1.2 Arrangements et permutations p.~1}
+On choisit $4$ cartes différentes \textbf{et} on les ordonne (ordre de passage sur le banc)~: ce sont des arrangements.
+\[
+A_{15}^{4} = 15\times 14\times 13\times 12 = 32\,760.
+\]
+Variante acceptée~: $1365$ groupes $\times$ $4! = 24$ ordres $= 32\,760$ séquences.
+\bareme{calcul et résultat : 0,5}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 2 -- Cartes électroniques (8 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1,5 pt}]
+\source{\LD{}, §2.2 Schéma de Bernoulli p.~5 et §3.1 Définition p.~7}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Épreuve de Bernoulli~: on prélève une carte et on regarde si elle est sans défaut. Deux issues. Succès~: «~la carte est sans défaut~», de probabilité $p = 1 - 0{,}03 = 0{,}97$.
+  \item L'épreuve est répétée $40$ fois, de façon identique et indépendante (tirage assimilé à un tirage avec remise).
+  \item $X$ compte le nombre de succès.
+\end{itemize}
+Donc $X$ suit la loi binomiale $\mathcal{B}(40\,;0{,}97)$.
+\bareme{Bernoulli, succès et $p$ : 0,5 \quad répétitions identiques et indépendantes : 0,5 \quad loi et paramètres : 0,5}
+\piege{prendre $p = 0{,}03$ alors que $X$ compte les cartes \textbf{sans défaut} ; oublier l'indépendance.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\LD{}, §3.3 p.~8 (propriété «~Espérance et écart-type~»)}
+\[
+E(X) = np = 40\times 0{,}97 = 38{,}8,\qquad \sigma(X) = \sqrt{np(1-p)} = \sqrt{40\times 0{,}97\times 0{,}03} = \sqrt{1{,}164}\approx 1{,}0789.
+\]
+Interprétation~: sur un grand nombre de prélèvements de $40$ cartes, on compte en moyenne $38{,}8$ cartes sans défaut par prélèvement (donc $1{,}2$ carte défectueuse en moyenne).
+\bareme{$E(X)$ : 0,5 \quad $\sigma(X)$ : 0,5 \quad interprétation : 0,5}
+\piege{oublier la racine carrée (donner la variance $1{,}164$) ; calculer $E(X) = 40\times 0{,}03 = 1{,}2$ (nombre moyen de cartes \textbf{défectueuses}).}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 3.a \pts{0,5 pt}]
+\source{\CD{}, §1.3 Combinaisons p.~1 et \LD{}, §3.2 Coefficient binomial p.~7}
+On choisit les $39$ rangs des cartes sans défaut parmi les $40$ rangs, sans ordre~:
+\[
+\binom{40}{39} = \frac{40!}{39!\,1!} = 40.
+\]
+Lecture simple~: placer $39$ cartes sans défaut revient à choisir la place de l'unique carte défectueuse, d'où $\binom{40}{39} = \binom{40}{1} = 40$.
+\bareme{résultat justifié : 0,5}
+\piege{tenter de calculer $40!$ à la calculatrice sans simplifier ; répondre $39$ ou $1$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3.b \pts{1 pt}]
+\source{\LD{}, §3.3 Calcul des probabilités p.~7}
+L'évènement est $\{X = 39\}$. Pour un placement donné, les épreuves étant indépendantes, la probabilité vaut $0{,}97^{39}\times 0{,}03$ ($39$ cartes sans défaut et $1$ défectueuse). Les $40$ placements sont incompatibles et ont la même probabilité~:
+\[
+P(X = 39) = \binom{40}{39}\times 0{,}97^{39}\times 0{,}03^{1} = 40\times 0{,}97^{39}\times 0{,}03 \approx 1{,}2\times 0{,}3049 \approx 0{,}3658.
+\]
+\bareme{lien avec 3.a (coefficient $40$) : 0,25 \quad formule complète : 0,5 \quad résultat : 0,25}
+\piege{écrire $0{,}97^{40}$ ou oublier le facteur $0{,}03$ ; oublier le coefficient $40$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4.a \pts{0,5 pt}]
+\source{\LD{}, §3.3 p.~7}
+«~Aucune carte défectueuse~» $\iff$ «~les $40$ cartes sont sans défaut~» $\iff X = 40$.
+\[
+P(X = 40) = 0{,}97^{40}\approx 0{,}2957.
+\]
+\bareme{traduction : 0,25 \quad résultat : 0,25}
+\piege{écrire $X = 0$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.b \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8 ; \CD{}, §2.1 p.~3 (évènement contraire)}
+«~Au plus $2$ défectueuses~» $\iff$ «~$0$, $1$ ou $2$ défectueuses~» $\iff$ «~$40$, $39$ ou $38$ sans défaut~» $\iff X\geq 38$. Son contraire est $X\leq 37$.
+\[
+P(X\geq 38) = 1 - P(X\leq 37) = 1 - \texttt{binomFRép}(40,\,0{,}97,\,37)\approx 1 - 0{,}1178 = 0{,}8822.
+\]
+Variante acceptée~: $D = 40 - X$ (nombre de cartes défectueuses) suit $\mathcal{B}(40\,;0{,}03)$ et $P(D\leq 2)\approx 0{,}8822$, à condition que $D$ soit défini.
+\bareme{traduction $X\geq 38$ : 0,5 \quad passage au contraire et résultat : 0,5}
+\piege{écrire $X\leq 2$ (probabilité quasi nulle, qui devrait alerter) ; écrire $1 - P(X\leq 38)$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.c \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8}
+«~Plus de $3$ défectueuses~» signifie «~strictement plus de $3$~», donc «~au moins $4$ défectueuses~», donc «~au plus $40 - 4 = 36$ cartes sans défaut~»~: $X\leq 36$.
+\[
+P(X\leq 36) = \texttt{binomFRép}(40,\,0{,}97,\,36)\approx 0{,}0314.
+\]
+\bareme{traduction $X\leq 36$ : 0,5 \quad résultat : 0,5}
+\piege{traduire par $X\leq 37$ (inclut $3$ défectueuses) ; écrire $X > 3$ ou $X\geq 36$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.d \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8}
+«~Au moins une défectueuse~» donne $X\leq 39$ ; «~pas plus de $3$ défectueuses~» donne $X\geq 37$. L'évènement est $\{37\leq X\leq 39\}$.
+\[
+P(37\leq X\leq 39) = P(X\leq 39) - P(X\leq 36) \approx 0{,}7043 - 0{,}0314 = 0{,}6729.
+\]
+Variante acceptée~: $P(X=37)+P(X=38)+P(X=39)\approx 0{,}0864 + 0{,}2206 + 0{,}3658 = 0{,}6728$ (écart dû aux arrondis).
+\bareme{traduction $37\leq X\leq 39$ : 0,5 \quad calcul et résultat : 0,5}
+\piege{soustraire $P(X\leq 37)$ au lieu de $P(X\leq 36)$, ce qui exclut $37$ ; inclure $40$ ; traduire par $1\leq X\leq 3$.}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 3 -- Alarmes d'un robot de palettisation (6 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §4.1 Définition p.~9 (propriété «~Espérance et écart-type~»)}
+Soit $Y$ le nombre d'alarmes enregistrées par l'automate au cours d'un poste de $8$ heures. $Y$ suit une loi de Poisson $\mathcal{P}(\lambda)$.\\
+Pour une loi de Poisson, $E(Y) = \lambda$. Or le nombre moyen d'alarmes est $3{,}2$ par poste. Donc $\lambda = 3{,}2$ et $Y$ suit $\mathcal{P}(3{,}2)$.
+\bareme{variable définie en phrase (avec la durée : un poste) : 0,5 \quad $\lambda = E(Y) = 3{,}2$ justifié : 0,5}
+\piege{variable non définie ou sans référence au poste ; paramètre donné sans justification.}
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 2 \pts{0,5 pt}]
+\source{\LD{}, §4.1 p.~9}
+$\sigma(Y) = \sqrt{\lambda} = \sqrt{3{,}2}\approx 1{,}7889$.
+\bareme{résultat : 0,5}
+\piege{répondre $\sigma = 3{,}2$ (confusion avec la variance).}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9}
+«~Exactement $2$ alarmes~» $\iff Y = 2$.
+\[
+P(Y = 2) = e^{-3{,}2}\,\frac{3{,}2^{2}}{2!} = e^{-3{,}2}\times\frac{10{,}24}{2} = 5{,}12\,e^{-3{,}2}\approx 0{,}2087.
+\]
+\bareme{traduction : 0,25 \quad formule avec $k=2$ : 0,5 \quad résultat : 0,25}
+\piege{oublier la factorielle ; écrire $3{,}2\times 2$ au lieu de $3{,}2^{2}$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~») ; \CD{}, §2.1 p.~3}
+«~Plus de $4$ alarmes~» signifie «~strictement plus de $4$~»~: $Y\geq 5$. Son contraire est $Y\leq 4$.
+\[
+P(Y\geq 5) = 1 - P(Y\leq 4) = 1 - \texttt{poissonFRép}(3{,}2,\,4)\approx 1 - 0{,}7806 = 0{,}2194.
+\]
+\bareme{traduction et contraire : 0,5 \quad résultat : 0,5}
+\piege{traduire par $Y\geq 4$, soit $1 - P(Y\leq 3)\approx 0{,}3975$ ; écrire $1 - P(Y\leq 5)$.}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 5 \pts{1,5 pt}]
+\source{\LD{}, §4.1 p.~9 ; §1.3 Espérance, variance, écart-type p.~3 (interprétation de $\sigma$)}
+$E - \sigma\approx 3{,}2 - 1{,}7889 = 1{,}4111$ et $E + \sigma\approx 3{,}2 + 1{,}7889 = 4{,}9889$.\\
+$Y$ ne prend que des valeurs entières. Un poste est normal si $Y\in\{2\,;3\,;4\}$, c'est-à-dire $2\leq Y\leq 4$.
+\[
+P(2\leq Y\leq 4) = P(Y\leq 4) - P(Y\leq 1)\approx 0{,}7806 - 0{,}1712 = 0{,}6094.
+\]
+Environ $61\,\%$ des postes sont normaux.
+\bareme{bornes de l'intervalle : 0,5 \quad valeurs entières $2\leq Y\leq 4$ : 0,5 \quad calcul et résultat : 0,5}
+\piege{garder $1$ ou $5$ (arrondi des bornes au plus proche au lieu de rester dans l'intervalle) ; calculer $P(Y\leq 4) - P(Y\leq 2)$, ce qui exclut $2$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 6 \pts{1 pt}]
+\source{\CD{}, §2.1 p.~3 (intersection d'évènements indépendants) ; \LD{}, §3.1 p.~7 (variante binomiale)}
+«~Aucun des $5$ postes ne compte plus de $4$ alarmes~» $\iff$ «~chacun des $5$ postes compte au plus $4$ alarmes~».\\
+Pour un poste, $P(Y\leq 4)\approx 0{,}7806$. Les postes sont indépendants~:
+\[
+P(\text{aucun poste à plus de } 4 \text{ alarmes}) = \big(P(Y\leq 4)\big)^{5}\approx 0{,}7806^{5}\approx 0{,}2898.
+\]
+Variante acceptée~: le nombre $W$ de postes à plus de $4$ alarmes suit $\mathcal{B}(5\,;0{,}2194)$ et $P(W = 0) = 0{,}7806^{5}\approx 0{,}2898$. La valeur $0{,}2899$, obtenue sans arrondi intermédiaire, est acceptée.
+\bareme{traduction «~chacun au plus 4~» : 0,5 \quad puissance $5$ (indépendance) et résultat : 0,5}
+\piege{calculer $1 - 0{,}7806^{5}$ (probabilité qu'\textbf{au moins un} poste dépasse $4$ alarmes) ; calculer $0{,}2194^{5}$ ; calculer $5\times 0{,}7806$.}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 4 -- Contrôle de connecteurs (2 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §3.1 p.~7 et §5.1 Principe p.~11}
+Soit $V$ le nombre de connecteurs défectueux dans le prélèvement. Schéma de Bernoulli~: $750$ épreuves identiques et indépendantes, succès «~connecteur défectueux~» de probabilité $0{,}004$. Donc $V$ suit $\mathcal{B}(750\,;0{,}004)$.\\
+$n = 750\geq 30$, $p = 0{,}004\leq 0{,}1$ et $np = 3\leq 10$~: on peut approcher la loi de $V$ par $\mathcal{P}(\lambda)$ avec $\lambda = np = 3$.
+\bareme{loi exacte : 0,25 \quad conditions : 0,5 \quad $\lambda = 3$ : 0,25}
+\piege{écrire $p = 0{,}4$ (pourcentage mal converti), d'où $np = 300$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9}
+«~Moins de $2$ connecteurs défectueux~» signifie «~strictement moins de $2$~»~: $V\leq 1$.
+\[
+P(V\leq 1)\approx e^{-3}\left(1 + 3\right) = 4\,e^{-3}\approx 0{,}1991 \qquad(\texttt{poissonFRép}(3,\,1)).
+\]
+\bareme{traduction $V\leq 1$ : 0,5 \quad résultat : 0,5}
+\piege{traduire par $V\leq 2$ ($\approx 0{,}4232$) ou par $V = 1$.}
+\end{correction}
+
+\noindent{\footnotesize\color{uimmgray}\textit{Contrôle~: avec la loi binomiale exacte $\mathcal{B}(750\,;0{,}004)$, on trouve $P(V\leq 1)\approx 0{,}1986$. L'écart avec l'approximation est inférieur à $10^{-3}$.}}
+
+\end{document}

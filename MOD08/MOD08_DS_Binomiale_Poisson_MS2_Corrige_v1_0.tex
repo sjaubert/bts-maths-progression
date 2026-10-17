@@ -1,0 +1,342 @@
+% ============================================================
+% Corrigé et barème -- DS MOD08 Binomiale -- Poisson (1 h)
+% Loi binomiale, loi de Poisson, dénombrement
+% BTS MS 2e année -- Pôle Formation UIMM - CVDL - S. JAUBERT
+% Énoncé : MOD08_DS_Binomiale_Poisson_MS2_v1_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=10pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newcommand{\pts}[1]{\hfill\mbox{\color{uimmred}\small\textbf{(#1)}}}
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.85*\i) -- (\linewidth-1pt,-0.85*\i);}
+  \end{tikzpicture}\par\medskip}
+% Cadre vide (arbre pondéré) : #1 = hauteur
+\newcommand{\cadre}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \draw[uimmgray!40, rounded corners=3pt] (0,0) rectangle (\linewidth-1pt,-#1);
+  \end{tikzpicture}\par\medskip}
+\newcommand{\EnTete}[2]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS MS 2\textsuperscript{e} année -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{Corrigé DS Bin.--Poisson}{Corrigé DS 1 h}
+\renewcommand{\pts}[1]{\hfill\mbox{\color{white}\small\textbf{#1}}}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\bareme}[1]{\par\smallskip{\footnotesize\color{uimmred}\textbf{Barème~:} #1}}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\LD}{Cours MOD08 \textit{Lois discrètes}}
+\newcommand{\CD}{Cours MOD08 \textit{Dénombrement et probabilités élémentaires}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé et barème -- DS MOD08}\\[4pt]
+{\color{white}\large Loi binomiale, loi de Poisson, dénombrement \hfill Total~: 20 points}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Principes de notation.} Les points de méthode (variable aléatoire définie, évènement traduit avec la variable, formule écrite) sont accordés même en cas d'erreur de calcul. Une erreur n'est sanctionnée qu'une fois~: la suite, cohérente avec un résultat faux, est notée normalement. Un résultat de calculatrice sans l'évènement écrit avec la variable aléatoire perd la moitié des points de la question. Une loi citée sans ses paramètres perd $0{,}25$\,pt.\\[3pt]
+\textbf{Repères de durée (estimation).} Exercice 1~: 12 min \quad Exercice 2~: 22 min \quad Exercice 3~: 18 min \quad Exercice 4~: 6 min. Le sujet est dense pour une heure~: la traduction des évènements est le c\oe ur de l'évaluation.\\[3pt]
+\textbf{Références.} \LD{}~: PDF \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0} (numérotation imprimée en pied de page). \CD{}~: PDF \texttt{Cours\_Dénombrement\_\_\_Probabilités} (numérotation imprimée en pied de page). Les formules utiles figurent aussi dans l'encadré «~Rappels de cours~» p.~1 du sujet.
+\end{tcolorbox}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 1 -- Audit de machines (4 points)}
+
+\needspace{5cm}
+\begin{correction}[-- Question 1 \pts{0,75 pt}]
+\source{\CD{}, §1.3 Combinaisons p.~1}
+On choisit $3$ machines parmi $12$, sans répétition et sans ordre~: ce sont des combinaisons.
+\[
+\binom{12}{3} = \frac{12\times 11\times 10}{3\times 2\times 1} = 220.
+\]
+On peut former $220$ groupes de $3$ machines.
+\bareme{reconnaître une combinaison : 0,25 \quad calcul : 0,5}
+\piege{calculer $12\times 11\times 10 = 1320$ (l'ordre ne compte pas ici) ; calculer $12^3$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1 pt}]
+\source{\CD{}, §1.1 Principe multiplicatif p.~1 et §1.3 Combinaisons p.~1}
+«~Au plus une machine critique~» signifie «~$0$ ou $1$ machine critique~». On compte les deux cas, qui sont disjoints.
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item $0$ critique~: les $3$ machines sont standard~: $\dbinom{8}{3} = 56$ groupes.
+  \item $1$ critique~: $1$ critique parmi $4$ \textbf{et} $2$ standard parmi $8$~: $\dbinom{4}{1}\times\dbinom{8}{2} = 4\times 28 = 112$ groupes.
+\end{itemize}
+Total~: $56 + 112 = 168$ groupes contiennent au plus une machine critique.
+\bareme{traduction «~0 ou 1~» : 0,25 \quad cas 0 : 0,25 \quad cas 1 (produit) : 0,25 \quad somme : 0,25}
+\piege{oublier le cas $0$ ; additionner $\binom{4}{1}+\binom{8}{2}$ au lieu de multiplier ; compter seulement «~exactement une~» ($112$).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\CD{}, §2.1 Définitions et propriétés p.~3 (formule de Laplace, évènement contraire)}
+L'évènement contraire de «~au moins une machine critique~» est «~aucune machine critique~», qui compte $56$ groupes (question 2). Les groupes sont équiprobables~:
+\[
+P(\text{au moins une critique}) = 1 - \frac{56}{220} = \frac{164}{220} = \frac{41}{55} \approx 0{,}7455.
+\]
+\bareme{contraire «~aucune~» : 0,5 \quad Laplace et résultat : 0,5}
+\piege{prendre «~au plus une~» comme contraire, soit $1 - \frac{168}{220}\approx 0{,}2364$ ; donner $\frac{112}{220}$ («~exactement une~»).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{0,75 pt}]
+\source{\CD{}, §2.1 p.~3 (évènement contraire)}
+Le technicien a tort. Le contraire de «~au plus une~» ($0$ ou $1$) est «~au moins deux~» ($2$ ou $3$).\\
+Les deux évènements cités ont une partie commune~: «~exactement une machine critique~» ($112$ groupes). Ils ne sont donc pas incompatibles, donc pas contraires.\\
+Contrôle numérique~: $168 + 164 = 332 \neq 220$ ; l'excédent $332 - 220 = 112$ correspond exactement aux groupes comptés deux fois.
+\bareme{réponse «~non~» : 0,25 \quad justification (contraire correct ou intersection non vide) : 0,5}
+\piege{répondre «~oui~» parce que les mots «~au plus~» et «~au moins~» semblent opposés.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 5 \pts{0,5 pt}]
+\source{\CD{}, §1.2 Arrangements et permutations p.~1}
+On choisit $3$ machines différentes \textbf{et} on les ordonne (lundi, mardi, mercredi)~: ce sont des arrangements.
+\[
+A_{12}^{3} = 12\times 11\times 10 = 1320.
+\]
+Variante acceptée~: $220$ groupes $\times$ $3! = 6$ ordres $= 1320$ plannings.
+\bareme{calcul et résultat : 0,5}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 2 -- Joints toriques (8 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1,5 pt}]
+\source{\LD{}, §2.2 Schéma de Bernoulli p.~5 et §3.1 Définition p.~7}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Épreuve de Bernoulli~: on prélève un joint et on regarde s'il est défectueux. Deux issues. Succès~: «~le joint est défectueux~», de probabilité $p = 0{,}04$.
+  \item L'épreuve est répétée $30$ fois, de façon identique et indépendante (tirage assimilé à un tirage avec remise).
+  \item $X$ compte le nombre de succès.
+\end{itemize}
+Donc $X$ suit la loi binomiale $\mathcal{B}(30\,;0{,}04)$.
+\bareme{Bernoulli, succès et $p$ : 0,5 \quad répétitions identiques et indépendantes : 0,5 \quad loi et paramètres : 0,5}
+\piege{prendre $p = 0{,}96$ alors que $X$ compte les \textbf{défectueux} ; oublier l'indépendance.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\LD{}, §3.3 p.~8 (propriété «~Espérance et écart-type~»)}
+\[
+E(X) = np = 30\times 0{,}04 = 1{,}2,\qquad \sigma(X) = \sqrt{np(1-p)} = \sqrt{30\times 0{,}04\times 0{,}96} = \sqrt{1{,}152}\approx 1{,}0733.
+\]
+Interprétation~: sur un grand nombre de prélèvements de $30$ joints, on compte en moyenne $1{,}2$ joint défectueux par prélèvement.
+\bareme{$E(X)$ : 0,5 \quad $\sigma(X)$ : 0,5 \quad interprétation : 0,5}
+\piege{oublier la racine carrée (donner la variance $1{,}152$) ; interpréter $1{,}2$ comme «~il y a $1{,}2$ joint défectueux dans ce prélèvement~».}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 3.a \pts{0,5 pt}]
+\source{\CD{}, §1.3 Combinaisons p.~1 et \LD{}, §3.2 Coefficient binomial p.~7}
+On choisit les $2$ rangs des joints défectueux parmi les $30$ rangs, sans ordre~:
+\[
+\binom{30}{2} = \frac{30\times 29}{2} = 435.
+\]
+\bareme{résultat justifié : 0,5}
+\piege{répondre $30\times 29 = 870$ (chaque placement compté deux fois).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3.b \pts{1 pt}]
+\source{\LD{}, §3.3 Calcul des probabilités p.~7}
+L'évènement est $\{X = 2\}$. Pour un placement donné, les épreuves étant indépendantes, la probabilité vaut $0{,}04^{2}\times 0{,}96^{28}$ ($2$ défectueux et $28$ conformes). Les $435$ placements sont incompatibles et ont la même probabilité~:
+\[
+P(X = 2) = \binom{30}{2}\times 0{,}04^{2}\times 0{,}96^{28} = 435\times 0{,}0016\times 0{,}96^{28} \approx 0{,}696\times 0{,}3189 \approx 0{,}2219.
+\]
+\bareme{lien avec 3.a (coefficient $435$) : 0,25 \quad formule complète : 0,5 \quad résultat : 0,25}
+\piege{écrire $0{,}96^{30}$ au lieu de $0{,}96^{28}$ ; oublier le coefficient $435$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4.a \pts{0,5 pt}]
+\source{\LD{}, §3.3 p.~7}
+«~Tous les joints sont conformes~» $\iff$ «~aucun joint défectueux~» $\iff X = 0$.
+\[
+P(X = 0) = 0{,}96^{30}\approx 0{,}2939.
+\]
+\bareme{traduction : 0,25 \quad résultat : 0,25}
+\piege{écrire $X = 30$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.b \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8}
+«~Au moins $28$ conformes~» $\iff$ «~$28$, $29$ ou $30$ conformes~» $\iff$ «~$2$, $1$ ou $0$ défectueux~» $\iff X\leq 2$.
+\[
+P(X\leq 2) = \texttt{binomFRép}(30,\,0{,}04,\,2)\approx 0{,}8831.
+\]
+\bareme{traduction $X\leq 2$ : 0,5 \quad résultat : 0,5}
+\piege{écrire $X\geq 28$ (probabilité quasi nulle, qui devrait alerter) ; écrire $X\leq 28$ ; écrire $X < 2$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.c \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et p.~8 ; \CD{}, §2.1 p.~3 (évènement contraire)}
+«~Plus de $2$ défectueux~» signifie «~strictement plus de $2$~»~: $X > 2 \iff X\geq 3$. Son contraire est $X\leq 2$.
+\[
+P(X\geq 3) = 1 - P(X\leq 2)\approx 1 - 0{,}8831 = 0{,}1169.
+\]
+\bareme{traduction $X\geq 3$ : 0,5 \quad passage au contraire et résultat : 0,5}
+\piege{traduire par $X\geq 2$ ; écrire $1 - P(X\leq 3)$ ; calculer $1 - P(X\geq 3)$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.d \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8}
+«~Au moins $2$~» donne $X\geq 2$ ; «~moins de $5$~» signifie «~strictement moins de $5$~»~: $X\leq 4$. L'évènement est $\{2\leq X\leq 4\}$.
+\[
+P(2\leq X\leq 4) = P(X\leq 4) - P(X\leq 1) \approx 0{,}9937 - 0{,}6612 = 0{,}3325.
+\]
+Variante acceptée~: $P(X=2)+P(X=3)+P(X=4)\approx 0{,}2219 + 0{,}0863 + 0{,}0243 = 0{,}3325$.
+\bareme{traduction $2\leq X\leq 4$ : 0,5 \quad calcul et résultat : 0,5}
+\piege{inclure $5$ ($P(X\leq 5) - P(X\leq 1)$) ; soustraire $P(X\leq 2)$ au lieu de $P(X\leq 1)$, ce qui exclut $2$.}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 3 -- Arrêts d'une ligne de conditionnement (6 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §4.1 Définition p.~9 (propriété «~Espérance et écart-type~»)}
+Soit $Y$ le nombre d'arrêts non programmés de la ligne au cours d'une semaine. $Y$ suit une loi de Poisson $\mathcal{P}(\lambda)$.\\
+Pour une loi de Poisson, $E(Y) = \lambda$. Or le nombre moyen d'arrêts est $2{,}5$ par semaine. Donc $\lambda = 2{,}5$ et $Y$ suit $\mathcal{P}(2{,}5)$.
+\bareme{variable définie en phrase (avec la durée : une semaine) : 0,5 \quad $\lambda = E(Y) = 2{,}5$ justifié : 0,5}
+\piege{variable non définie ou sans unité de temps ; paramètre donné sans justification.}
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 2 \pts{0,5 pt}]
+\source{\LD{}, §4.1 p.~9}
+$\sigma(Y) = \sqrt{\lambda} = \sqrt{2{,}5}\approx 1{,}5811$.
+\bareme{résultat : 0,5}
+\piege{répondre $\sigma = 2{,}5$ (confusion avec la variance).}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9}
+«~Semaine sans arrêt~» $\iff Y = 0$.
+\[
+P(Y = 0) = e^{-2{,}5}\,\frac{2{,}5^{0}}{0!} = e^{-2{,}5}\approx 0{,}0821.
+\]
+\bareme{traduction : 0,25 \quad formule avec $k=0$ : 0,5 \quad résultat : 0,25}
+\piege{écrire $2{,}5^0 = 0$ ou $0! = 0$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~») ; \CD{}, §2.1 p.~3}
+«~Au moins $3$ arrêts~» $\iff Y\geq 3$. Son contraire est $Y\leq 2$.
+\[
+P(Y\geq 3) = 1 - P(Y\leq 2) = 1 - \texttt{poissonFRép}(2{,}5,\,2)\approx 1 - 0{,}5438 = 0{,}4562.
+\]
+Calcul à la main accepté~: $P(Y\leq 2) = e^{-2{,}5}\left(1 + 2{,}5 + \dfrac{2{,}5^{2}}{2}\right) = 6{,}625\,e^{-2{,}5}\approx 0{,}5438$.
+\bareme{traduction et contraire : 0,5 \quad résultat : 0,5}
+\piege{écrire $1 - P(Y\leq 3)\approx 0{,}2424$.}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 5 \pts{1,5 pt}]
+\source{\LD{}, §4.1 p.~9 ; §1.3 Espérance, variance, écart-type p.~3 (interprétation de $\sigma$)}
+$E - \sigma\approx 2{,}5 - 1{,}5811 = 0{,}9189$ et $E + \sigma\approx 2{,}5 + 1{,}5811 = 4{,}0811$.\\
+$Y$ ne prend que des valeurs entières. Une semaine est normale si $Y\in\{1\,;2\,;3\,;4\}$, c'est-à-dire $1\leq Y\leq 4$.
+\[
+P(1\leq Y\leq 4) = P(Y\leq 4) - P(Y = 0)\approx 0{,}8912 - 0{,}0821 = 0{,}8091.
+\]
+Environ $81\,\%$ des semaines sont normales.
+\bareme{bornes de l'intervalle : 0,5 \quad valeurs entières $1\leq Y\leq 4$ : 0,5 \quad calcul et résultat : 0,5}
+\piege{garder $0$ ou $5$ ; calculer $P(Y\leq 4) - P(Y\leq 1)$, ce qui exclut $1$ ; garder les bornes décimales sans conclure sur les entiers.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 6 \pts{1 pt}]
+\source{\CD{}, §2.1 p.~3 (contraire, intersection d'évènements indépendants) ; \LD{}, §3.1 p.~7 (variante binomiale)}
+Le contraire de «~au moins une semaine sans arrêt~» est «~aucune des $4$ semaines n'est sans arrêt~», c'est-à-dire «~chaque semaine compte au moins un arrêt~».\\
+Pour une semaine, $P(Y\geq 1) = 1 - e^{-2{,}5}\approx 0{,}9179$. Les semaines sont indépendantes~:
+\[
+P(\text{au moins une semaine sans arrêt}) = 1 - \left(1 - e^{-2{,}5}\right)^{4}\approx 1 - 0{,}9179^{4}\approx 0{,}2901.
+\]
+Variante acceptée~: le nombre $W$ de semaines sans arrêt suit $\mathcal{B}(4\,;0{,}0821)$ et $P(W\geq 1) = 1 - P(W = 0)\approx 0{,}2901$.
+\bareme{contraire correct : 0,5 \quad puissance $4$ (indépendance) et résultat : 0,5}
+\piege{calculer $4\times 0{,}0821\approx 0{,}3284$ ; calculer $0{,}0821^{4}$ ; utiliser $\mathcal{P}(10)$ sur $4$ semaines (autre question : nombre total d'arrêts).}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 4 -- Contrôle de vis (2 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §3.1 p.~7 et §5.1 Principe p.~11}
+Soit $V$ le nombre de vis défectueuses dans le prélèvement. Schéma de Bernoulli~: $400$ épreuves identiques et indépendantes, succès «~vis défectueuse~» de probabilité $0{,}005$. Donc $V$ suit $\mathcal{B}(400\,;0{,}005)$.\\
+$n = 400\geq 30$, $p = 0{,}005\leq 0{,}1$ et $np = 2\leq 10$~: on peut approcher la loi de $V$ par $\mathcal{P}(\lambda)$ avec $\lambda = np = 2$.
+\bareme{loi exacte : 0,25 \quad conditions : 0,5 \quad $\lambda = 2$ : 0,25}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9}
+«~Pas plus d'une vis défectueuse~» $\iff$ «~au plus une~» $\iff V\leq 1$.
+\[
+P(V\leq 1)\approx e^{-2}\left(1 + 2\right) = 3\,e^{-2}\approx 0{,}4060 \qquad(\texttt{poissonFRép}(2,\,1)).
+\]
+\bareme{traduction $V\leq 1$ : 0,5 \quad résultat : 0,5}
+\piege{traduire par $V < 1$ ou par $V = 1$.}
+\end{correction}
+
+\noindent{\footnotesize\color{uimmgray}\textit{Contrôle~: avec la loi binomiale exacte $\mathcal{B}(400\,;0{,}005)$, on trouve $P(V\leq 1)\approx 0{,}4053$. L'écart avec l'approximation est inférieur à $10^{-3}$.}}
+
+\end{document}

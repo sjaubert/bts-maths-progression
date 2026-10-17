@@ -1,0 +1,346 @@
+% ============================================================
+% Corrigé et barème -- DS MOD08 Binomiale -- Poisson (1 h)
+% Loi binomiale, loi de Poisson, dénombrement
+% BTS CPRP 1re année -- Pôle Formation UIMM - CVDL - S. JAUBERT
+% Énoncé : MOD08_DS_Binomiale_Poisson_CPRP_v1_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=10pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+
+\newcommand{\pts}[1]{\hfill\mbox{\color{uimmred}\small\textbf{(#1)}}}
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.85*\i) -- (\linewidth-1pt,-0.85*\i);}
+  \end{tikzpicture}\par\medskip}
+% Cadre vide (arbre pondéré) : #1 = hauteur
+\newcommand{\cadre}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \draw[uimmgray!40, rounded corners=3pt] (0,0) rectangle (\linewidth-1pt,-#1);
+  \end{tikzpicture}\par\medskip}
+\newcommand{\EnTete}[2]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS CPRP 1\textsuperscript{re} année\\ Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{Corrigé DS Bin.--Poisson}{Corrigé DS 1 h}
+\renewcommand{\pts}[1]{\hfill\mbox{\color{white}\small\textbf{#1}}}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\bareme}[1]{\par\smallskip{\footnotesize\color{uimmred}\textbf{Barème~:} #1}}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\LD}{Cours MOD08 \textit{Lois discrètes}}
+\newcommand{\CD}{Cours MOD08 \textit{Dénombrement et probabilités élémentaires}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé et barème -- DS MOD08}\\[4pt]
+{\color{white}\large Loi binomiale, loi de Poisson, dénombrement \hfill Total~: 20 points}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Principes de notation.} Les points de méthode (variable aléatoire définie, évènement traduit avec la variable, formule écrite) sont accordés même en cas d'erreur de calcul. Une erreur n'est sanctionnée qu'une fois~: la suite, cohérente avec un résultat faux, est notée normalement. Un résultat de calculatrice sans l'évènement écrit avec la variable aléatoire perd la moitié des points de la question. Une loi citée sans ses paramètres perd $0{,}25$\,pt.\\[3pt]
+\textbf{Repères de durée (estimation).} Exercice 1~: 12 min \quad Exercice 2~: 22 min \quad Exercice 3~: 18 min \quad Exercice 4~: 6 min. Le sujet est dense pour une heure~: la traduction des évènements est le c\oe ur de l'évaluation.\\[3pt]
+\textbf{Références.} \LD{}~: PDF \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0} (numérotation imprimée en pied de page). \CD{}~: PDF \texttt{Cours\_Dénombrement\_\_\_Probabilités} (numérotation imprimée en pied de page). Les formules utiles figurent aussi dans l'encadré «~Rappels de cours~» p.~1 du sujet.
+\end{tcolorbox}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 1 -- Contrôle d'usure des outils (4 points)}
+
+\needspace{5cm}
+\begin{correction}[-- Question 1 \pts{0,75 pt}]
+\source{\CD{}, §1.3 Combinaisons p.~1}
+On choisit $4$ outils parmi $14$, sans répétition et sans ordre~: ce sont des combinaisons.
+\[
+\binom{14}{4} = \frac{14\times 13\times 12\times 11}{4\times 3\times 2\times 1} = \frac{24\,024}{24} = 1001.
+\]
+On peut former $1001$ groupes de $4$ outils.
+\bareme{reconnaître une combinaison : 0,25 \quad calcul : 0,5}
+\piege{calculer $14\times 13\times 12\times 11 = 24\,024$ (l'ordre ne compte pas ici) ; calculer $14^4$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1 pt}]
+\source{\CD{}, §1.1 Principe multiplicatif p.~1 et §1.3 Combinaisons p.~1}
+«~Au moins $3$ fraises~» signifie «~$3$ ou $4$ fraises~» (le groupe ne compte que $4$ outils). On compte les deux cas, qui sont disjoints.
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item $3$ fraises~: $3$ fraises parmi $6$ \textbf{et} $1$ foret parmi $8$~: $\dbinom{6}{3}\times\dbinom{8}{1} = 20\times 8 = 160$ groupes.
+  \item $4$ fraises~: $\dbinom{6}{4} = 15$ groupes.
+\end{itemize}
+Total~: $160 + 15 = 175$ groupes contiennent au moins $3$ fraises.
+\bareme{traduction «~3 ou 4~» : 0,25 \quad cas 3 (produit) : 0,25 \quad cas 4 : 0,25 \quad somme : 0,25}
+\piege{oublier le cas $4$ ; oublier le facteur $\binom{8}{1}$ dans le cas $3$ ; compter seulement «~exactement $3$~» ($160$).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\CD{}, §2.1 Définitions et propriétés p.~3 (formule de Laplace, évènement contraire)}
+«~Au plus $2$ fraises~» ($0$, $1$ ou $2$) est le contraire de «~au moins $3$ fraises~», qui compte $175$ groupes (question 2). Les groupes sont équiprobables~:
+\[
+P(\text{au plus 2 fraises}) = 1 - \frac{175}{1001} = \frac{826}{1001} = \frac{118}{143}\approx 0{,}8252.
+\]
+Un calcul direct ($\binom{8}{4} + \binom{6}{1}\binom{8}{3} + \binom{6}{2}\binom{8}{2} = 70 + 336 + 420 = 826$) est accepté.
+\bareme{contraire «~au moins 3~» reconnu : 0,5 \quad Laplace et résultat : 0,5}
+\piege{prendre «~au moins $2$~» comme contraire ; oublier un des trois cas dans le calcul direct.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{0,75 pt}]
+\source{\CD{}, §2.1 p.~3 (évènements)}
+Le collègue a tort. Le groupe compte $4$ outils, donc nombre de forets $= 4 -$ nombre de fraises.
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item «~Au moins $3$ fraises~» $\iff$ «~au plus $1$ foret~».
+  \item «~Au plus $2$ forets~» $\iff$ «~au moins $2$ fraises~».
+\end{itemize}
+Les groupes à exactement $2$ fraises et $2$ forets ($\binom{6}{2}\times\binom{8}{2} = 15\times 28 = 420$ groupes) réalisent le second évènement mais pas le premier. Contrôle~: «~au plus $2$ forets~» compte $420 + 175 = 595$ groupes, contre $175$.
+\bareme{réponse «~non~» : 0,25 \quad traduction correcte d'un des deux évènements : 0,25 \quad contre-exemple ou dénombrement : 0,25}
+\piege{répondre «~oui~» en confondant le passage fraises/forets avec un simple changement de borne.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 5 \pts{0,5 pt}]
+\source{\CD{}, §1.2 Arrangements et permutations p.~1}
+On choisit $4$ outils différents \textbf{et} on leur attribue un poste (ordre)~: ce sont des arrangements.
+\[
+A_{14}^{4} = 14\times 13\times 12\times 11 = 24\,024.
+\]
+Variante acceptée~: $1001$ groupes $\times$ $4! = 24$ attributions $= 24\,024$ montages.
+\bareme{calcul et résultat : 0,5}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 2 -- Arbres tournés (8 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1,5 pt}]
+\source{\LD{}, §2.2 Schéma de Bernoulli p.~5 et §3.1 Définition p.~7}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Épreuve de Bernoulli~: on prélève un arbre et on regarde s'il est hors tolérance. Deux issues. Succès~: «~l'arbre est hors tolérance~», de probabilité $p = 0{,}06$.
+  \item L'épreuve est répétée $25$ fois, de façon identique et indépendante (tirage assimilé à un tirage avec remise).
+  \item $X$ compte le nombre de succès.
+\end{itemize}
+Donc $X$ suit la loi binomiale $\mathcal{B}(25\,;0{,}06)$.
+\bareme{Bernoulli, succès et $p$ : 0,5 \quad répétitions identiques et indépendantes : 0,5 \quad loi et paramètres : 0,5}
+\piege{prendre $p = 0{,}94$ alors que $X$ compte les arbres \textbf{hors tolérance} ; oublier l'indépendance.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\LD{}, §3.3 p.~8 (propriété «~Espérance et écart-type~»)}
+\[
+E(X) = np = 25\times 0{,}06 = 1{,}5,\qquad \sigma(X) = \sqrt{np(1-p)} = \sqrt{25\times 0{,}06\times 0{,}94} = \sqrt{1{,}41}\approx 1{,}1874.
+\]
+Interprétation~: sur un grand nombre de prélèvements de $25$ arbres, on compte en moyenne $1{,}5$ arbre hors tolérance par prélèvement.
+\bareme{$E(X)$ : 0,5 \quad $\sigma(X)$ : 0,5 \quad interprétation : 0,5}
+\piege{oublier la racine carrée (donner la variance $1{,}41$) ; interpréter $1{,}5$ comme le nombre d'arbres hors tolérance de \textbf{ce} prélèvement.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 3.a \pts{0,5 pt}]
+\source{\CD{}, §1.3 Combinaisons p.~1 et \LD{}, §3.2 Coefficient binomial p.~7}
+On choisit les $3$ rangs des arbres hors tolérance parmi les $25$ rangs, sans ordre~:
+\[
+\binom{25}{3} = \frac{25\times 24\times 23}{3\times 2\times 1} = 2300.
+\]
+\bareme{résultat justifié : 0,5}
+\piege{répondre $25\times 24\times 23 = 13\,800$ (chaque placement compté $3! = 6$ fois).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3.b \pts{1 pt}]
+\source{\LD{}, §3.3 Calcul des probabilités p.~7}
+L'évènement est $\{X = 3\}$. Pour un placement donné, les épreuves étant indépendantes, la probabilité vaut $0{,}06^{3}\times 0{,}94^{22}$ ($3$ arbres hors tolérance et $22$ conformes). Les $2300$ placements sont incompatibles et ont la même probabilité~:
+\[
+P(X = 3) = \binom{25}{3}\times 0{,}06^{3}\times 0{,}94^{22} = 2300\times 0{,}000216\times 0{,}94^{22}\approx 0{,}4968\times 0{,}2563\approx 0{,}1273.
+\]
+\bareme{lien avec 3.a (coefficient $2300$) : 0,25 \quad formule complète : 0,5 \quad résultat : 0,25}
+\piege{écrire $0{,}94^{25}$ au lieu de $0{,}94^{22}$ ; oublier le coefficient $2300$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4.a \pts{0,5 pt}]
+\source{\LD{}, §3.3 p.~7 ; \CD{}, §2.1 p.~3 (évènement contraire)}
+«~Au moins un arbre hors tolérance~» $\iff X\geq 1$. Son contraire est $X = 0$.
+\[
+P(X\geq 1) = 1 - P(X = 0) = 1 - 0{,}94^{25}\approx 1 - 0{,}2129 = 0{,}7871.
+\]
+\bareme{traduction et contraire : 0,25 \quad résultat : 0,25}
+\piege{donner $P(X = 0)\approx 0{,}2129$ ; calculer $P(X = 1)$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.b \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8}
+«~Au moins $23$ conformes~» $\iff$ «~$23$, $24$ ou $25$ conformes~» $\iff$ «~$2$, $1$ ou $0$ hors tolérance~» $\iff X\leq 2$.
+\[
+P(X\leq 2) = \texttt{binomFRép}(25,\,0{,}06,\,2)\approx 0{,}8129.
+\]
+\bareme{traduction $X\leq 2$ : 0,5 \quad résultat : 0,5}
+\piege{écrire $X\geq 23$ (probabilité quasi nulle, qui devrait alerter) ; écrire $X < 2$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.c \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et p.~8 ; \CD{}, §2.1 p.~3 (évènement contraire)}
+«~Moins de $22$ conformes~» signifie «~au plus $21$ conformes~», donc «~au moins $25 - 21 = 4$ hors tolérance~»~: $X\geq 4$. Son contraire est $X\leq 3$.
+\[
+P(X\geq 4) = 1 - P(X\leq 3) = 1 - \texttt{binomFRép}(25,\,0{,}06,\,3)\approx 1 - 0{,}9402 = 0{,}0598.
+\]
+\bareme{traduction $X\geq 4$ : 0,5 \quad passage au contraire et résultat : 0,5}
+\piege{traduire par $X\geq 3$ (inclut $22$ conformes) ; écrire $1 - P(X\leq 4)$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.d \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8}
+«~Strictement compris entre $1$ et $4$~» exclut les bornes~: $1 < X < 4 \iff X\in\{2\,;3\} \iff 2\leq X\leq 3$.
+\[
+P(2\leq X\leq 3) = P(X\leq 3) - P(X\leq 1) \approx 0{,}9402 - 0{,}5527 = 0{,}3875.
+\]
+La valeur $0{,}3876$, obtenue sans arrondi intermédiaire, est acceptée. Variante~: $P(X=2) + P(X=3)\approx 0{,}2602 + 0{,}1273 = 0{,}3875$.
+\bareme{traduction $2\leq X\leq 3$ : 0,5 \quad calcul et résultat : 0,5}
+\piege{inclure les bornes ($1\leq X\leq 4$) ; soustraire $P(X\leq 2)$ au lieu de $P(X\leq 1)$, ce qui exclut $2$.}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 3 -- Bris d'outils sur un îlot de fraisage (6 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §4.1 Définition p.~9 (propriété «~Espérance et écart-type~»)}
+Soit $Y$ le nombre de bris d'outils sur l'îlot de fraisage au cours d'un mois. $Y$ suit une loi de Poisson $\mathcal{P}(\lambda)$.\\
+Pour une loi de Poisson, $E(Y) = \lambda$. Or le nombre moyen de bris est $4{,}5$ par mois. Donc $\lambda = 4{,}5$ et $Y$ suit $\mathcal{P}(4{,}5)$.
+\bareme{variable définie en phrase (avec la durée : un mois) : 0,5 \quad $\lambda = E(Y) = 4{,}5$ justifié : 0,5}
+\piege{variable non définie ou sans unité de temps ; paramètre donné sans justification.}
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 2 \pts{0,5 pt}]
+\source{\LD{}, §4.1 p.~9}
+$\sigma(Y) = \sqrt{\lambda} = \sqrt{4{,}5}\approx 2{,}1213$.
+\bareme{résultat : 0,5}
+\piege{répondre $\sigma = 4{,}5$ (confusion avec la variance).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9}
+«~Au plus un bris~» $\iff Y\leq 1 \iff Y = 0$ ou $Y = 1$.
+\[
+P(Y\leq 1) = e^{-4{,}5}\,\frac{4{,}5^{0}}{0!} + e^{-4{,}5}\,\frac{4{,}5^{1}}{1!} = e^{-4{,}5}\,(1 + 4{,}5) = 5{,}5\,e^{-4{,}5}\approx 0{,}0611.
+\]
+\bareme{traduction ($k = 0$ et $k = 1$) : 0,25 \quad formule : 0,5 \quad résultat : 0,25}
+\piege{calculer seulement $P(Y = 1)\approx 0{,}0500$ ; écrire $4{,}5^{0} = 0$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~») ; \CD{}, §2.1 p.~3}
+«~Au moins $7$ bris~» $\iff Y\geq 7$. Son contraire est $Y\leq 6$.
+\[
+P(Y\geq 7) = 1 - P(Y\leq 6) = 1 - \texttt{poissonFRép}(4{,}5,\,6)\approx 1 - 0{,}8311 = 0{,}1689.
+\]
+\bareme{traduction et contraire : 0,5 \quad résultat : 0,5}
+\piege{écrire $1 - P(Y\leq 7)\approx 0{,}0866$.}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 5 \pts{1,5 pt}]
+\source{\LD{}, §4.1 p.~9 ; §1.3 Espérance, variance, écart-type p.~3 (interprétation de $\sigma$)}
+$E - \sigma\approx 4{,}5 - 2{,}1213 = 2{,}3787$ et $E + \sigma\approx 4{,}5 + 2{,}1213 = 6{,}6213$.\\
+$Y$ ne prend que des valeurs entières. Un mois est normal si $Y\in\{3\,;4\,;5\,;6\}$, c'est-à-dire $3\leq Y\leq 6$.
+\[
+P(3\leq Y\leq 6) = P(Y\leq 6) - P(Y\leq 2)\approx 0{,}8311 - 0{,}1736 = 0{,}6575.
+\]
+Environ $66\,\%$ des mois sont normaux.
+\bareme{bornes de l'intervalle : 0,5 \quad valeurs entières $3\leq Y\leq 6$ : 0,5 \quad calcul et résultat : 0,5}
+\piege{garder $2$ ou $7$ (arrondi des bornes au plus proche au lieu de rester dans l'intervalle) ; calculer $P(Y\leq 6) - P(Y\leq 3)$, ce qui exclut $3$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 6 \pts{1 pt}]
+\source{\LD{}, §2.2 Schéma de Bernoulli p.~5 et §3.3 p.~7}
+Pour un mois, l'évènement «~au moins $7$ bris~» a la probabilité $q = P(Y\geq 7)\approx 0{,}1689$ (question 4). Les $3$ mois sont indépendants~: le nombre $W$ de mois à au moins $7$ bris suit $\mathcal{B}(3\,;q)$.\\
+«~Exactement un mois~» $\iff W = 1$. Le mois concerné peut être le $1^{\text{er}}$, le $2^{\text{e}}$ ou le $3^{\text{e}}$~: $\binom{3}{1} = 3$ cas.
+\[
+P(W = 1) = \binom{3}{1}\,q\,(1-q)^{2}\approx 3\times 0{,}1689\times 0{,}8311^{2}\approx 0{,}3500.
+\]
+La valeur $0{,}3501$, obtenue sans arrondi intermédiaire, est acceptée.
+\bareme{reconnaître les 3 cas ou la loi $\mathcal{B}(3\,;q)$ : 0,5 \quad calcul et résultat : 0,5}
+\piege{oublier le facteur $3$ ($\approx 0{,}1167$) ; calculer «~au moins un mois~» $1 - 0{,}8311^{3}\approx 0{,}4260$ ; utiliser $\mathcal{P}(13{,}5)$ sur $3$ mois (autre question : nombre total de bris).}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 4 -- Contrôle de plaquettes de coupe (2 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §3.1 p.~7 et §5.1 Principe p.~11}
+Soit $V$ le nombre de plaquettes défectueuses dans le prélèvement. Schéma de Bernoulli~: $2000$ épreuves identiques et indépendantes, succès «~plaquette défectueuse~» de probabilité $0{,}002$. Donc $V$ suit $\mathcal{B}(2000\,;0{,}002)$.\\
+$n = 2000\geq 30$, $p = 0{,}002\leq 0{,}1$ et $np = 4\leq 10$~: on peut approcher la loi de $V$ par $\mathcal{P}(\lambda)$ avec $\lambda = np = 4$.
+\bareme{loi exacte : 0,25 \quad conditions : 0,5 \quad $\lambda = 4$ : 0,25}
+\piege{écrire $p = 0{,}2$ (pourcentage mal converti), d'où $np = 400$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 ; \CD{}, §2.1 p.~3 (évènement contraire)}
+«~Plus d'une plaquette défectueuse~» signifie «~strictement plus d'une~»~: $V\geq 2$. Son contraire est $V\leq 1$.
+\[
+P(V\geq 2) = 1 - P(V\leq 1)\approx 1 - e^{-4}\left(1 + 4\right) = 1 - 5\,e^{-4}\approx 0{,}9084 \qquad(1 - \texttt{poissonFRép}(4,\,1)).
+\]
+\bareme{traduction $V\geq 2$ et contraire : 0,5 \quad résultat : 0,5}
+\piege{traduire par $V\geq 1$ ($\approx 0{,}9817$) ; calculer $1 - P(V\leq 2)$.}
+\end{correction}
+
+\noindent{\footnotesize\color{uimmgray}\textit{Contrôle~: avec la loi binomiale exacte $\mathcal{B}(2000\,;0{,}002)$, on trouve $P(V\geq 2)\approx 0{,}9086$. L'écart avec l'approximation est inférieur à $10^{-3}$.}}
+
+\end{document}
