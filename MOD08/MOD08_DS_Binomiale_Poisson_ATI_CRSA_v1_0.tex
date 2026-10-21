@@ -62,8 +62,8 @@
 \fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
   {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
 \EnTete{DS Binomiale -- Poisson}{DS 1 h}
-\newtcolorbox{rappel}{colback=uimmlightblue, colframe=uimmblue, fonttitle=\bfseries\color{white},
-  coltitle=white, title={Rappels de cours}, boxrule=1pt, arc=2pt,
+\newtcolorbox{rappel}[1][Rappels de cours]{colback=uimmlightblue, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
   left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=8pt, after skip=8pt}
 
 \begin{document}
@@ -88,11 +88,38 @@ Nom, prénom~: & \dotfill \hspace{1cm}{\bfseries\color{uimmblue}Note~:}\ \dots\d
 \end{itemize}
 \end{consigne}
 
-\begin{rappel}
-\textbf{Coefficient binomial.} Nombre de façons de choisir $k$ objets parmi $n$, sans tenir compte de l'ordre~:
+\begin{rappel}[Rappels de cours -- Dénombrement]
+\textbf{Factorielle.} $n! = n \times (n-1) \times \dots \times 2 \times 1$, avec par convention $0! = 1$. Exemple~: $4! = 24$.
+
+\smallskip
+\textbf{Principes de comptage.} Choix successifs («~et~»)~: on \textbf{multiplie} les nombres de possibilités. Cas qui s'excluent («~ou~»)~: on \textbf{additionne}.
+
+\smallskip
+\textbf{Choisir $k$ objets parmi $n$ objets distincts.}\\[3pt]
+{\small\renewcommand{\arraystretch}{1.45}%
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4.3cm}|>{\centering\arraybackslash}p{5.3cm}|>{\raggedright\arraybackslash}p{5.1cm}|}
+\hline
+\rowcolor{uimmblue}\color{white}\textbf{Situation} & \color{white}\textbf{Nombre de possibilités} & \color{white}\textbf{Exemple} \\ \hline
+L'ordre compte, répétitions possibles ($k$-uplets) & $n^{k}$ & Code à $3$ chiffres~: $10^{3} = 1\,000$ \\ \hline
+L'ordre compte, sans répétition (arrangements) & $A_n^k = \dfrac{n!}{(n-k)!}$\newline $= n(n-1)\cdots(n-k+1)$ & Podium de $3$ parmi $8$~: $8 \times 7 \times 6 = 336$ \\ \hline
+Cas $k = n$~: ranger les $n$ objets (permutations) & $n!$ & Ordonner $5$ pièces~: $5! = 120$ \\ \hline
+L'ordre ne compte pas, sans répétition (combinaisons) & $\dbinom{n}{k} = \dfrac{n!}{k!\,(n-k)!}$ & Choisir $2$ outils parmi $6$~: $\tbinom{6}{2} = 15$ \\ \hline
+\end{tabular}}
+
+\medskip
+\textbf{Propriétés.} $\binom{n}{0} = \binom{n}{n} = 1$, \quad $\binom{n}{1} = n$, \quad $\binom{n}{k} = \binom{n}{n-k}$.
+
+\smallskip
+\textbf{Équiprobabilité.} Si toutes les issues ont la même probabilité~:
 \[
-\binom{n}{k} = \frac{n!}{k!\,(n-k)!}.
+P(A) = \frac{\text{nombre d'issues favorables à } A}{\text{nombre d'issues possibles}}, \qquad P(\overline{A}) = 1 - P(A) \ \text{(évènement contraire)}.
 \]
+
+\smallskip
+\textbf{Calculatrice.} TI~: touche \texttt{math}, menu \texttt{PROB}. Casio~: \texttt{OPTN}, menu \texttt{PROB}. Fonctions \texttt{nPr} (arrangements), \texttt{nCr} (combinaisons), \texttt{!} (factorielle). Saisie~: \texttt{8 nPr 3}, \texttt{6 nCr 2}.
+\end{rappel}
+
+\begin{rappel}[Rappels de cours -- Loi binomiale, loi de Poisson]
 \textbf{Loi binomiale $\mathcal{B}(n\,;p)$.} On répète $n$ fois, de façon identique et indépendante, une épreuve à deux issues (succès de probabilité $p$, échec de probabilité $1-p$). La variable $X$ qui compte le nombre de succès suit la loi $\mathcal{B}(n\,;p)$. Elle prend les valeurs $0, 1, \dots, n$.
 \[
 P(X = k) = \binom{n}{k}\,p^{k}\,(1-p)^{n-k},\qquad E(X) = np,\qquad \sigma(X) = \sqrt{np(1-p)}.
@@ -105,7 +132,7 @@ P(X = k) = e^{-\lambda}\,\frac{\lambda^{k}}{k!},\qquad E(X) = \lambda,\qquad \si
 
 \smallskip
 \textbf{Calculatrice.} La commande «~Fdp~» (ou «~pd~») donne $P(X = k)$. La commande «~FRép~» (ou «~cd~») donne $P(X \leq k)$.\\
-{\small TI~: \texttt{binomFdp(n,p,k)}, \texttt{binomFRép(n,p,k)}, \texttt{poissonFdp($\lambda$,k)}, \texttt{poissonFRép($\lambda$,k)}. \quad Casio~: \texttt{Bpd}, \texttt{Bcd}, \texttt{Ppd}, \texttt{Pcd}.}
+{\small TI~: \texttt{binomFdp(n,p,k)}, \texttt{binomFRép(n,p,k)}, \texttt{poissonFdp($\lambda$,k)}, \texttt{poissonFRép($\lambda$,k)}.\\ Casio~: \texttt{Bpd}, \texttt{Bcd}, \texttt{Ppd}, \texttt{Pcd}.}
 \end{rappel}
 
 % ------------------------------------------------------------
