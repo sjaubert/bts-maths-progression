@@ -1,0 +1,296 @@
+% ============================================================
+% Corrigé DS MOD08 -- SUJET A : loi binomiale, loi de Poisson, loi normale
+% BTS CPRP 1re année -- durée 1 h 30
+% Pôle Formation UIMM - CVDL - S. JAUBERT
+% Sujet : MOD08_DS_Binomiale_Poisson_Normale_CPRP_Sujet_A_v1_0
+% Valeurs recalculées en Python (scipy.stats) avant livraison.
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newcommand{\EnTete}[2]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{7cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS CPRP 1\textsuperscript{re} année\\ Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{Corrigé DS Sujet A}{Corrigé Sujet A -- DS 1 h 30}
+\newcommand{\pts}[1]{\hfill\mbox{\color{white}\small\textbf{#1}}}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\bareme}[1]{\par\smallskip{\footnotesize\color{uimmred}\textbf{Barème~:} #1}}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\LD}{Cours MOD08 \textit{Lois discrètes}}
+\newcommand{\LN}{Cours MOD08 \textit{Loi normale}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé et barème -- DS MOD08 \hfill Sujet A}\\[4pt]
+{\color{white}\large Loi binomiale, loi de Poisson, loi normale \hfill Total~: 20 points}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Principes de notation.} Les points de méthode (variable aléatoire définie, évènement traduit avec la variable, formule écrite) sont accordés même en cas d'erreur de calcul. Une erreur n'est sanctionnée qu'une fois~: la suite, cohérente avec un résultat faux, est notée normalement. Un résultat de calculatrice sans l'évènement écrit avec la variable aléatoire perd la moitié des points de la question. Une loi citée sans ses paramètres perd $0{,}25$\,pt.\\[3pt]
+\textbf{Repères de durée (estimation).} Exercice 1~: 30 min \quad Exercice 2~: 25 min \quad Exercice 3~: 35 min.\\[3pt]
+\textbf{Références.} \LD{}~: PDF \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0}. \LN{}~: PDF \texttt{MOD08\_Loi\_Normale\_Cours\_v1\_0}. Numéros de page~: numérotation imprimée en pied de page. Les formules utiles figurent aussi dans l'encadré «~Rappels de cours~» p.~1 du sujet.\\[3pt]
+\textbf{Contrôle.} Toutes les valeurs numériques ont été recalculées indépendamment en Python (\texttt{scipy.stats}).
+\end{tcolorbox}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 1 -- Taraudage de brides (7 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1,5 pt}]
+\source{\LD{}, §2.2 Schéma de Bernoulli p.~5 et §3.1 Définition p.~7}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Épreuve de Bernoulli~: on prélève une bride et on regarde si son taraudage est non conforme. Deux issues. Succès~: «~la bride est non conforme~», de probabilité $p = 0{,}04$.
+  \item L'épreuve est répétée $30$ fois, de façon identique et indépendante (tirage assimilé à un tirage avec remise).
+  \item $X$ compte le nombre de succès.
+\end{itemize}
+Donc $X$ suit la loi binomiale $\mathcal{B}(30\,;0{,}04)$.
+\bareme{Bernoulli, succès et $p$ : 0,5 \quad répétitions identiques et indépendantes : 0,5 \quad loi et paramètres : 0,5}
+\piege{prendre $p = 0{,}96$ alors que $X$ compte les brides \textbf{non conformes} ; oublier l'indépendance.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\LD{}, §3.3 p.~8 (propriété «~Espérance et écart-type~»)}
+\[
+E(X) = np = 30\times 0{,}04 = 1{,}2,\quad \sigma(X) = \sqrt{np(1-p)} = \sqrt{30\times 0{,}04\times 0{,}96} = \sqrt{1{,}152}\approx 1{,}0733.
+\]
+Interprétation~: sur un grand nombre de prélèvements de $30$ brides, on compte en moyenne $1{,}2$ bride non conforme par prélèvement.
+\bareme{$E(X)$ : 0,5 \quad $\sigma(X)$ : 0,5 \quad interprétation : 0,5}
+\piege{oublier la racine carrée (donner la variance $1{,}152$) ; interpréter $1{,}2$ comme le nombre de brides non conformes de \textbf{ce} prélèvement.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LD{}, §3.2 Coefficient binomial p.~7 et §3.3 Calcul des probabilités p.~7 (exemple «~Calcul détaillé~» p.~8)}
+L'évènement est $\{X = 2\}$~: $2$ brides non conformes et $28$ conformes. Le coefficient $\binom{30}{2} = \dfrac{30\times 29}{2} = 435$ compte les placements des $2$ brides non conformes dans le prélèvement.
+\[
+P(X = 2) = \binom{30}{2}\times 0{,}04^{2}\times 0{,}96^{28} = 435\times 0{,}0016\times 0{,}96^{28}\approx 0{,}696\times 0{,}3189\approx 0{,}2219.
+\]
+\bareme{coefficient $435$ : 0,25 \quad formule complète : 0,5 \quad résultat : 0,25}
+\piege{écrire $0{,}96^{30}$ au lieu de $0{,}96^{28}$ ; oublier le coefficient $435$ ; calculer $30\times 29 = 870$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4.a \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 (évènement contraire)}
+«~Au moins une bride non conforme~» $\iff X\geq 1$. Son contraire est $X = 0$.
+\[
+P(X\geq 1) = 1 - P(X = 0) = 1 - 0{,}96^{30}\approx 1 - 0{,}2939 = 0{,}7061.
+\]
+\bareme{traduction et contraire : 0,5 \quad résultat : 0,5}
+\piege{donner $P(X = 0)\approx 0{,}2939$ ; calculer $P(X = 1)\approx 0{,}3673$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.b \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8}
+«~Au moins $28$ conformes~» $\iff$ «~$28$, $29$ ou $30$ conformes~» $\iff$ «~$2$, $1$ ou $0$ non conformes~» $\iff X\leq 2$.
+\[
+P(X\leq 2) = \texttt{binomFRép}(30,\,0{,}04,\,2)\approx 0{,}8831.
+\]
+\bareme{traduction $X\leq 2$ : 0,5 \quad résultat : 0,5}
+\piege{écrire $X\geq 28$ (probabilité quasi nulle, qui devrait alerter) ; écrire $X < 2$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.c \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8}
+«~Plus de $3$~» signifie «~strictement plus de $3$~»~: $X\geq 4$. Son contraire est $X\leq 3$.
+\[
+P(X\geq 4) = 1 - P(X\leq 3) = 1 - \texttt{binomFRép}(30,\,0{,}04,\,3)\approx 1 - 0{,}9694 = 0{,}0306.
+\]
+\bareme{traduction $X\geq 4$ : 0,5 \quad passage au contraire et résultat : 0,5}
+\piege{traduire par $X\geq 3$ ($\approx 0{,}1169$) ; écrire $1 - P(X\leq 4)$.}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 2 -- Arrêts du robot de chargement (6 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §4.1 Définition p.~9}
+Soit $Y$ le nombre d'arrêts non planifiés du robot de chargement au cours d'une semaine. $Y$ suit une loi de Poisson $\mathcal{P}(\lambda)$.\\
+Pour une loi de Poisson, $E(Y) = \lambda$. Or le nombre moyen d'arrêts est $3{,}2$ par semaine. Donc $\lambda = 3{,}2$ et $Y$ suit $\mathcal{P}(3{,}2)$.
+\bareme{variable définie en phrase (avec la durée : une semaine) : 0,5 \quad $\lambda = E(Y) = 3{,}2$ justifié : 0,5}
+\piege{variable non définie ou sans unité de temps ; paramètre donné sans justification.}
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 2 \pts{0,5 pt}]
+\source{\LD{}, §4.1 p.~9}
+$\sigma(Y) = \sqrt{\lambda} = \sqrt{3{,}2}\approx 1{,}7889$.
+\bareme{résultat : 0,5}
+\piege{répondre $\sigma = 3{,}2$ (confusion avec la variance).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 (exemple «~Calcul détaillé~»)}
+\[
+P(Y = 0) = e^{-3{,}2}\,\frac{3{,}2^{0}}{0!} = e^{-3{,}2}\approx 0{,}0408,\qquad
+P(Y = 2) = e^{-3{,}2}\,\frac{3{,}2^{2}}{2!} = 5{,}12\,e^{-3{,}2}\approx 0{,}2087.
+\]
+\bareme{$P(Y = 0)$ avec formule : 0,5 \quad $P(Y = 2)$ avec formule : 0,5}
+\piege{écrire $3{,}2^{0} = 0$ ; oublier la factorielle ($10{,}24\,e^{-3{,}2}\approx 0{,}4174$).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)}
+«~Au moins $5$ arrêts~» $\iff Y\geq 5$. Son contraire est $Y\leq 4$.
+\[
+P(Y\geq 5) = 1 - P(Y\leq 4) = 1 - \texttt{poissonFRép}(3{,}2,\,4)\approx 1 - 0{,}7806 = 0{,}2194.
+\]
+\bareme{traduction et contraire : 0,5 \quad résultat : 0,5}
+\piege{écrire $1 - P(Y\leq 5)\approx 0{,}1054$.}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 5 \pts{1,5 pt}]
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)}
+On cherche le plus petit entier $k$ tel que $P(Y\leq k)\geq 0{,}95$. On calcule les probabilités cumulées~:
+\[
+P(Y\leq 5)\approx 0{,}8946 < 0{,}95 \qquad\text{et}\qquad P(Y\leq 6)\approx 0{,}9554\geq 0{,}95.
+\]
+Donc $k = 6$~: une astreinte dimensionnée pour $6$ arrêts par semaine suffit dans au moins $95\,\%$ des semaines.
+\bareme{traduction $P(Y\leq k)\geq 0{,}95$ : 0,5 \quad les deux probabilités encadrantes : 0,5 \quad conclusion $k = 6$ : 0,5}
+\piege{donner une seule probabilité (sans montrer que $k = 5$ ne convient pas) ; chercher $P(Y = k)\geq 0{,}95$ ; répondre $k = 5$ en confondant $0{,}8946$ et $0{,}95$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 6 \pts{1 pt}]
+\source{\LD{}, §4.1 Définition p.~9 (paramètre $=$ nombre moyen sur la durée considérée)}
+Sur deux semaines, le nombre moyen d'arrêts est $2\times 3{,}2 = 6{,}4$. Le nombre $W$ d'arrêts sur deux semaines suit $\mathcal{P}(6{,}4)$.
+\[
+P(W\leq 3) = \texttt{poissonFRép}(6{,}4,\,3)\approx 0{,}1189.
+\]
+\bareme{$\lambda = 6{,}4$ justifié : 0,5 \quad résultat : 0,5}
+\piege{garder $\lambda = 3{,}2$ ($P\approx 0{,}6025$) ; calculer $P(Y\leq 3)^{2}\approx 0{,}3630$ (ce serait «~au plus $3$ arrêts \textbf{chaque} semaine~»).}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 3 -- Alésage de logements de roulement (7 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LN{}, §3.2 Calcul d'une probabilité p.~6 (encadré «~À la calculatrice~»)}
+«~Alésage conforme~» $\iff 25{,}000\leq D\leq 25{,}021$.
+\[
+P(25{,}000\leq D\leq 25{,}021) = \texttt{normalFRép}(25{,}000,\,25{,}021,\,25{,}012,\,0{,}004)\approx 0{,}9864.
+\]
+Environ $98{,}6\,\%$ des alésages sont conformes.
+\bareme{traduction : 0,5 \quad résultat : 0,5}
+\piege{saisir la variance $0{,}004^{2}$ au lieu de l'écart-type ; inverser l'ordre des paramètres à la calculatrice.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\LN{}, §3.2 p.~6 ; §3.3 Standardisation p.~7 (lecture des écarts en nombre de $\sigma$)}
+À reprendre~: $D < 25{,}000$.
+\[
+P(D < 25{,}000) = \texttt{normalFRép}(-10^{99},\,25{,}000,\,25{,}012,\,0{,}004)\approx 0{,}0013.
+\]
+Au rebut~: $D > 25{,}021$.
+\[
+P(D > 25{,}021) = 1 - P(D\leq 25{,}021)\approx 1 - 0{,}9878 = 0{,}0122.
+\]
+Contrôle~: $0{,}9864 + 0{,}0013 + 0{,}0122 = 0{,}9999\approx 1$ (arrondis). Repère~: $25{,}000$ est à $3\sigma$ sous la moyenne, $25{,}021$ à $2{,}25\sigma$ au-dessus.
+\bareme{traduction des deux évènements : 0,5 \quad reprise : 0,5 \quad rebut : 0,5}
+\piege{confondre reprise et rebut ; calculer $P(D\leq 25{,}021)$ sans passer au contraire.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LN{}, §3.4 La règle des 68 -- 95 -- 99,7 p.~7}
+Environ $99{,}7\,\%$ des diamètres sont dans $[\mu - 3\sigma\,;\mu + 3\sigma] = [25{,}012 - 0{,}012\,;25{,}012 + 0{,}012] = [25{,}000\,;25{,}024]$.\\
+La borne basse coïncide avec la limite inférieure de tolérance. La borne haute $25{,}024$ dépasse la limite supérieure $25{,}021$~: c'est le côté \textbf{rebut} qui pose problème. La moyenne $25{,}012$ est décentrée vers le haut (milieu de tolérance entre $25{,}010$ et $25{,}011$\,mm).
+\bareme{intervalle : 0,5 \quad comparaison et côté rebut identifié : 0,5}
+\piege{utiliser $\mu\pm 2\sigma$ ; conclure «~tout est conforme~» parce que la borne basse est juste à la limite.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1,5 pt}]
+\source{\LN{}, §4.1 Trouver un seuil sur $X$ p.~8 (encadré «~À la calculatrice~»)}
+«~$2\,\%$ des alésages ont un diamètre supérieur à $a$~» $\iff P(D > a) = 0{,}02 \iff P(D\leq a) = 0{,}98$.
+\[
+a = \texttt{FracNormale}(0{,}98,\,25{,}012,\,0{,}004)\approx 25{,}0202,\ \text{soit}\ a\approx 25{,}020\ \text{mm au micron}.
+\]
+Vérification par standardisation~: $a = 25{,}012 + 2{,}0537\times 0{,}004\approx 25{,}020$.
+\bareme{traduction $P(D > a) = 0{,}02$ : 0,5 \quad passage à $P(D\leq a) = 0{,}98$ : 0,5 \quad résultat : 0,5}
+\piege{saisir $0{,}02$ dans \texttt{FracNormale} ($a\approx 25{,}004$, sous la moyenne, ce qui devrait alerter).}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 5.a \pts{1,25 pt}]
+\source{\LN{}, §4.2 Retrouver un paramètre $\mu$ ou $\sigma$ p.~8 (encadré «~Méthode~») et §3.3 Standardisation p.~7}
+On veut $P(D > 25{,}021)\approx 0{,}001$, soit $P(D\leq 25{,}021) = 0{,}999$. On standardise avec $Z = \dfrac{D-\mu}{0{,}004}$~:
+\[
+P\!\left(Z\leq \frac{25{,}021-\mu}{0{,}004}\right) = 0{,}999 \iff \frac{25{,}021-\mu}{0{,}004} = \texttt{FracNormale}(0{,}999)\approx 3{,}0902.
+\]
+\[
+\mu = 25{,}021 - 3{,}0902\times 0{,}004\approx 25{,}0086,\ \text{soit}\ \mu\approx 25{,}009\ \text{mm au micron}.
+\]
+\bareme{traduction $P(D\leq 25{,}021) = 0{,}999$ : 0,25 \quad standardisation : 0,25 \quad $z\approx 3{,}0902$ : 0,25 \quad résolution et résultat au micron : 0,5}
+\piege{utiliser $0{,}001$ au lieu de $0{,}999$ ($z\approx -3{,}0902$, d'où $\mu\approx 25{,}033$) ; ajouter au lieu de soustraire.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 5.b \pts{0,75 pt}]
+\source{\LN{}, §3.2 Calcul d'une probabilité p.~6}
+Avec $D\sim\mathcal{N}(25{,}009\,;0{,}004)$~:
+\[
+P(D < 25{,}000) = \texttt{normalFRép}(-10^{99},\,25{,}000,\,25{,}009,\,0{,}004)\approx 0{,}0122.
+\]
+La reprise passe d'environ $0{,}13\,\%$ à $1{,}22\,\%$, le rebut d'environ $1{,}22\,\%$ à $0{,}13\,\%$ ($25{,}021$ est maintenant à $3\sigma$ de la moyenne). Le réglage est intéressant~: une pièce reprise est récupérée, une pièce au rebut est perdue.
+\bareme{résultat : 0,5 \quad conclusion argumentée (reprise récupérable / rebut perdu) : 0,25}
+\piege{garder $\mu = 25{,}012$ ; conclure sur la seule hausse des reprises sans la comparer à la baisse du rebut.}
+\end{correction}
+
+\noindent{\footnotesize\color{uimmgray}\textit{Arrondi au micron~: avec $\mu = 25{,}009$\,mm, le rebut vaut $0{,}13\,\%$, un peu au-dessus de la cible. Un apprenti qui arrondit par défaut ($\mu = 25{,}008$\,mm) pour garantir au plus $0{,}1\,\%$ de rebut a raison~: accepter (rebut $0{,}06\,\%$, reprise $2{,}28\,\%$). Pour aller plus loin~: l'intervalle de tolérance ($21\,\mu$m) est inférieur à $6\sigma = 24\,\mu$m, aucun réglage de la moyenne ne supprime à la fois rebut et reprise.}}
+
+\end{document}

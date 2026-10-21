@@ -1,0 +1,296 @@
+% ============================================================
+% Corrigé DS MOD08 -- SUJET B : loi binomiale, loi de Poisson, loi normale
+% BTS CPRP 1re année -- durée 1 h 30
+% Pôle Formation UIMM - CVDL - S. JAUBERT
+% Sujet : MOD08_DS_Binomiale_Poisson_Normale_CPRP_Sujet_B_v1_0
+% Valeurs recalculées en Python (scipy.stats) avant livraison.
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newcommand{\EnTete}[2]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{7cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS CPRP 1\textsuperscript{re} année\\ Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{Corrigé DS Sujet B}{Corrigé Sujet B -- DS 1 h 30}
+\newcommand{\pts}[1]{\hfill\mbox{\color{white}\small\textbf{#1}}}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\bareme}[1]{\par\smallskip{\footnotesize\color{uimmred}\textbf{Barème~:} #1}}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\LD}{Cours MOD08 \textit{Lois discrètes}}
+\newcommand{\LN}{Cours MOD08 \textit{Loi normale}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé et barème -- DS MOD08 \hfill Sujet B}\\[4pt]
+{\color{white}\large Loi binomiale, loi de Poisson, loi normale \hfill Total~: 20 points}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Principes de notation.} Les points de méthode (variable aléatoire définie, évènement traduit avec la variable, formule écrite) sont accordés même en cas d'erreur de calcul. Une erreur n'est sanctionnée qu'une fois~: la suite, cohérente avec un résultat faux, est notée normalement. Un résultat de calculatrice sans l'évènement écrit avec la variable aléatoire perd la moitié des points de la question. Une loi citée sans ses paramètres perd $0{,}25$\,pt.\\[3pt]
+\textbf{Repères de durée (estimation).} Exercice 1~: 30 min \quad Exercice 2~: 25 min \quad Exercice 3~: 35 min.\\[3pt]
+\textbf{Références.} \LD{}~: PDF \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0}. \LN{}~: PDF \texttt{MOD08\_Loi\_Normale\_Cours\_v1\_0}. Numéros de page~: numérotation imprimée en pied de page. Les formules utiles figurent aussi dans l'encadré «~Rappels de cours~» p.~1 du sujet.\\[3pt]
+\textbf{Contrôle.} Toutes les valeurs numériques ont été recalculées indépendamment en Python (\texttt{scipy.stats}).
+\end{tcolorbox}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 1 -- Tournage de bagues (7 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1,5 pt}]
+\source{\LD{}, §2.2 Schéma de Bernoulli p.~5 et §3.1 Définition p.~7}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Épreuve de Bernoulli~: on prélève une bague et on regarde si son état de surface est non conforme. Deux issues. Succès~: «~la bague est non conforme~», de probabilité $p = 0{,}05$.
+  \item L'épreuve est répétée $25$ fois, de façon identique et indépendante (tirage assimilé à un tirage avec remise).
+  \item $X$ compte le nombre de succès.
+\end{itemize}
+Donc $X$ suit la loi binomiale $\mathcal{B}(25\,;0{,}05)$.
+\bareme{Bernoulli, succès et $p$ : 0,5 \quad répétitions identiques et indépendantes : 0,5 \quad loi et paramètres : 0,5}
+\piege{prendre $p = 0{,}95$ alors que $X$ compte les bagues \textbf{non conformes} ; oublier l'indépendance.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\LD{}, §3.3 p.~8 (propriété «~Espérance et écart-type~»)}
+\[
+E(X) = np = 25\times 0{,}05 = 1{,}25,\quad \sigma(X) = \sqrt{np(1-p)} = \sqrt{25\times 0{,}05\times 0{,}95} = \sqrt{1{,}1875}\approx 1{,}0897.
+\]
+Interprétation~: sur un grand nombre de prélèvements de $25$ bagues, on compte en moyenne $1{,}25$ bague non conforme par prélèvement.
+\bareme{$E(X)$ : 0,5 \quad $\sigma(X)$ : 0,5 \quad interprétation : 0,5}
+\piege{oublier la racine carrée (donner la variance $1{,}1875$) ; interpréter $1{,}25$ comme le nombre de bagues non conformes de \textbf{ce} prélèvement.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LD{}, §3.2 Coefficient binomial p.~7 et §3.3 Calcul des probabilités p.~7 (exemple «~Calcul détaillé~» p.~8)}
+L'évènement est $\{X = 2\}$~: $2$ bagues non conformes et $23$ conformes. Le coefficient $\binom{25}{2} = \dfrac{25\times 24}{2} = 300$ compte les placements des $2$ bagues non conformes dans le prélèvement.
+\[
+P(X = 2) = \binom{25}{2}\times 0{,}05^{2}\times 0{,}95^{23} = 300\times 0{,}0025\times 0{,}95^{23}\approx 0{,}75\times 0{,}3074\approx 0{,}2305.
+\]
+\bareme{coefficient $300$ : 0,25 \quad formule complète : 0,5 \quad résultat : 0,25}
+\piege{écrire $0{,}95^{25}$ au lieu de $0{,}95^{23}$ ; oublier le coefficient $300$ ; calculer $25\times 24 = 600$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4.a \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 (évènement contraire)}
+«~Au moins une bague non conforme~» $\iff X\geq 1$. Son contraire est $X = 0$.
+\[
+P(X\geq 1) = 1 - P(X = 0) = 1 - 0{,}95^{25}\approx 1 - 0{,}2774 = 0{,}7226.
+\]
+\bareme{traduction et contraire : 0,5 \quad résultat : 0,5}
+\piege{donner $P(X = 0)\approx 0{,}2774$ ; calculer $P(X = 1)\approx 0{,}3650$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.b \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8}
+«~Au moins $22$ conformes~» $\iff$ «~$22$, $23$, $24$ ou $25$ conformes~» $\iff$ «~$3$, $2$, $1$ ou $0$ non conformes~» $\iff X\leq 3$.
+\[
+P(X\leq 3) = \texttt{binomFRép}(25,\,0{,}05,\,3)\approx 0{,}9659.
+\]
+\bareme{traduction $X\leq 3$ : 0,5 \quad résultat : 0,5}
+\piege{écrire $X\geq 22$ (probabilité quasi nulle, qui devrait alerter) ; écrire $X < 3$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.c \pts{1 pt}]
+\source{\LD{}, §3.3 p.~7 et encadré «~À la calculatrice~» p.~8}
+«~Plus de $2$~» signifie «~strictement plus de $2$~»~: $X\geq 3$. Son contraire est $X\leq 2$.
+\[
+P(X\geq 3) = 1 - P(X\leq 2) = 1 - \texttt{binomFRép}(25,\,0{,}05,\,2)\approx 1 - 0{,}8729 = 0{,}1271.
+\]
+\bareme{traduction $X\geq 3$ : 0,5 \quad passage au contraire et résultat : 0,5}
+\piege{traduire par $X\geq 2$ ($\approx 0{,}3576$) ; écrire $1 - P(X\leq 3)$.}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 2 -- Casses de fil en électroérosion (6 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §4.1 Définition p.~9}
+Soit $Y$ le nombre de casses de fil sur la machine d'électroérosion au cours d'une semaine. $Y$ suit une loi de Poisson $\mathcal{P}(\lambda)$.\\
+Pour une loi de Poisson, $E(Y) = \lambda$. Or le nombre moyen de casses est $2{,}8$ par semaine. Donc $\lambda = 2{,}8$ et $Y$ suit $\mathcal{P}(2{,}8)$.
+\bareme{variable définie en phrase (avec la durée : une semaine) : 0,5 \quad $\lambda = E(Y) = 2{,}8$ justifié : 0,5}
+\piege{variable non définie ou sans unité de temps ; paramètre donné sans justification.}
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 2 \pts{0,5 pt}]
+\source{\LD{}, §4.1 p.~9}
+$\sigma(Y) = \sqrt{\lambda} = \sqrt{2{,}8}\approx 1{,}6733$.
+\bareme{résultat : 0,5}
+\piege{répondre $\sigma = 2{,}8$ (confusion avec la variance).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 (exemple «~Calcul détaillé~»)}
+\[
+P(Y = 0) = e^{-2{,}8}\,\frac{2{,}8^{0}}{0!} = e^{-2{,}8}\approx 0{,}0608,\qquad
+P(Y = 3) = e^{-2{,}8}\,\frac{2{,}8^{3}}{3!} = \frac{21{,}952}{6}\,e^{-2{,}8}\approx 0{,}2225.
+\]
+\bareme{$P(Y = 0)$ avec formule : 0,5 \quad $P(Y = 3)$ avec formule : 0,5}
+\piege{écrire $2{,}8^{0} = 0$ ; oublier la factorielle ($21{,}952\,e^{-2{,}8}\approx 1{,}3349$, supérieur à $1$, ce qui devrait alerter) ; prendre $3! = 3$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)}
+«~Au moins $5$ casses~» $\iff Y\geq 5$. Son contraire est $Y\leq 4$.
+\[
+P(Y\geq 5) = 1 - P(Y\leq 4) = 1 - \texttt{poissonFRép}(2{,}8,\,4)\approx 1 - 0{,}8477 = 0{,}1523.
+\]
+\bareme{traduction et contraire : 0,5 \quad résultat : 0,5}
+\piege{écrire $1 - P(Y\leq 5)\approx 0{,}0651$.}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 5 \pts{1,5 pt}]
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)}
+On cherche le plus petit entier $k$ tel que $P(Y\leq k)\geq 0{,}90$. On calcule les probabilités cumulées~:
+\[
+P(Y\leq 4)\approx 0{,}8477 < 0{,}90 \qquad\text{et}\qquad P(Y\leq 5)\approx 0{,}9349\geq 0{,}90.
+\]
+Donc $k = 5$~: un temps réservé pour $5$ casses par semaine suffit dans au moins $90\,\%$ des semaines.
+\bareme{traduction $P(Y\leq k)\geq 0{,}90$ : 0,5 \quad les deux probabilités encadrantes : 0,5 \quad conclusion $k = 5$ : 0,5}
+\piege{donner une seule probabilité (sans montrer que $k = 4$ ne convient pas) ; chercher $P(Y = k)\geq 0{,}90$ ; répondre $k = 4$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 6 \pts{1 pt}]
+\source{\LD{}, §4.1 Définition p.~9 (paramètre $=$ nombre moyen sur la durée considérée)}
+Sur trois semaines, le nombre moyen de casses est $3\times 2{,}8 = 8{,}4$. Le nombre $W$ de casses sur trois semaines suit $\mathcal{P}(8{,}4)$.
+\[
+P(W\leq 5) = \texttt{poissonFRép}(8{,}4,\,5)\approx 0{,}1573.
+\]
+\bareme{$\lambda = 8{,}4$ justifié : 0,5 \quad résultat : 0,5}
+\piege{garder $\lambda = 2{,}8$ ($P\approx 0{,}9349$) ; prendre $\lambda = 2{,}8^{3}$ ou $2{,}8 + 3$.}
+\end{correction}
+
+% ============================================================
+\needspace{5cm}
+\section{Exercice 3 -- Tournage d'axes de transmission (7 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LN{}, §3.2 Calcul d'une probabilité p.~6 (encadré «~À la calculatrice~»)}
+«~Axe conforme~» $\iff 39{,}966\leq D\leq 39{,}991$.
+\[
+P(39{,}966\leq D\leq 39{,}991) = \texttt{normalFRép}(39{,}966,\,39{,}991,\,39{,}976,\,0{,}005)\approx 0{,}9759.
+\]
+Environ $97{,}6\,\%$ des axes sont conformes.
+\bareme{traduction : 0,5 \quad résultat : 0,5}
+\piege{saisir la variance $0{,}005^{2}$ au lieu de l'écart-type ; inverser l'ordre des paramètres à la calculatrice.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\LN{}, §3.2 p.~6 ; §3.3 Standardisation p.~7 (lecture des écarts en nombre de $\sigma$)}
+Au rebut~: $D < 39{,}966$.
+\[
+P(D < 39{,}966) = \texttt{normalFRép}(-10^{99},\,39{,}966,\,39{,}976,\,0{,}005)\approx 0{,}0228.
+\]
+À reprendre~: $D > 39{,}991$.
+\[
+P(D > 39{,}991) = 1 - P(D\leq 39{,}991)\approx 1 - 0{,}9987 = 0{,}0013.
+\]
+Contrôle~: $0{,}9759 + 0{,}0228 + 0{,}0013 = 1$. Repère~: $39{,}966$ est à $2\sigma$ sous la moyenne, $39{,}991$ à $3\sigma$ au-dessus.
+\bareme{traduction des deux évènements : 0,5 \quad rebut : 0,5 \quad reprise : 0,5}
+\piege{confondre reprise et rebut (ici, c'est l'axe \textbf{trop petit} qui part au rebut) ; calculer $P(D\leq 39{,}991)$ sans passer au contraire.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LN{}, §3.4 La règle des 68 -- 95 -- 99,7 p.~7}
+Environ $99{,}7\,\%$ des diamètres sont dans $[\mu - 3\sigma\,;\mu + 3\sigma] = [39{,}976 - 0{,}015\,;39{,}976 + 0{,}015] = [39{,}961\,;39{,}991]$.\\
+La borne haute coïncide avec la limite supérieure de tolérance. La borne basse $39{,}961$ est sous la limite inférieure $39{,}966$~: c'est le côté \textbf{rebut} qui pose problème. La moyenne $39{,}976$ est décentrée vers le bas (milieu de tolérance entre $39{,}978$ et $39{,}979$\,mm).
+\bareme{intervalle : 0,5 \quad comparaison et côté rebut identifié : 0,5}
+\piege{utiliser $\mu\pm 2\sigma$ ; conclure «~tout est conforme~» parce que la borne haute est juste à la limite.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1,5 pt}]
+\source{\LN{}, §4.1 Trouver un seuil sur $X$ p.~8 (encadré «~À la calculatrice~»)}
+«~$97\,\%$ des axes ont un diamètre supérieur à $a$~» $\iff P(D > a) = 0{,}97 \iff P(D\leq a) = 0{,}03$.
+\[
+a = \texttt{FracNormale}(0{,}03,\,39{,}976,\,0{,}005)\approx 39{,}9666,\ \text{soit}\ a\approx 39{,}967\ \text{mm au micron}.
+\]
+Vérification par standardisation~: $a = 39{,}976 - 1{,}8808\times 0{,}005\approx 39{,}967$.
+\bareme{traduction $P(D > a) = 0{,}97$ : 0,5 \quad passage à $P(D\leq a) = 0{,}03$ : 0,5 \quad résultat : 0,5}
+\piege{saisir $0{,}97$ dans \texttt{FracNormale} ($a\approx 39{,}985$, au-dessus de la moyenne, ce qui devrait alerter).}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 5.a \pts{1,25 pt}]
+\source{\LN{}, §4.2 Retrouver un paramètre $\mu$ ou $\sigma$ p.~8 (encadré «~Méthode~») et §3.3 Standardisation p.~7}
+On veut $P(D < 39{,}966)\approx 0{,}001$. On standardise avec $Z = \dfrac{D-\mu}{0{,}005}$~:
+\[
+P\!\left(Z\leq \frac{39{,}966-\mu}{0{,}005}\right) = 0{,}001 \iff \frac{39{,}966-\mu}{0{,}005} = \texttt{FracNormale}(0{,}001)\approx -3{,}0902.
+\]
+\[
+\mu = 39{,}966 + 3{,}0902\times 0{,}005\approx 39{,}9815,\ \text{soit}\ \mu\approx 39{,}981\ \text{mm au micron}.
+\]
+\bareme{traduction $P(D < 39{,}966) = 0{,}001$ : 0,25 \quad standardisation : 0,25 \quad $z\approx -3{,}0902$ : 0,25 \quad résolution et résultat au micron : 0,5}
+\piege{utiliser $0{,}999$ au lieu de $0{,}001$ ($z\approx 3{,}0902$, d'où $\mu\approx 39{,}951$) ; erreur de signe dans la résolution.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 5.b \pts{0,75 pt}]
+\source{\LN{}, §3.2 Calcul d'une probabilité p.~6}
+Avec $D\sim\mathcal{N}(39{,}981\,;0{,}005)$~:
+\[
+P(D > 39{,}991) = 1 - \texttt{normalFRép}(-10^{99},\,39{,}991,\,39{,}981,\,0{,}005)\approx 0{,}0228.
+\]
+La reprise passe d'environ $0{,}13\,\%$ à $2{,}28\,\%$, le rebut d'environ $2{,}28\,\%$ à $0{,}13\,\%$ ($39{,}966$ est maintenant à $3\sigma$ de la moyenne). Le réglage est intéressant~: une pièce reprise est récupérée, une pièce au rebut est perdue.
+\bareme{résultat : 0,5 \quad conclusion argumentée (reprise récupérable / rebut perdu) : 0,25}
+\piege{garder $\mu = 39{,}976$ ; conclure sur la seule hausse des reprises sans la comparer à la baisse du rebut.}
+\end{correction}
+
+\noindent{\footnotesize\color{uimmgray}\textit{Arrondi au micron~: avec $\mu = 39{,}981$\,mm, le rebut vaut $0{,}13\,\%$, un peu au-dessus de la cible. Un apprenti qui arrondit par excès ($\mu = 39{,}982$\,mm) pour garantir au plus $0{,}1\,\%$ de rebut a raison~: accepter (rebut $0{,}07\,\%$, reprise $3{,}59\,\%$). Pour aller plus loin~: l'intervalle de tolérance ($25\,\mu$m) est inférieur à $6\sigma = 30\,\mu$m, aucun réglage de la moyenne ne supprime à la fois rebut et reprise.}}
+
+\end{document}
