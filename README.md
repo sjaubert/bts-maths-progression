@@ -192,6 +192,7 @@ Pôle Formation UIMM Centre-Val de Loire. Programme de mathématiques des BTS in
 
 - [MOD08 Lois Discretes Cours v1 0](MOD08/MOD08_Lois_Discretes_Cours_v1_0.pdf)
 - [MOD08 Lois Discretes TD v1 0](MOD08/MOD08_Lois_Discretes_TD_v1_0.pdf)
+- [MOD08 Lois Discretes Simulateur Web v1 0.html](MOD08/MOD08_Lois_Discretes_Simulateur_Web_v1_0.html)
 - [MOD08 Loi Exponentielle Cours v1 0](MOD08/MOD08_Loi_Exponentielle_Cours_v1_0.pdf)
 - [MOD08 Loi Exponentielle TD v1 0](MOD08/MOD08_Loi_Exponentielle_TD_v1_0.pdf)
 - [MOD08 Loi Normale Cours v1 0](MOD08/MOD08_Loi_Normale_Cours_v1_0.pdf)
@@ -503,6 +504,7 @@ Pôle Formation UIMM Centre-Val de Loire. Programme de mathématiques des BTS in
 - [MOD13 Series Fourier TD Corrige v1 0](MOD13/MOD13_Series_Fourier_TD_Corrige_v1_0.pdf)
 - [MOD13 Series Fourier Evaluation v1 0](MOD13/MOD13_Series_Fourier_Evaluation_v1_0.pdf)
 - [MOD13 Series Fourier Evaluation Corrige v1 0](MOD13/MOD13_Series_Fourier_Evaluation_Corrige_v1_0.pdf)
+- [Atelier Vibratoire BV12.html](MOD13/Atelier_Vibratoire_BV12.html)
 
 [Retour au sommaire](#sommaire)
 
