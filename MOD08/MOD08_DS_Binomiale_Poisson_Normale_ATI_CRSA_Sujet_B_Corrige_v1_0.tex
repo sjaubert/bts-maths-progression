@@ -128,7 +128,7 @@ P(X = 0) = 0{,}92^{20}\approx 0{,}1887.
 
 \needspace{5cm}
 \begin{correction}[-- Question 4.b \pts{0,75 pt}]
-\source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~» et exemple $P(X\geq 1) = 1 - P(X = 0)$)}
+\source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~») et §3.4 p.~8 (application «~Contrôle qualité d'un lot~» : $P(X\geq 1) = 1 - P(X = 0)$)}
 «~Au moins un vérin qui fuit~» $\iff X\geq 1$. Son contraire est $X = 0$.
 \[
 P(X\geq 1) = 1 - P(X = 0)\approx 1 - 0{,}1887 = 0{,}8113.
@@ -239,7 +239,7 @@ Chaque câble est défectueux ou non, avec la probabilité $0{,}008$, de façon 
 
 \needspace{6cm}
 \begin{correction}[-- Question 7 \pts{1 pt}]
-\source{\LD{}, §5 Approximation d'une loi binomiale par une loi de Poisson, propriété «~Approximation de Poisson~» p.~11}
+\source{\LD{}, §5.1 Principe p.~11 (propriété «~Approximation de Poisson~»)}
 \begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
   \item $n = 300\geq 30$~;
   \item $p = 0{,}008\leq 0{,}1$~;
@@ -252,7 +252,7 @@ Les trois conditions sont réunies. On peut approcher la loi de $N$ par la loi d
 
 \needspace{5cm}
 \begin{correction}[-- Question 8 \pts{1 pt}]
-\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)~; §5 p.~11}
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)~; §5.1 p.~11}
 Soit $N'$ de loi $\mathcal{P}(2{,}4)$. «~Au plus $1$ câble défectueux~» $\iff N'\leq 1$.
 \[
 P(N'\leq 1) = \texttt{poissonFRép}(2{,}4,\,1)\approx 0{,}3084.
@@ -263,7 +263,7 @@ P(N'\leq 1) = \texttt{poissonFRép}(2{,}4,\,1)\approx 0{,}3084.
 
 \needspace{5cm}
 \begin{correction}[-- Question 9 \pts{0,5 pt}]
-\source{\LD{}, §5 p.~11 (exemple «~Comparaison chiffrée~»)}
+\source{\LD{}, §5.1 p.~11 (exemple «~Comparaison chiffrée~»)}
 Avec la loi exacte~: $P(N\leq 1) = \texttt{binomFRép}(300,\,0{,}008,\,1)\approx 0{,}3072$.\\
 L'écart est d'environ $0{,}0012$, soit environ $0{,}1$ point de pourcentage. L'approximation est très bonne.
 \bareme{valeur exacte : 0,25 \quad comparaison et conclusion : 0,25}

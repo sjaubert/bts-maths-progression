@@ -128,7 +128,7 @@ P(X = 0) = 0{,}95^{25}\approx 0{,}2774.
 
 \needspace{5cm}
 \begin{correction}[-- Question 4.b \pts{0,75 pt}]
-\source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~» et exemple $P(X\geq 1) = 1 - P(X = 0)$)}
+\source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~») et §3.4 p.~8 (application «~Contrôle qualité d'un lot~» : $P(X\geq 1) = 1 - P(X = 0)$)}
 «~Au moins un défectueux~» $\iff X\geq 1$. Son contraire est $X = 0$.
 \[
 P(X\geq 1) = 1 - P(X = 0)\approx 1 - 0{,}2774 = 0{,}7226.
@@ -239,7 +239,7 @@ Chaque carte est défectueuse ou non, avec la probabilité $0{,}0075$, de façon
 
 \needspace{6cm}
 \begin{correction}[-- Question 7 \pts{1 pt}]
-\source{\LD{}, §5 Approximation d'une loi binomiale par une loi de Poisson, propriété «~Approximation de Poisson~» p.~11}
+\source{\LD{}, §5.1 Principe p.~11 (propriété «~Approximation de Poisson~»)}
 \begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
   \item $n = 400\geq 30$~;
   \item $p = 0{,}0075\leq 0{,}1$~;
@@ -252,7 +252,7 @@ Les trois conditions sont réunies. On peut approcher la loi de $N$ par la loi d
 
 \needspace{5cm}
 \begin{correction}[-- Question 8 \pts{1 pt}]
-\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)~; §5 p.~11}
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)~; §5.1 p.~11}
 Soit $N'$ de loi $\mathcal{P}(3)$. «~Au plus $2$ cartes défectueuses~» $\iff N'\leq 2$.
 \[
 P(N'\leq 2) = \texttt{poissonFRép}(3,\,2)\approx 0{,}4232.
@@ -263,7 +263,7 @@ P(N'\leq 2) = \texttt{poissonFRép}(3,\,2)\approx 0{,}4232.
 
 \needspace{5cm}
 \begin{correction}[-- Question 9 \pts{0,5 pt}]
-\source{\LD{}, §5 p.~11 (exemple «~Comparaison chiffrée~»)}
+\source{\LD{}, §5.1 p.~11 (exemple «~Comparaison chiffrée~»)}
 Avec la loi exacte~: $P(N\leq 2) = \texttt{binomFRép}(400,\,0{,}0075,\,2)\approx 0{,}4223$.\\
 L'écart est d'environ $0{,}0009$, soit moins de $0{,}1$ point de pourcentage. L'approximation est très bonne.
 \bareme{valeur exacte : 0,25 \quad comparaison et conclusion : 0,25}
@@ -287,7 +287,7 @@ Environ $79\,\%$ des cycles durent entre $11{,}5$\,s et $12{,}5$\,s.
 
 \needspace{5cm}
 \begin{correction}[-- Question 2 \pts{1 pt}]
-\source{\LN{}, §3.2 p.~6 (exemple «~Masse d'une pièce moulée~» : calcul de $P(X > 540)$)~; §2.2 p.~4 ($P(Z\geq a) = 1 - P(Z\leq a)$)}
+\source{\LN{}, §3.2 p.~6 (exemple «~Masse d'une pièce moulée~» : calcul de $P(X > 540)$)~; §2.1 p.~4 (propriétés de symétrie : $P(Z\geq a) = 1 - P(Z\leq a)$)}
 «~Le cycle dépasse $12{,}8$\,s~» $\iff T > 12{,}8$.
 \[
 P(T > 12{,}8) = \texttt{normalFRép}(12{,}8,\,10^{99},\,12{,}0,\,0{,}4)\approx 0{,}0228
