@@ -504,6 +504,7 @@ Pôle Formation UIMM Centre-Val de Loire. Programme de mathématiques des BTS in
 - [MOD13 Series Fourier TD Corrige v1 0](MOD13/MOD13_Series_Fourier_TD_Corrige_v1_0.pdf)
 - [MOD13 Series Fourier Evaluation v1 0](MOD13/MOD13_Series_Fourier_Evaluation_v1_0.pdf)
 - [MOD13 Series Fourier Evaluation Corrige v1 0](MOD13/MOD13_Series_Fourier_Evaluation_Corrige_v1_0.pdf)
+- [Atelier Vibratoire BV12.html](MOD13/Atelier_Vibratoire_BV12.html)
 
 [Retour au sommaire](#sommaire)
 
