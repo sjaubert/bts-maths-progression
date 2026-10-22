@@ -1,0 +1,319 @@
+% ============================================================
+% Corrigé DS MOD08 -- SUJET B : loi binomiale, loi de Poisson, loi normale
+% BTS ATI / CRSA 1re année -- durée 1 h 30
+% Pôle Formation UIMM - CVDL - S. JAUBERT
+% Sujet : MOD08_DS_Binomiale_Poisson_Normale_ATI_CRSA_Sujet_B_v1_0
+% Valeurs recalculées en Python (scipy.stats) avant livraison.
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\titleformat{\subsection}{\large\bfseries\color{uimmblue}}{}{0pt}{}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newcommand{\EnTete}[2]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{7cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS ATI / CRSA 1\textsuperscript{re} année\\ Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmred}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{Corrigé DS Sujet B}{Corrigé Sujet B -- DS 1 h 30}
+\newcommand{\pts}[1]{\hfill\mbox{\color{white}\small\textbf{#1}}}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\bareme}[1]{\par\smallskip{\footnotesize\color{uimmred}\textbf{Barème~:} #1}}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\LD}{Cours MOD08 \textit{Lois discrètes}}
+\newcommand{\LN}{Cours MOD08 \textit{Loi normale}}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=10pt, bottom=10pt]
+{\color{white}\LARGE\bfseries Corrigé et barème -- DS MOD08 \hfill Sujet B}\\[4pt]
+{\color{white}\large Loi binomiale, loi de Poisson, loi normale \hfill Total~: 20 points}
+\end{tcolorbox}
+
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
+\small\textbf{Principes de notation.} Les points de méthode (variable aléatoire définie, évènement traduit avec la variable, formule écrite) sont accordés même en cas d'erreur de calcul. Une erreur n'est sanctionnée qu'une fois~: la suite, cohérente avec un résultat faux, est notée normalement. Un résultat de calculatrice sans l'évènement écrit avec la variable aléatoire perd la moitié des points de la question. Une loi citée sans ses paramètres perd $0{,}25$\,pt.\\[3pt]
+\textbf{Barème global.} Partie 1 (binomiale)~: 8 pts \quad Partie 2 (Poisson)~: 8 pts \quad Partie 3 (normale)~: 4 pts.\\[3pt]
+\textbf{Repères de durée (estimation).} Partie 1~: 35 min \quad Partie 2~: 35 min \quad Partie 3~: 20 min.\\[3pt]
+\textbf{Références.} \LD{}~: PDF \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0}. \LN{}~: PDF \texttt{MOD08\_Loi\_Normale\_Cours\_v1\_0}. Numéros de page~: numérotation imprimée en pied de page. Les formules utiles figurent aussi dans l'encadré «~Rappels de cours~» p.~1 du sujet.\\[3pt]
+\textbf{Contrôle.} Toutes les valeurs numériques ont été recalculées indépendamment en Python (\texttt{scipy.stats}).
+\end{tcolorbox}
+
+% ============================================================
+\needspace{9cm}
+\section{Partie 1 -- Remise en état de vérins pneumatiques (8 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1,5 pt}]
+\source{\LD{}, §2.1 et §2.2 Épreuve et schéma de Bernoulli p.~5~; §3.1 Définition et méthode «~Reconnaître une loi binomiale~» p.~7}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Épreuve de Bernoulli~: on teste l'étanchéité d'un vérin. Deux issues. Succès~: «~le vérin fuit~», de probabilité $p = 0{,}08$.
+  \item L'épreuve est répétée $20$ fois, de façon identique et indépendante (prélèvement assimilé à un tirage avec remise).
+  \item $X$ compte le nombre de succès.
+\end{itemize}
+Donc $X$ suit la loi binomiale $\mathcal{B}(20\,;0{,}08)$.
+\bareme{Bernoulli, succès et $p$ : 0,5 \quad répétitions identiques et indépendantes : 0,5 \quad loi et paramètres : 0,5}
+\piege{prendre $p = 0{,}92$ alors que $X$ compte les vérins \textbf{qui fuient} ; oublier l'indépendance.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\source{\LD{}, §3.3 p.~8 (propriété «~Espérance et écart-type~»)}
+\[
+E(X) = np = 20\times 0{,}08 = 1{,}6,\quad \sigma(X) = \sqrt{np(1-p)} = \sqrt{20\times 0{,}08\times 0{,}92} = \sqrt{1{,}472}\approx 1{,}2133.
+\]
+Interprétation~: sur un grand nombre de prélèvements de $20$ vérins, on trouve en moyenne $1{,}6$ vérin qui fuit par prélèvement.
+\bareme{$E(X)$ : 0,5 \quad $\sigma(X)$ : 0,5 \quad interprétation : 0,5}
+\piege{oublier la racine carrée (donner la variance $1{,}472$) ; interpréter $1{,}6$ comme le nombre de vérins qui fuient dans \textbf{ce} prélèvement.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LD{}, §3.2 Coefficient binomial p.~7~; §3.3 Calcul des probabilités p.~7 et exemple «~Calcul détaillé~» p.~8}
+L'évènement est $\{X = 2\}$~: $2$ vérins qui fuient et $18$ étanches. Le coefficient $\binom{20}{2} = \dfrac{20\times 19}{2} = 190$ compte les placements des $2$ vérins qui fuient dans le prélèvement.
+\[
+P(X = 2) = \binom{20}{2}\times 0{,}08^{2}\times 0{,}92^{18} = 190\times 0{,}0064\times 0{,}92^{18}\approx 1{,}216\times 0{,}2229\approx 0{,}2711.
+\]
+\bareme{coefficient $190$ : 0,25 \quad formule complète : 0,5 \quad résultat : 0,25}
+\piege{écrire $0{,}92^{20}$ au lieu de $0{,}92^{18}$ ; oublier le coefficient $190$ ; calculer $20\times 19 = 380$ sans diviser par $2$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4.a \pts{0,75 pt}]
+\source{\LD{}, §3.3 Calcul des probabilités p.~7 (terme général)}
+«~Aucun vérin ne fuit~» $\iff X = 0$.
+\[
+P(X = 0) = 0{,}92^{20}\approx 0{,}1887.
+\]
+\bareme{traduction : 0,25 \quad résultat : 0,5}
+\piege{écrire $0{,}08^{20}$ (probabilité que \textbf{tous} fuient).}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4.b \pts{0,75 pt}]
+\source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~» et exemple $P(X\geq 1) = 1 - P(X = 0)$)}
+«~Au moins un vérin qui fuit~» $\iff X\geq 1$. Son contraire est $X = 0$.
+\[
+P(X\geq 1) = 1 - P(X = 0)\approx 1 - 0{,}1887 = 0{,}8113.
+\]
+\bareme{traduction et contraire : 0,25 \quad résultat : 0,5}
+\piege{calculer $P(X = 1)\approx 0{,}3282$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4.c \pts{1 pt}]
+\source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~»)}
+«~Au moins $18$ étanches~» $\iff$ «~$18$, $19$ ou $20$ étanches~» $\iff$ «~$2$, $1$ ou $0$ qui fuient~» $\iff X\leq 2$.
+\[
+P(X\leq 2) = \texttt{binomFRép}(20,\,0{,}08,\,2)\approx 0{,}7879.
+\]
+\bareme{traduction $X\leq 2$ : 0,5 \quad résultat : 0,5}
+\piege{écrire $X\geq 18$ (probabilité quasi nulle, qui devrait alerter) ; écrire $X < 2$ ($\approx 0{,}5169$).}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4.d \pts{1 pt}]
+\source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~»)}
+«~Au plus $3$ vérins qui fuient~» $\iff X\leq 3$.
+\[
+P(X\leq 3) = \texttt{binomFRép}(20,\,0{,}08,\,3)\approx 0{,}9294.
+\]
+\bareme{traduction : 0,5 \quad résultat : 0,5}
+\piege{traduire par $X < 3$ ($\approx 0{,}7879$) ; utiliser \texttt{binomFdp} au lieu de \texttt{binomFRép} ($\approx 0{,}1414$).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 5 \pts{0,5 pt}]
+\source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~» : $P(X\geq k) = 1 - P(X\leq k-1)$)}
+«~Plus de $3$~» signifie «~strictement plus de $3$~»~: $X\geq 4$. C'est le contraire de la question 4.d.
+\[
+P(X\geq 4) = 1 - P(X\leq 3)\approx 1 - 0{,}9294 = 0{,}0706.
+\]
+Alors que la proportion de fuites reste de $8\,\%$, une analyse des causes est lancée dans environ $7\,\%$ des prélèvements.
+\bareme{traduction $X\geq 4$ et contraire : 0,25 \quad résultat : 0,25}
+\piege{traduire par $X\geq 3$ ($\approx 0{,}2121$) ; écrire $1 - P(X\leq 4)$ ($\approx 0{,}0183$).}
+\end{correction}
+
+% ============================================================
+\needspace{9cm}
+\section{Partie 2 -- Loi de Poisson (8 points)}
+\subsection*{A. Appels de l'astreinte maintenance (5 points)}
+
+\needspace{6cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LD{}, §4.1 Définition p.~9}
+Soit $Y$ le nombre d'appels de dépannage reçus par le technicien d'astreinte au cours d'une nuit. $Y$ suit une loi de Poisson $\mathcal{P}(\lambda)$.\\
+Pour une loi de Poisson, $E(Y) = \lambda$. Or le nombre moyen d'appels est $1{,}8$ par nuit. Donc $\lambda = 1{,}8$ et $Y$ suit $\mathcal{P}(1{,}8)$.
+\bareme{variable définie en phrase (avec la durée : une nuit) : 0,5 \quad $\lambda = E(Y) = 1{,}8$ justifié : 0,5}
+\piege{variable non définie ou sans unité de temps ; paramètre donné sans justification.}
+\end{correction}
+
+\needspace{4cm}
+\begin{correction}[-- Question 2 \pts{0,5 pt}]
+\source{\LD{}, §4.1 p.~9 (propriété «~Espérance et écart-type~»)}
+$\sigma(Y) = \sqrt{\lambda} = \sqrt{1{,}8}\approx 1{,}3416$.
+\bareme{résultat : 0,5}
+\piege{répondre $\sigma = 1{,}8$ (confusion avec la variance).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 (exemple «~Calcul détaillé~»)}
+\[
+P(Y = 0) = e^{-1{,}8}\,\frac{1{,}8^{0}}{0!} = e^{-1{,}8}\approx 0{,}1653,\qquad
+P(Y = 2) = e^{-1{,}8}\,\frac{1{,}8^{2}}{2!} = 1{,}62\,e^{-1{,}8}\approx 0{,}2678.
+\]
+\bareme{$P(Y = 0)$ avec formule : 0,5 \quad $P(Y = 2)$ avec formule : 0,5}
+\piege{écrire $1{,}8^{0} = 0$ ; oublier la factorielle ($3{,}24\,e^{-1{,}8}\approx 0{,}5356$) ; écrire $1{,}8^{2} = 3{,}6$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 4 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)~; règle $P(X\geq k) = 1 - P(X\leq k-1)$ : §3.3 p.~8}
+«~Plus de $3$ appels~» $\iff Y\geq 4$. Son contraire est $Y\leq 3$.
+\[
+P(Y\geq 4) = 1 - P(Y\leq 3) = 1 - \texttt{poissonFRép}(1{,}8,\,3)\approx 1 - 0{,}8913 = 0{,}1087.
+\]
+\bareme{traduction et contraire : 0,5 \quad résultat : 0,5}
+\piege{traduire par $Y\geq 3$ ($\approx 0{,}2694$) ; écrire $1 - P(Y\leq 4)$ ($\approx 0{,}0364$).}
+\end{correction}
+
+\needspace{7cm}
+\begin{correction}[-- Question 5 \pts{1,5 pt}]
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)}
+On cherche le plus petit entier $k$ tel que $P(Y\leq k)\geq 0{,}95$. On calcule les probabilités cumulées~:
+\[
+P(Y\leq 3)\approx 0{,}8913 < 0{,}95 \qquad\text{et}\qquad P(Y\leq 4)\approx 0{,}9636\geq 0{,}95.
+\]
+Donc $k = 4$~: le renfort n'est rappelé que les nuits à plus de $4$ appels, soit environ $4\,\%$ des nuits.
+\bareme{traduction $P(Y\leq k)\geq 0{,}95$ : 0,5 \quad les deux probabilités encadrantes : 0,5 \quad conclusion $k = 4$ : 0,5}
+\piege{donner une seule probabilité (sans montrer que $k = 3$ ne convient pas) ; chercher $P(Y = k)\geq 0{,}95$ ; répondre $k = 3$.}
+\end{correction}
+
+\needspace{9cm}
+\subsection*{B. Approximation d'une loi binomiale par une loi de Poisson (3 points)}
+
+\needspace{5cm}
+\begin{correction}[-- Question 6 \pts{0,5 pt}]
+\source{\LD{}, §3.1 Définition p.~7}
+Chaque câble est défectueux ou non, avec la probabilité $0{,}008$, de façon indépendante, sur $300$ câbles. $N$ compte les câbles défectueux~: $N$ suit la loi binomiale $\mathcal{B}(300\,;0{,}008)$.
+\bareme{loi et paramètres : 0,5}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 7 \pts{1 pt}]
+\source{\LD{}, §5 Approximation d'une loi binomiale par une loi de Poisson, propriété «~Approximation de Poisson~» p.~11}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item $n = 300\geq 30$~;
+  \item $p = 0{,}008\leq 0{,}1$~;
+  \item $np = 300\times 0{,}008 = 2{,}4\leq 10$.
+\end{itemize}
+Les trois conditions sont réunies. On peut approcher la loi de $N$ par la loi de Poisson $\mathcal{P}(2{,}4)$, avec $\lambda = np = 2{,}4$.
+\bareme{chaque condition vérifiée avec sa valeur : 3 $\times$ 0,25 \quad $\lambda = 2{,}4$ : 0,25}
+\piege{vérifier une seule condition ; écrire «~$n$ grand, $p$ petit~» sans valeurs ; prendre $\lambda = 0{,}008$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 8 \pts{1 pt}]
+\source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)~; §5 p.~11}
+Soit $N'$ de loi $\mathcal{P}(2{,}4)$. «~Au plus $1$ câble défectueux~» $\iff N'\leq 1$.
+\[
+P(N'\leq 1) = \texttt{poissonFRép}(2{,}4,\,1)\approx 0{,}3084.
+\]
+\bareme{traduction : 0,5 \quad résultat : 0,5}
+\piege{calculer $P(N' = 1)\approx 0{,}2177$ ; calculer $P(N' < 1)\approx 0{,}0907$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 9 \pts{0,5 pt}]
+\source{\LD{}, §5 p.~11 (exemple «~Comparaison chiffrée~»)}
+Avec la loi exacte~: $P(N\leq 1) = \texttt{binomFRép}(300,\,0{,}008,\,1)\approx 0{,}3072$.\\
+L'écart est d'environ $0{,}0012$, soit environ $0{,}1$ point de pourcentage. L'approximation est très bonne.
+\bareme{valeur exacte : 0,25 \quad comparaison et conclusion : 0,25}
+\piege{conclure sans chiffrer l'écart.}
+\end{correction}
+
+% ============================================================
+\needspace{9cm}
+\section{Partie 3 -- Tension de sortie d'alimentations 24 V (4 points)}
+
+\needspace{5cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\LN{}, §3.2 Calcul d'une probabilité p.~6 (encadré «~À la calculatrice~»)}
+\[
+P(24{,}0\leq U\leq 24{,}5) = \texttt{normalFRép}(24{,}0,\,24{,}5,\,24{,}2,\,0{,}15)\approx 0{,}8860.
+\]
+Environ $89\,\%$ des alimentations délivrent une tension comprise entre $24{,}0$\,V et $24{,}5$\,V.
+\bareme{traduction : 0,5 \quad résultat : 0,5}
+\piege{saisir la variance $0{,}0225$ au lieu de l'écart-type ; inverser l'ordre des paramètres à la calculatrice.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 2 \pts{1 pt}]
+\source{\LN{}, §3.2 p.~6 (encadré «~À la calculatrice~» et exemple «~Masse d'une pièce moulée~» : calcul de $P(X\leq 530)$ avec la borne $-10^{99}$)}
+«~La tension est inférieure à $23{,}9$\,V~» $\iff U < 23{,}9$.
+\[
+P(U < 23{,}9) = \texttt{normalFRép}(-10^{99},\,23{,}9,\,24{,}2,\,0{,}15)\approx 0{,}0228.
+\]
+\bareme{traduction : 0,5 \quad résultat : 0,5}
+\piege{calculer $P(U\geq 23{,}9)\approx 0{,}9772$ ; oublier la borne $-10^{99}$ et saisir $0$.}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 3 \pts{1 pt}]
+\source{\LN{}, §3.4 La règle des 68 -- 95 -- 99,7 p.~7}
+Environ $95\,\%$ des tensions sont dans $[\mu - 2\sigma\,;\mu + 2\sigma] = [24{,}2 - 0{,}3\,;24{,}2 + 0{,}3] = [23{,}9\,;24{,}5]$.\\
+Cohérence~: il reste environ $5\,\%$ hors de l'intervalle, réparti par symétrie en $2{,}5\,\%$ de chaque côté. On attend donc environ $2{,}5\,\%$ de tensions sous $23{,}9$\,V, ce qui est cohérent avec $2{,}28\,\%$ trouvé à la question 2 (la règle donne des valeurs approchées).
+\bareme{intervalle : 0,5 \quad argument de symétrie et cohérence : 0,5}
+\piege{utiliser $\mu\pm\sigma$ ou $\mu\pm 3\sigma$ ; répondre $5\,\%$ sous $23{,}9$\,V (oubli de la symétrie).}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4 \pts{1 pt}]
+\source{\LN{}, §3.2 p.~6~; \LD{}, §3.3 p.~8 (espérance d'une loi binomiale $E = np$)}
+Chaque alimentation délivre moins de $23{,}9$\,V avec la probabilité $0{,}0228$. Sur $500$ alimentations, le nombre moyen d'alimentations concernées est
+\[
+500\times 0{,}0228\approx 11{,}4,\ \text{soit environ}\ 11\ \text{alimentations}.
+\]
+\bareme{produit $500\times P(U < 23{,}9)$ : 0,5 \quad résultat arrondi et interprété : 0,5}
+\piege{répondre $0{,}0228$ ; utiliser $P(U\geq 23{,}9)$ ($\approx 489$ alimentations).}
+\end{correction}
+
+\end{document}
