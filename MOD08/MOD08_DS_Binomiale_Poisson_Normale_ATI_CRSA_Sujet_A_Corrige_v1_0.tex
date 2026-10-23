@@ -1,5 +1,5 @@
 % ============================================================
-% Corrigé DS MOD08 -- SUJET A : loi binomiale, loi de Poisson, loi normale
+% Corrigé DS MOD08 -- SUJET A : loi binomiale, loi de Poisson, loi normale, dénombrement
 % BTS ATI / CRSA 1re année -- durée 1 h 30
 % Pôle Formation UIMM - CVDL - S. JAUBERT
 % Sujet : MOD08_DS_Binomiale_Poisson_Normale_ATI_CRSA_Sujet_A_v1_0
@@ -59,29 +59,30 @@
 \newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
 \newcommand{\LD}{Cours MOD08 \textit{Lois discrètes}}
 \newcommand{\LN}{Cours MOD08 \textit{Loi normale}}
+\newcommand{\CD}{Cours MOD08 \textit{Dénombrement et probabilités}}
 
 \begin{document}
 
 \begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
   left=14pt, right=14pt, top=10pt, bottom=10pt]
 {\color{white}\LARGE\bfseries Corrigé et barème -- DS MOD08 \hfill Sujet A}\\[4pt]
-{\color{white}\large Loi binomiale, loi de Poisson, loi normale \hfill Total~: 20 points}
+{\color{white}\large Lois binomiale, de Poisson et normale~; dénombrement \hfill Total~: 20 points}
 \end{tcolorbox}
 
 \begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt]
 \small\textbf{Principes de notation.} Les points de méthode (variable aléatoire définie, évènement traduit avec la variable, formule écrite) sont accordés même en cas d'erreur de calcul. Une erreur n'est sanctionnée qu'une fois~: la suite, cohérente avec un résultat faux, est notée normalement. Un résultat de calculatrice sans l'évènement écrit avec la variable aléatoire perd la moitié des points de la question. Une loi citée sans ses paramètres perd $0{,}25$\,pt.\\[3pt]
-\textbf{Barème global.} Partie 1 (binomiale)~: 8 pts \quad Partie 2 (Poisson)~: 8 pts \quad Partie 3 (normale)~: 4 pts.\\[3pt]
-\textbf{Repères de durée (estimation).} Partie 1~: 35 min \quad Partie 2~: 35 min \quad Partie 3~: 20 min.\\[3pt]
-\textbf{Références.} \LD{}~: PDF \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0}. \LN{}~: PDF \texttt{MOD08\_Loi\_Normale\_Cours\_v1\_0}. Numéros de page~: numérotation imprimée en pied de page. Les formules utiles figurent aussi dans l'encadré «~Rappels de cours~» p.~1 du sujet.\\[3pt]
+\textbf{Barème global.} Partie 1 (binomiale)~: 6 pts \quad Partie 2 (Poisson)~: 6 pts \quad Partie 3 (normale)~: 4 pts \quad Partie 4 (dénombrement)~: 4 pts.\\[3pt]
+\textbf{Repères de durée (estimation).} Partie 1~: 25 min \quad Partie 2~: 25 min \quad Partie 3~: 15 min \quad Partie 4~: 15 min, soit 1 h 20 sur 1 h 30.\\[3pt]
+\textbf{Références.} \LD{}~: PDF \texttt{MOD08\_Lois\_Discretes\_Cours\_v1\_0}. \LN{}~: PDF \texttt{MOD08\_Loi\_Normale\_Cours\_v1\_0}. \CD{}~: PDF \texttt{Cours\_Dénombrement\_\_\_Probabilités}. Numéros de page~: numérotation imprimée en pied de page. Les formules utiles figurent aussi dans l'encadré «~Rappels de cours~» p.~1 du sujet.\\[3pt]
 \textbf{Contrôle.} Toutes les valeurs numériques ont été recalculées indépendamment en Python (\texttt{scipy.stats}).
 \end{tcolorbox}
 
 % ============================================================
 \needspace{9cm}
-\section{Partie 1 -- Réception de détecteurs inductifs (8 points)}
+\section{Partie 1 -- Réception de détecteurs inductifs (6 points)}
 
 \needspace{6cm}
-\begin{correction}[-- Question 1 \pts{1,5 pt}]
+\begin{correction}[-- Question 1 \pts{1 pt}]
 \source{\LD{}, §2.1 et §2.2 Épreuve et schéma de Bernoulli p.~5~; §3.1 Définition et méthode «~Reconnaître une loi binomiale~» p.~7}
 \begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
   \item Épreuve de Bernoulli~: on teste un détecteur et on regarde s'il est défectueux. Deux issues. Succès~: «~le détecteur est défectueux~», de probabilité $p = 0{,}05$.
@@ -89,18 +90,18 @@
   \item $X$ compte le nombre de succès.
 \end{itemize}
 Donc $X$ suit la loi binomiale $\mathcal{B}(25\,;0{,}05)$.
-\bareme{Bernoulli, succès et $p$ : 0,5 \quad répétitions identiques et indépendantes : 0,5 \quad loi et paramètres : 0,5}
+\bareme{Bernoulli, succès et $p$ : 0,25 \quad répétitions identiques et indépendantes : 0,25 \quad loi et paramètres : 0,5}
 \piege{prendre $p = 0{,}95$ alors que $X$ compte les détecteurs \textbf{défectueux} ; oublier l'indépendance.}
 \end{correction}
 
 \needspace{6cm}
-\begin{correction}[-- Question 2 \pts{1,5 pt}]
+\begin{correction}[-- Question 2 \pts{1 pt}]
 \source{\LD{}, §3.3 p.~8 (propriété «~Espérance et écart-type~»)}
 \[
 E(X) = np = 25\times 0{,}05 = 1{,}25,\quad \sigma(X) = \sqrt{np(1-p)} = \sqrt{25\times 0{,}05\times 0{,}95} = \sqrt{1{,}1875}\approx 1{,}0897.
 \]
 Interprétation~: sur un grand nombre de prélèvements de $25$ détecteurs, on trouve en moyenne $1{,}25$ détecteur défectueux par prélèvement.
-\bareme{$E(X)$ : 0,5 \quad $\sigma(X)$ : 0,5 \quad interprétation : 0,5}
+\bareme{$E(X)$ : 0,25 \quad $\sigma(X)$ : 0,25 \quad interprétation : 0,5}
 \piege{oublier la racine carrée (donner la variance $1{,}1875$) ; interpréter $1{,}25$ comme le nombre de défectueux de \textbf{ce} prélèvement.}
 \end{correction}
 
@@ -116,46 +117,46 @@ P(X = 2) = \binom{25}{2}\times 0{,}05^{2}\times 0{,}95^{23} = 300\times 0{,}0025
 \end{correction}
 
 \needspace{5cm}
-\begin{correction}[-- Question 4.a \pts{0,75 pt}]
+\begin{correction}[-- Question 4.a \pts{0,5 pt}]
 \source{\LD{}, §3.3 Calcul des probabilités p.~7 (terme général)}
 «~Aucun détecteur défectueux~» $\iff X = 0$.
 \[
 P(X = 0) = 0{,}95^{25}\approx 0{,}2774.
 \]
-\bareme{traduction : 0,25 \quad résultat : 0,5}
+\bareme{traduction : 0,25 \quad résultat : 0,25}
 \piege{écrire $0{,}05^{25}$ (probabilité que \textbf{tous} soient défectueux).}
 \end{correction}
 
 \needspace{5cm}
-\begin{correction}[-- Question 4.b \pts{0,75 pt}]
+\begin{correction}[-- Question 4.b \pts{0,5 pt}]
 \source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~») et §3.4 p.~8 (application «~Contrôle qualité d'un lot~» : $P(X\geq 1) = 1 - P(X = 0)$)}
 «~Au moins un défectueux~» $\iff X\geq 1$. Son contraire est $X = 0$.
 \[
 P(X\geq 1) = 1 - P(X = 0)\approx 1 - 0{,}2774 = 0{,}7226.
 \]
-\bareme{traduction et contraire : 0,25 \quad résultat : 0,5}
+\bareme{traduction et contraire : 0,25 \quad résultat : 0,25}
 \piege{calculer $P(X = 1)\approx 0{,}3650$.}
 \end{correction}
 
 \needspace{6cm}
-\begin{correction}[-- Question 4.c \pts{1 pt}]
+\begin{correction}[-- Question 4.c \pts{0,75 pt}]
 \source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~»)}
 «~Au moins $23$ corrects~» $\iff$ «~$23$, $24$ ou $25$ corrects~» $\iff$ «~$2$, $1$ ou $0$ défectueux~» $\iff X\leq 2$.
 \[
 P(X\leq 2) = \texttt{binomFRép}(25,\,0{,}05,\,2)\approx 0{,}8729.
 \]
-\bareme{traduction $X\leq 2$ : 0,5 \quad résultat : 0,5}
+\bareme{traduction $X\leq 2$ : 0,5 \quad résultat : 0,25}
 \piege{écrire $X\geq 23$ (probabilité quasi nulle, qui devrait alerter) ; écrire $X < 2$ ($\approx 0{,}6424$).}
 \end{correction}
 
 \needspace{5cm}
-\begin{correction}[-- Question 4.d \pts{1 pt}]
+\begin{correction}[-- Question 4.d \pts{0,75 pt}]
 \source{\LD{}, §3.3 p.~8 (encadré «~À la calculatrice~»)}
 «~Au plus $3$ défectueux~» $\iff X\leq 3$.
 \[
 P(X\leq 3) = \texttt{binomFRép}(25,\,0{,}05,\,3)\approx 0{,}9659.
 \]
-\bareme{traduction : 0,5 \quad résultat : 0,5}
+\bareme{traduction : 0,25 \quad résultat : 0,5}
 \piege{traduire par $X < 3$ ($\approx 0{,}8729$) ; utiliser \texttt{binomFdp} au lieu de \texttt{binomFRép} ($\approx 0{,}0930$).}
 \end{correction}
 
@@ -173,62 +174,62 @@ Un arrivage conforme à l'annonce du fournisseur est refusé dans environ $3{,}4
 
 % ============================================================
 \needspace{9cm}
-\section{Partie 2 -- Loi de Poisson (8 points)}
-\subsection*{A. Pertes de communication sur le réseau de terrain (5 points)}
+\section{Partie 2 -- Loi de Poisson (6 points)}
+\subsection*{A. Pertes de communication sur le réseau de terrain (3,5 points)}
 
 \needspace{6cm}
-\begin{correction}[-- Question 1 \pts{1 pt}]
+\begin{correction}[-- Question 1 \pts{0,75 pt}]
 \source{\LD{}, §4.1 Définition p.~9}
 Soit $Y$ le nombre de pertes de communication enregistrées par l'automate au cours d'une semaine de production. $Y$ suit une loi de Poisson $\mathcal{P}(\lambda)$.\\
 Pour une loi de Poisson, $E(Y) = \lambda$. Or le nombre moyen de pertes est $2{,}5$ par semaine. Donc $\lambda = 2{,}5$ et $Y$ suit $\mathcal{P}(2{,}5)$.
-\bareme{variable définie en phrase (avec la durée : une semaine) : 0,5 \quad $\lambda = E(Y) = 2{,}5$ justifié : 0,5}
+\bareme{variable définie en phrase (avec la durée : une semaine) : 0,25 \quad loi et $\lambda = E(Y) = 2{,}5$ justifié : 0,5}
 \piege{variable non définie ou sans unité de temps ; paramètre donné sans justification.}
 \end{correction}
 
 \needspace{4cm}
-\begin{correction}[-- Question 2 \pts{0,5 pt}]
+\begin{correction}[-- Question 2 \pts{0,25 pt}]
 \source{\LD{}, §4.1 p.~9 (propriété «~Espérance et écart-type~»)}
 $\sigma(Y) = \sqrt{\lambda} = \sqrt{2{,}5}\approx 1{,}5811$.
-\bareme{résultat : 0,5}
+\bareme{résultat : 0,25}
 \piege{répondre $\sigma = 2{,}5$ (confusion avec la variance).}
 \end{correction}
 
 \needspace{6cm}
-\begin{correction}[-- Question 3 \pts{1 pt}]
+\begin{correction}[-- Question 3 \pts{0,75 pt}]
 \source{\LD{}, §4.1 p.~9 (exemple «~Calcul détaillé~»)}
 \[
 P(Y = 0) = e^{-2{,}5}\,\frac{2{,}5^{0}}{0!} = e^{-2{,}5}\approx 0{,}0821,\qquad
 P(Y = 3) = e^{-2{,}5}\,\frac{2{,}5^{3}}{3!} = \frac{15{,}625}{6}\,e^{-2{,}5}\approx 0{,}2138.
 \]
-\bareme{$P(Y = 0)$ avec formule : 0,5 \quad $P(Y = 3)$ avec formule : 0,5}
+\bareme{$P(Y = 0)$ avec formule : 0,25 \quad $P(Y = 3)$ avec formule : 0,5}
 \piege{écrire $2{,}5^{0} = 0$ ; oublier la factorielle ($15{,}625\,e^{-2{,}5}\approx 1{,}2826$, une probabilité supérieure à $1$ qui devrait alerter) ; écrire $3! = 3$.}
 \end{correction}
 
 \needspace{6cm}
-\begin{correction}[-- Question 4 \pts{1 pt}]
+\begin{correction}[-- Question 4 \pts{0,75 pt}]
 \source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)~; règle $P(X\geq k) = 1 - P(X\leq k-1)$ : §3.3 p.~8}
 «~Plus de $4$ pertes~» $\iff Y\geq 5$. Son contraire est $Y\leq 4$.
 \[
 P(Y\geq 5) = 1 - P(Y\leq 4) = 1 - \texttt{poissonFRép}(2{,}5,\,4)\approx 1 - 0{,}8912 = 0{,}1088.
 \]
-\bareme{traduction et contraire : 0,5 \quad résultat : 0,5}
+\bareme{traduction et contraire : 0,5 \quad résultat : 0,25}
 \piege{traduire par $Y\geq 4$ ($\approx 0{,}2424$) ; écrire $1 - P(Y\leq 5)$ ($\approx 0{,}0420$).}
 \end{correction}
 
 \needspace{7cm}
-\begin{correction}[-- Question 5 \pts{1,5 pt}]
+\begin{correction}[-- Question 5 \pts{1 pt}]
 \source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)}
 On cherche le plus petit entier $k$ tel que $P(Y\leq k)\geq 0{,}95$. On calcule les probabilités cumulées~:
 \[
 P(Y\leq 4)\approx 0{,}8912 < 0{,}95 \qquad\text{et}\qquad P(Y\leq 5)\approx 0{,}9580\geq 0{,}95.
 \]
 Donc $k = 5$~: le diagnostic complet n'est déclenché que les semaines à plus de $5$ pertes, soit environ $4\,\%$ des semaines.
-\bareme{traduction $P(Y\leq k)\geq 0{,}95$ : 0,5 \quad les deux probabilités encadrantes : 0,5 \quad conclusion $k = 5$ : 0,5}
+\bareme{traduction $P(Y\leq k)\geq 0{,}95$ : 0,25 \quad les deux probabilités encadrantes : 0,5 \quad conclusion $k = 5$ : 0,25}
 \piege{donner une seule probabilité (sans montrer que $k = 4$ ne convient pas) ; chercher $P(Y = k)\geq 0{,}95$ ; répondre $k = 4$.}
 \end{correction}
 
 \needspace{9cm}
-\subsection*{B. Approximation d'une loi binomiale par une loi de Poisson (3 points)}
+\subsection*{B. Approximation d'une loi binomiale par une loi de Poisson (2,5 points)}
 
 \needspace{5cm}
 \begin{correction}[-- Question 6 \pts{0,5 pt}]
@@ -251,13 +252,13 @@ Les trois conditions sont réunies. On peut approcher la loi de $N$ par la loi d
 \end{correction}
 
 \needspace{5cm}
-\begin{correction}[-- Question 8 \pts{1 pt}]
+\begin{correction}[-- Question 8 \pts{0,5 pt}]
 \source{\LD{}, §4.1 p.~9 (encadré «~À la calculatrice~»)~; §5.1 p.~11}
 Soit $N'$ de loi $\mathcal{P}(3)$. «~Au plus $2$ cartes défectueuses~» $\iff N'\leq 2$.
 \[
 P(N'\leq 2) = \texttt{poissonFRép}(3,\,2)\approx 0{,}4232.
 \]
-\bareme{traduction : 0,5 \quad résultat : 0,5}
+\bareme{traduction : 0,25 \quad résultat : 0,25}
 \piege{calculer $P(N' = 2)\approx 0{,}2240$ ; calculer $P(N' < 2)\approx 0{,}1991$.}
 \end{correction}
 
@@ -315,6 +316,78 @@ Chaque cycle dépasse $12{,}8$\,s avec la probabilité $0{,}0228$. Sur $1\,000$ 
 \]
 \bareme{produit $1\,000\times P(T > 12{,}8)$ : 0,5 \quad résultat arrondi et interprété : 0,5}
 \piege{répondre $0{,}0228$ ; utiliser $P(T\leq 12{,}8)$ ($\approx 977$ cycles).}
+\end{correction}
+
+% ============================================================
+\needspace{9cm}
+\section{Partie 4 -- Vissage robotisé d'un carter (4 points)}
+
+\needspace{5cm}
+\begin{correction}[-- Question 1 \pts{1 pt}]
+\source{\CD{}, §1.2 Arrangements et permutations p.~1 (permutation de $n$ éléments~: $P_n = n!$)}
+Un ordre de vissage est un classement des $6$ vis, sans répétition, où l'ordre compte~: c'est une permutation des $6$ vis.
+\[
+6! = 6\times 5\times 4\times 3\times 2\times 1 = 720\ \text{ordres de vissage}.
+\]
+\bareme{reconnaître une permutation (ou raisonnement par choix successifs $6\times 5\times\dots$) : 0,5 \quad résultat : 0,5}
+\piege{répondre $6^{6} = 46\,656$ (une vis serrée plusieurs fois) ; répondre $\binom{6}{6} = 1$ (oubli de l'ordre).}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 2 \pts{0,5 pt}]
+\source{\CD{}, §1.1 Principe multiplicatif p.~1 et §1.2 Permutations p.~1}
+La première place est imposée ($V_1$). Il reste à ordonner les $5$ autres vis~:
+\[
+1\times 5! = 120\ \text{ordres de vissage}.
+\]
+\bareme{raisonnement : 0,25 \quad résultat : 0,25}
+\piege{répondre $6!-1 = 719$ ; répondre $6\times 5! = 720$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 3 \pts{0,75 pt}]
+\source{\CD{}, §1.3 Combinaisons p.~1}
+On choisit $3$ vis parmi $6$, sans répétition et sans ordre~: c'est une combinaison.
+\[
+\binom{6}{3} = \frac{6!}{3!\,3!} = \frac{6\times 5\times 4}{3\times 2\times 1} = 20\ \text{groupes}.
+\]
+\bareme{reconnaître une combinaison : 0,25 \quad calcul : 0,25 \quad résultat : 0,25}
+\piege{répondre $6\times 5\times 4 = 120$ (arrangement~: l'ordre est compté alors qu'il n'a pas d'importance).}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4.a \pts{0,5 pt}]
+\source{\CD{}, §1.3 Combinaisons p.~1}
+Aucune vis mal serrée~: les $3$ vis sont choisies parmi les $4$ vis bien serrées.
+\[
+\binom{4}{3} = 4\ \text{groupes}.
+\]
+\bareme{raisonnement (choix parmi les $4$ bonnes vis) : 0,25 \quad résultat : 0,25}
+\piege{répondre $\binom{6}{3} - 2 = 18$.}
+\end{correction}
+
+\needspace{5cm}
+\begin{correction}[-- Question 4.b \pts{0,5 pt}]
+\source{\CD{}, §1.1 Principe multiplicatif p.~1 et §1.3 Combinaisons p.~1}
+On choisit $1$ vis parmi les $2$ mal serrées \textbf{et} $2$ vis parmi les $4$ bien serrées~:
+\[
+\binom{2}{1}\times\binom{4}{2} = 2\times 6 = 12\ \text{groupes}.
+\]
+Contrôle~: les groupes à $2$ vis mal serrées sont $\binom{2}{2}\times\binom{4}{1} = 4$, et $4 + 12 + 4 = 20$.
+\bareme{produit de deux combinaisons : 0,25 \quad résultat : 0,25}
+\piege{additionner au lieu de multiplier ($2 + 6 = 8$) ; oublier le facteur $2$ (réponse $6$).}
+\end{correction}
+
+\needspace{6cm}
+\begin{correction}[-- Question 5 \pts{0,75 pt}]
+\source{\CD{}, §2.1 Définitions et propriétés p.~3 (formule de Laplace, évènement contraire)}
+Soit $D$ l'évènement «~le contrôle détecte au moins une vis mal serrée~». Son contraire est «~aucune vis mal serrée dans le groupe~», qui compte $4$ groupes (question 4.a) sur $20$ équiprobables.
+\[
+P(D) = 1 - \frac{4}{20} = 1 - 0{,}2 = 0{,}8.
+\]
+Le contrôle de $3$ vis détecte le défaut dans $80\,\%$ des cas.
+\bareme{évènement contraire ou somme des cas favorables ($\frac{12+4}{20}$) : 0,25 \quad formule de Laplace : 0,25 \quad résultat : 0,25}
+\piege{calculer seulement $\frac{12}{20} = 0{,}6$ (oubli des groupes contenant les $2$ vis mal serrées) ; répondre $\frac{4}{20} = 0{,}2$.}
 \end{correction}
 
 \end{document}

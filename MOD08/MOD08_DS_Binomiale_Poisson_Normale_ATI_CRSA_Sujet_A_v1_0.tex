@@ -1,8 +1,8 @@
 % ============================================================
-% DS MOD08 -- SUJET A : loi binomiale, loi de Poisson, loi normale
+% DS MOD08 -- SUJET A : loi binomiale, loi de Poisson, loi normale, dénombrement
 % BTS ATI / CRSA 1re année -- durée 1 h 30
 % Pôle Formation UIMM - CVDL - S. JAUBERT
-% Corrigé et barème : MOD08_DS_Binomiale_Poisson_Normale_ATI_CRSA_Sujet_A_Corrige_v1_0 (sujet jumeau : Sujet_B)
+% Corrigé et barème : MOD08_DS_Binomiale_Poisson_Normale_ATI_CRSA_Sujet_A_Corrige_v1_0 (version 4 parties : le sujet B, en 3 parties, n'est plus utilisé)
 % ============================================================
 \documentclass[a4paper,11pt]{article}
 \usepackage[utf8]{inputenc}
@@ -67,7 +67,7 @@
 \begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
   left=14pt, right=14pt, top=10pt, bottom=10pt]
 {\color{white}\LARGE\bfseries Devoir surveillé -- MOD08 \hfill Sujet A}\\[4pt]
-{\color{white}\large Loi binomiale, loi de Poisson, loi normale \hfill Durée~: 1 h 30}
+{\color{white}\large Lois binomiale, de Poisson et normale~; dénombrement \hfill Durée~: 1 h 30}
 \end{tcolorbox}
 
 \vspace{4pt}
@@ -82,7 +82,7 @@ Nom, prénom~: & \dotfill & Groupe~: & \dotfill \\
 \begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
   \item Toute loi utilisée doit être \textbf{nommée avec ses paramètres}.
   \item Pour chaque probabilité demandée~: écrire l'évènement à l'aide de la variable aléatoire, \textbf{puis} le résultat. Un résultat seul ne rapporte pas tous les points.
-  \item Probabilités arrondies à $10^{-4}$. Le barème est donné à titre indicatif~: partie 1 sur 8 points, partie 2 sur 8 points, partie 3 sur 4 points.
+  \item Probabilités arrondies à $10^{-4}$. Le barème est donné à titre indicatif~: partie 1 sur 6 points, partie 2 sur 6 points, partie 3 sur 4 points, partie 4 sur 4 points.
 \end{itemize}
 \end{consigne}
 
@@ -102,24 +102,31 @@ P(X = k) = e^{-\lambda}\,\frac{\lambda^{k}}{k!},\qquad E(X) = \lambda,\qquad \si
 $P(\mu-\sigma\leq X\leq\mu+\sigma)\approx 0{,}68$, \ $P(\mu-2\sigma\leq X\leq\mu+2\sigma)\approx 0{,}95$, \ $P(\mu-3\sigma\leq X\leq\mu+3\sigma)\approx 0{,}997$.
 
 \smallskip
+\textbf{Dénombrement.} Ordonner $n$ objets distincts (permutations)~: $n! = n\times(n-1)\times\dots\times 2\times 1$ façons. Choisir $k$ objets parmi $n$, sans tenir compte de l'ordre (combinaisons)~: $\binom{n}{k}$ façons. Si toutes les issues ont la même probabilité~:
+\[
+P(A) = \frac{\text{nombre de cas favorables à } A}{\text{nombre de cas possibles}}.
+\]
+
+\smallskip
 \textbf{Calculatrice.} «~Fdp~» (ou «~pd~») donne $P(X = k)$~; «~FRép~» (ou «~cd~») donne $P(X \leq k)$.\\
 {\small TI~: \texttt{binomFdp(n,p,k)}, \texttt{binomFRép(n,p,k)}, \texttt{poissonFdp($\lambda$,k)}, \texttt{poissonFRép($\lambda$,k)}, \texttt{normalFRép(a,b,$\mu$,$\sigma$)}.\\
-Casio~: \texttt{Bpd}, \texttt{Bcd}, \texttt{Ppd}, \texttt{Pcd}, \texttt{Ncd}. \quad Borne infinie pour la loi normale~: \texttt{-1E99} ou \texttt{1E99}.}
+Casio~: \texttt{Bpd}, \texttt{Bcd}, \texttt{Ppd}, \texttt{Pcd}, \texttt{Ncd}. \quad Borne infinie pour la loi normale~: \texttt{-1E99} ou \texttt{1E99}.\\
+Dénombrement (menu \texttt{PROB})~: \texttt{!} (factorielle), \texttt{nCr} (combinaisons).}
 \end{rappel}
 
 % ============================================================
 \newpage
-\section{Partie 1 -- Loi binomiale \hfill {\normalsize\color{uimmred}8 points}}
+\section{Partie 1 -- Loi binomiale \hfill {\normalsize\color{uimmred}6 points}}
 \begin{exo}{Réception de détecteurs inductifs}
 Un intégrateur de cellules robotisées achète des détecteurs de proximité inductifs M12 par cartons de plusieurs centaines. Le fournisseur annonce que $5\,\%$ des détecteurs présentent un défaut (distance de commutation hors tolérance). À la réception, le technicien prélève $25$ détecteurs et les teste sur un banc. L'arrivage est assez important pour assimiler ce prélèvement à un tirage avec remise.\\
 On note $X$ le nombre de détecteurs \textbf{défectueux} dans le prélèvement.
 \end{exo}
 \begin{enumerate}
   \needspace{7.4cm}
-  \item Justifier que $X$ suit une loi binomiale. Préciser ses paramètres. \pts{1,5 pt}
+  \item Justifier que $X$ suit une loi binomiale. Préciser ses paramètres. \pts{1 pt}
   \zone{6}
   \needspace{6.5cm}
-  \item Calculer l'espérance $E(X)$ et l'écart-type $\sigma(X)$. Interpréter $E(X)$ dans le contexte. \pts{1,5 pt}
+  \item Calculer l'espérance $E(X)$ et l'écart-type $\sigma(X)$. Interpréter $E(X)$ dans le contexte. \pts{1 pt}
   \zone{5}
   \needspace{6.5cm}
   \item Calculer la probabilité que le prélèvement contienne exactement $2$ détecteurs défectueux. Détailler le calcul à l'aide de la formule, \textbf{sans} utiliser les fonctions de loi de la calculatrice. \pts{1 pt}
@@ -128,16 +135,16 @@ On note $X$ le nombre de détecteurs \textbf{défectueux} dans le prélèvement.
   \item Pour chacun des évènements suivants, traduire l'évènement à l'aide de $X$, puis calculer sa probabilité.
   \begin{enumerate}
     \needspace{4cm}
-    \item Aucun détecteur du prélèvement n'est défectueux. \pts{0,75 pt}
+    \item Aucun détecteur du prélèvement n'est défectueux. \pts{0,5 pt}
     \zone{3}
     \needspace{4.8cm}
-    \item Le prélèvement contient au moins un détecteur défectueux. \pts{0,75 pt}
+    \item Le prélèvement contient au moins un détecteur défectueux. \pts{0,5 pt}
     \zone{4}
     \needspace{5.6cm}
-    \item Au moins $23$ détecteurs du prélèvement fonctionnent correctement. \pts{1 pt}
+    \item Au moins $23$ détecteurs du prélèvement fonctionnent correctement. \pts{0,75 pt}
     \zone{5}
     \needspace{4.8cm}
-    \item Le prélèvement contient au plus $3$ détecteurs défectueux. \pts{1 pt}
+    \item Le prélèvement contient au plus $3$ détecteurs défectueux. \pts{0,75 pt}
     \zone{4}
   \end{enumerate}
   \needspace{5.6cm}
@@ -147,26 +154,26 @@ On note $X$ le nombre de détecteurs \textbf{défectueux} dans le prélèvement.
 
 % ============================================================
 \newpage
-\section{Partie 2 -- Loi de Poisson \hfill {\normalsize\color{uimmred}8 points}}
+\section{Partie 2 -- Loi de Poisson \hfill {\normalsize\color{uimmred}6 points}}
 \subsection*{A. Pertes de communication sur le réseau de terrain}
 \begin{exo}{Contexte}
 Sur une ligne d'assemblage, l'automate dialogue avec des îlots d'entrées/sorties déportés par un réseau Profinet. Le diagnostic de l'automate enregistre des \textbf{pertes de communication} brèves, qui surviennent de façon aléatoire et indépendante. L'historique montre qu'il se produit \textbf{en moyenne $2{,}5$ pertes de communication par semaine} de production. On admet que le nombre de pertes au cours d'une semaine suit une loi de Poisson.
 \end{exo}
 \begin{enumerate}
   \needspace{5.6cm}
-  \item Définir une variable aléatoire $Y$ adaptée à la situation. Donner sa loi et justifier la valeur de son paramètre. \pts{1 pt}
+  \item Définir une variable aléatoire $Y$ adaptée à la situation. Donner sa loi et justifier la valeur de son paramètre. \pts{0,75 pt}
   \zone{3}
   \needspace{4cm}
-  \item Calculer l'écart-type de $Y$. \pts{0,5 pt}
+  \item Calculer l'écart-type de $Y$. \pts{0,25 pt}
   \zone{2}
   \needspace{6.5cm}
-  \item Calculer la probabilité qu'il ne se produise aucune perte de communication dans la semaine, puis la probabilité qu'il s'en produise exactement $3$. Détailler les calculs à l'aide de la formule. \pts{1 pt}
+  \item Calculer la probabilité qu'il ne se produise aucune perte de communication dans la semaine, puis la probabilité qu'il s'en produise exactement $3$. Détailler les calculs à l'aide de la formule. \pts{0,75 pt}
   \zone{4}
   \needspace{4.8cm}
-  \item Calculer la probabilité qu'il se produise plus de $4$ pertes de communication dans la semaine. \pts{1 pt}
+  \item Calculer la probabilité qu'il se produise plus de $4$ pertes dans la semaine. \pts{0,75 pt}
   \zone{4}
   \needspace{5.4cm}
-  \item Le technicien réseau veut fixer un seuil $k$~: si une semaine compte plus de $k$ pertes, il lance un diagnostic complet du réseau. Déterminer la plus petite valeur de $k$ telle que $P(Y \leq k) \geq 0{,}95$. Justifier par deux probabilités. \pts{1,5 pt}
+  \item Le technicien réseau veut fixer un seuil $k$~: si une semaine compte plus de $k$ pertes, il lance un diagnostic complet du réseau. Déterminer la plus petite valeur de $k$ telle que $P(Y \leq k) \geq 0{,}95$. Justifier par deux probabilités. \pts{1 pt}
   \zone{4}
 \end{enumerate}
 
@@ -183,7 +190,7 @@ Un fabricant livre des cartes d'entrées TOR par lots de $400$ cartes. La probab
   \item Justifier, en vérifiant chacune des conditions, que l'on peut approcher la loi de $N$ par une loi de Poisson. Préciser son paramètre. \pts{1 pt}
   \zone{6}
   \needspace{4.8cm}
-  \item À l'aide de cette loi de Poisson, calculer la probabilité qu'un lot contienne au plus $2$ cartes défectueuses. \pts{1 pt}
+  \item À l'aide de cette loi de Poisson, calculer la probabilité qu'un lot contienne au plus $2$ cartes défectueuses. \pts{0,5 pt}
   \zone{5}
   \needspace{4.8cm}
   \item Calculer la même probabilité avec la loi exacte. Comparer les deux résultats et conclure sur la qualité de l'approximation. \pts{0,5 pt}
@@ -209,6 +216,37 @@ En fin de ligne, un robot de palettisation prélève des cartons sur un convoyeu
   \needspace{4.8cm}
   \item Au cours d'un poste, le robot réalise $1\,000$ cycles. Estimer le nombre moyen de cycles qui dépassent $12{,}8$\,s. \pts{1 pt}
   \zone{4}
+\end{enumerate}
+
+% ============================================================
+\newpage
+\section{Partie 4 -- Dénombrement \hfill {\normalsize\color{uimmred}4 points}}
+\begin{exo}{Vissage robotisé d'un carter}
+Dans une cellule d'assemblage, un robot équipé d'une visseuse électrique serre les $6$ vis de fixation d'un carter de motoréducteur. Les vis sont repérées $V_1$, $V_2$, \dots, $V_6$. L'ordre dans lequel le robot serre les vis est défini dans son programme.
+\end{exo}
+\begin{enumerate}
+  \needspace{4.8cm}
+  \item Combien d'ordres de vissage différents le programmeur peut-il définir~? \pts{1 pt}
+  \zone{4}
+  \needspace{4.8cm}
+  \item Pour garantir la mise en position du carter, la vis $V_1$ doit être serrée en premier. Combien d'ordres de vissage restent possibles~? \pts{0,5 pt}
+  \zone{4}
+  \needspace{5.6cm}
+  \item En fin de poste, le contrôleur qualité vérifie à la clé dynamométrique le couple de serrage de $3$ vis du carter. L'ordre du contrôle n'a pas d'importance. Combien de groupes de $3$ vis différents peut-il contrôler~? \pts{0,75 pt}
+  \zone{4}
+  \needspace{4cm}
+  \item Sur un carter, $2$ des $6$ vis sont mal serrées (couple insuffisant).
+  \begin{enumerate}
+    \needspace{4cm}
+    \item Combien de groupes de $3$ vis ne contiennent aucune vis mal serrée~? \pts{0,5 pt}
+    \zone{3}
+    \needspace{4.8cm}
+    \item Combien de groupes de $3$ vis contiennent exactement une vis mal serrée~? \pts{0,5 pt}
+    \zone{4}
+  \end{enumerate}
+  \needspace{5.6cm}
+  \item Le contrôleur choisit les $3$ vis au hasard~: tous les groupes de $3$ vis ont la même probabilité d'être choisis. Calculer la probabilité que le contrôle détecte au moins une vis mal serrée. \pts{0,75 pt}
+  \zone{5}
 \end{enumerate}
 
 \end{document}
