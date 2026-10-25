@@ -2080,7 +2080,7 @@ const App = {
   filtre: 'retenus', recherche: '', sourceFiltre: '', page: 0, PAGE: 60,
   ecran: 'reglages',
   occupe: false,
-  VERSION: { numero: '1.11', date: '2026-10-25' },
+  VERSION: { numero: '1.12', date: '2026-10-25' },
   CONTACT_QUALITE: 'Philippe Viry',
   pickDir: mode => window.showDirectoryPicker({ mode }),
   memoriserDossiers: true,
@@ -2224,7 +2224,7 @@ App.rendreReglages = () => {
       h('li', {}, 'Rangez et nommez vos fichiers selon le cahier des charges : un dossier par formation, un sous-dossier par module.'),
       h('li', {}, `Ici : indiquez votre login, vérifiez le modèle de ${App.CONTACT_QUALITE} (le modèle vierge est chargé d’office), ajoutez votre ou vos dossiers et réglez les modules.`),
       h('li', {}, 'Analyse : l’outil écarte ce qui ne s’importe pas et propose titre, catégorie, description et mots-clés.'),
-      h('li', {}, 'Revue : relisez chaque ligne, corrigez, cochez « Relu ».'),
+      h('li', {}, 'Revue : vérifiez les propositions et corrigez-les si besoin. La case « Relu » est un repère facultatif.'),
       h('li', {}, `Génération : l’outil produit le fichier d’import et le dossier d’export à transmettre à ${App.CONTACT_QUALITE}.`)),
     h('p', { class: 'aide' }, 'Votre travail est enregistré dans ce navigateur : vous pouvez fermer la page et reprendre plus tard.')));
 
@@ -2501,10 +2501,26 @@ App.rendreRevue = () => {
       h('button', { class: 'lien', onclick: App.exporterRevue }, 'Enregistrer la revue'),
       h('label', { class: 'lien' }, 'Charger une revue', h('input', { type: 'file', accept: '.json', hidden: true, onchange: App.importerRevue })))));
   zone.append(App.panneauClaude());
-  zone.append(h('p', { class: 'aide' }, 'Cochez « Relu » quand une ligne est vérifiée. Les descriptions sont composées à partir de l’en-tête du document, ou rédigées par Claude : relisez-les toutes.'));
+  zone.append(h('p', { class: 'aide' }, 'Les descriptions sont composées à partir de l’en-tête du document, ou rédigées par Claude : vérifiez au moins les lignes « Avec alerte ». Cocher « Relu » est facultatif : c’est un repère pour vous, et une ligne cochée garde vos corrections si vous relancez l’analyse.'));
+  zone.append(h('p', { class: 'aide' },
+    h('button', { class: 'lien', onclick: () => App.marquerRelu(true) }, 'Cocher « Relu » pour toutes les lignes de ce filtre'), ' · ',
+    h('button', { class: 'lien', onclick: () => App.marquerRelu(false) }, 'Tout décocher dans ce filtre')));
   zone.append(h('div', { id: 'liste' }));
   zone.append(h('div', { class: 'actions' }, h('button', { class: 'bouton principal', onclick: () => App.aller('generation') }, 'Étape suivante : génération')));
   App.rendreListe();
+};
+
+/* coche ou décoche « Relu » pour les lignes retenues du filtre en cours (recherche comprise) */
+App.marquerRelu = relu => {
+  const cibles = App.filtrer().filter(l => l.statut === 'RETENU' && !!l.relu !== relu);
+  if (!cibles.length) { alert(relu ? 'Toutes les lignes de ce filtre sont déjà cochées « Relu ».' : 'Aucune ligne cochée « Relu » dans ce filtre.'); return; }
+  const question = relu
+    ? `${cibles.length} ligne(s) vont être cochées « Relu ». Leurs textes seront gardés si vous relancez l’analyse. Continuer ?`
+    : `« Relu » va être décoché pour ${cibles.length} ligne(s). Continuer ?`;
+  if (!confirm(question)) return;
+  for (const l of cibles) l.relu = relu;
+  App.sauver();
+  App.rendreRevue();
 };
 
 App.rendreListe = () => {
