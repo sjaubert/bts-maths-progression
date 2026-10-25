@@ -134,7 +134,7 @@ ul.erreurs li { margin: 3px 0; }
     <button id="recharger" class="bouton principal">Recharger la page</button>
   </div>
   <div id="alerte-navigateur" class="bandeau attention" hidden>
-    Ce navigateur ne permet pas d'ouvrir des dossiers. Ouvre cette page avec Microsoft Edge ou Google Chrome.
+    Ce navigateur ne permet pas d'ouvrir des dossiers. Ouvrez cette page avec Microsoft Edge ou Google Chrome.
   </div>
   <div id="reprise" class="bandeau" hidden>
     <span id="reprise-texte"></span>
@@ -148,7 +148,7 @@ ul.erreurs li { margin: 3px 0; }
 </main>
 <footer class="pied">
   <span id="etat-sauvegarde"></span>
-  <span>Tes fichiers restent sur ton poste : rien n'est envoyé sur Internet, sauf les extraits que tu colles toi-même dans Claude.</span>
+  <span>Vos fichiers restent sur votre poste : rien n'est envoyé sur Internet, sauf les extraits que vous collez vous-même dans Claude.</span>
   <span>Conception : S. Jaubert, Pôle Formation UIMM Centre-Val de Loire</span>
 </footer>
 <script>
@@ -1758,7 +1758,7 @@ A.trier = async (f, source, reglages) => {
       const base = source.urlBase.replace(/\/*$/, '/');
       l.url = base + rel.split('/').map(encodeURIComponent).join('/');
       l.famille = 'web';
-    } else exclure("Page web : renseigne l'adresse de publication (URL de base) de cette source");
+    } else exclure("Page web : renseignez l'adresse de publication (URL de base) de cette source");
   } else if (!l.famille) exclure(`Format non admis par EASi (.${ext || 'sans extension'})`);
   else if (l.famille === 'image' && !reglages.images) exclure('Image non retenue (option « inclure les images » désactivée)');
   const hay = ' ' + E.norm(rel).replace(/[^a-z0-9]+/g, ' ') + ' ';
@@ -1973,7 +1973,7 @@ A.unifierNoms = lignes => {
 A.controler = (lignes, listes, auteur) => {
   const erreurs = new Map();
   const glob = [];
-  if (!auteur || !auteur.trim()) glob.push('Renseigne ton login Windows (colonne Auteur) dans les réglages.');
+  if (!auteur || !auteur.trim()) glob.push('Renseignez votre login Windows (colonne Auteur) dans les réglages.');
   const noms = new Map();
   const ret = lignes.filter(l => l.statut === 'RETENU');
   if (!ret.length) glob.push('Aucune ligne retenue.');
@@ -2080,7 +2080,7 @@ const App = {
   filtre: 'retenus', recherche: '', sourceFiltre: '', page: 0, PAGE: 60,
   ecran: 'reglages',
   occupe: false,
-  VERSION: { numero: '1.10', date: '2026-10-25' },
+  VERSION: { numero: '1.11', date: '2026-10-25' },
   CONTACT_QUALITE: 'Philippe Viry',
   pickDir: mode => window.showDirectoryPicker({ mode }),
   memoriserDossiers: true,
@@ -2092,7 +2092,7 @@ let minuterie = null;
 App.sauver = () => {
   clearTimeout(minuterie);
   if (App.sauvegardeSuspendue) {
-    $('#etat-sauvegarde').textContent = 'Sauvegarde en pause : choisis « Reprendre » ou « Nouvelle session » en haut de la page.';
+    $('#etat-sauvegarde').textContent = 'Sauvegarde en pause : choisissez « Reprendre » ou « Nouvelle session » en haut de la page.';
     return;
   }
   minuterie = setTimeout(async () => {
@@ -2100,7 +2100,7 @@ App.sauver = () => {
       await DB.ecrire('etat', Object.assign({}, App.etat, { sources: App.etat.sources.map(({ handle, ...reste }) => reste) }));
       $('#etat-sauvegarde').textContent = 'Session enregistrée dans ce navigateur';
     } catch (e) {
-      $('#etat-sauvegarde').textContent = 'Sauvegarde automatique indisponible : utilise « Enregistrer la revue »';
+      $('#etat-sauvegarde').textContent = 'Sauvegarde automatique indisponible : utilisez « Enregistrer la revue »';
     }
   }, 500);
 };
@@ -2115,7 +2115,7 @@ App.sauverDossiers = async () => {
 };
 
 App.permission = async (handle, mode = 'read') => {
-  if (!handle) throw new Error('Dossier à reconnecter : retourne dans les réglages et clique « Reconnecter ».');
+  if (!handle) throw new Error('Dossier à reconnecter : retournez dans les réglages et cliquez « Reconnecter ».');
   if (!handle.queryPermission) return true;
   if ((await handle.queryPermission({ mode })) === 'granted') return true;
   return (await handle.requestPermission({ mode })) === 'granted';
@@ -2221,17 +2221,17 @@ App.rendreReglages = () => {
   zone.append(h('details', { class: 'carte guide', open: !E0.sources.length },
     h('summary', {}, 'Comment ça marche'),
     h('ol', {},
-      h('li', {}, 'Range et nomme tes fichiers selon le cahier des charges : un dossier par formation, un sous-dossier par module.'),
-      h('li', {}, `Ici : indique ton login, vérifie le modèle de ${App.CONTACT_QUALITE} (le modèle vierge est chargé d’office), ajoute ton ou tes dossiers et règle les modules.`),
+      h('li', {}, 'Rangez et nommez vos fichiers selon le cahier des charges : un dossier par formation, un sous-dossier par module.'),
+      h('li', {}, `Ici : indiquez votre login, vérifiez le modèle de ${App.CONTACT_QUALITE} (le modèle vierge est chargé d’office), ajoutez votre ou vos dossiers et réglez les modules.`),
       h('li', {}, 'Analyse : l’outil écarte ce qui ne s’importe pas et propose titre, catégorie, description et mots-clés.'),
-      h('li', {}, 'Revue : relis chaque ligne, corrige, coche « Relu ».'),
+      h('li', {}, 'Revue : relisez chaque ligne, corrigez, cochez « Relu ».'),
       h('li', {}, `Génération : l’outil produit le fichier d’import et le dossier d’export à transmettre à ${App.CONTACT_QUALITE}.`)),
-    h('p', { class: 'aide' }, 'Ton travail est enregistré dans ce navigateur : tu peux fermer la page et reprendre plus tard.')));
+    h('p', { class: 'aide' }, 'Votre travail est enregistré dans ce navigateur : vous pouvez fermer la page et reprendre plus tard.')));
 
   zone.append(h('div', { class: 'carte' },
-    h('h2', {}, 'Toi et le modèle'),
+    h('h2', {}, 'Vous et le modèle'),
     h('div', { class: 'grille2' },
-      h('label', {}, 'Ton login Windows (colonne Auteur)',
+      h('label', {}, 'Votre login Windows (colonne Auteur)',
         h('input', { type: 'text', placeholder: 'p.nom', value: E0.auteur, oninput: e => { E0.auteur = e.target.value.trim(); App.sauver(); } })),
       h('label', {}, "Modèle d'import de la qualité (.xlsx)",
         h('input', { type: 'file', accept: '.xlsx', onchange: async e => {
@@ -2243,7 +2243,7 @@ App.rendreReglages = () => {
         h('span', { class: L ? 'ok' : 'attention' }, L
           ? `${E0.modele.defaut ? 'Modèle par défaut' : 'Chargé'} : ${E0.modele.nom} (${L.formations.length} formations, ${L.categories.length} catégories)`
           : 'Aucun modèle chargé : les listes de formations, de blocs et de catégories en viennent.'),
-        L && E0.modele.defaut ? h('span', { class: 'aide' }, 'Pour une autre version du modèle, choisis le fichier ci-dessus.') : null,
+        L && E0.modele.defaut ? h('span', { class: 'aide' }, 'Pour une autre version du modèle, choisissez le fichier ci-dessus.') : null,
         E0.modele && !E0.modele.defaut && App.modeleDefaut() ? h('button', { class: 'lien', onclick: async () => {
           await App.chargerModeleDefaut(); App.sauver(); App.rendreReglages();
         } }, 'Revenir au modèle par défaut') : null)),
@@ -2271,7 +2271,7 @@ App.rendreReglages = () => {
         try { const d = await App.pickDir('read'); await App.ajouterSource(d); App.rendreReglages(); }
         catch (e) { if (e.name !== 'AbortError') alert(e.message); }
       } }, '+ Ajouter un dossier')),
-    h('p', { class: 'aide' }, "Choisis le dossier de niveau 1 (une formation ou un enseignement). Ses sous-dossiers sont les modules. Tu peux ajouter plusieurs dossiers : tout ira dans le même fichier d'import."));
+    h('p', { class: 'aide' }, "Choisissez le dossier de niveau 1 (une formation ou un enseignement). Ses sous-dossiers sont les modules. Vous pouvez ajouter plusieurs dossiers : tout ira dans le même fichier d'import."));
   zone.append(cs);
   if (!E0.sources.length) cs.append(h('p', { class: 'vide' }, 'Aucun dossier pour l’instant.'));
   for (const src of E0.sources) cs.append(App.carteSource(src));
@@ -2341,7 +2341,7 @@ App.carteSource = src => {
       h('label', {}, 'Unités', h('input', { value: src.unites, placeholder: 'ex. U5, ou ATI=U3, MS=U31', oninput: e => maj('unites', e.target.value) })),
       h('label', {}, 'Adresse web des pages publiées (facultatif)', h('input', { value: src.urlBase, placeholder: 'https://…', oninput: e => maj('urlBase', e.target.value.trim()) }))),
     mods.length ? h('div', { class: 'defile' }, table) : h('p', { class: 'vide' }, 'Aucun sous-dossier : les fichiers doivent être rangés dans des dossiers de module.'),
-    h('p', { class: 'aide' }, "Laisse « = » pour reprendre la valeur de la source. Décoche un dossier pour l'ignorer entièrement."));
+    h('p', { class: 'aide' }, "Laissez « = » pour reprendre la valeur de la source. Décochez un dossier pour l'ignorer entièrement."));
 };
 
 /* ==========================================================================
@@ -2368,7 +2368,7 @@ App.rendreAnalyse = () => {
   }
   ajouter(carte,
     h('p', {}, `${E0.sources.length} dossier(s) : ${E0.sources.map(s => s.nom).join(', ')}.`),
-    E0.dateAnalyse ? h('p', { class: 'aide' }, `Dernière analyse le ${new Date(E0.dateAnalyse).toLocaleString('fr-FR')}. Relancer garde les lignes que tu as cochées « relu ».`) : null,
+    E0.dateAnalyse ? h('p', { class: 'aide' }, `Dernière analyse le ${new Date(E0.dateAnalyse).toLocaleString('fr-FR')}. Relancer garde les lignes que vous avez cochées « relu ».`) : null,
     h('button', { class: 'bouton principal', id: 'lancer', onclick: App.analyser }, E0.dateAnalyse ? 'Relancer l’analyse' : 'Lancer l’analyse'),
     h('div', { id: 'progres', hidden: true }, h('progress', { max: 100, value: 0 }), h('p', { id: 'progres-texte' })),
     h('div', { id: 'bilan' }));
@@ -2486,7 +2486,7 @@ App.rendreRevue = () => {
   const E0 = App.etat, zone = $('#ecran-revue');
   zone.replaceChildren();
   if (!E0.lignes.length) {
-    zone.append(h('div', { class: 'carte' }, h('p', {}, 'Lance d’abord l’analyse.'), h('button', { class: 'bouton', onclick: () => App.aller('analyse') }, 'Aller à l’analyse')));
+    zone.append(h('div', { class: 'carte' }, h('p', {}, 'Lancez d’abord l’analyse.'), h('button', { class: 'bouton', onclick: () => App.aller('analyse') }, 'Aller à l’analyse')));
     return;
   }
   const L = E0.lignes, ret = L.filter(l => l.statut === 'RETENU');
@@ -2501,7 +2501,7 @@ App.rendreRevue = () => {
       h('button', { class: 'lien', onclick: App.exporterRevue }, 'Enregistrer la revue'),
       h('label', { class: 'lien' }, 'Charger une revue', h('input', { type: 'file', accept: '.json', hidden: true, onchange: App.importerRevue })))));
   zone.append(App.panneauClaude());
-  zone.append(h('p', { class: 'aide' }, 'Coche « Relu » quand une ligne est vérifiée. Les descriptions sont composées à partir de l’en-tête du document, ou rédigées par Claude : relis-les toutes.'));
+  zone.append(h('p', { class: 'aide' }, 'Cochez « Relu » quand une ligne est vérifiée. Les descriptions sont composées à partir de l’en-tête du document, ou rédigées par Claude : relisez-les toutes.'));
   zone.append(h('div', { id: 'liste' }));
   zone.append(h('div', { class: 'actions' }, h('button', { class: 'bouton principal', onclick: () => App.aller('generation') }, 'Étape suivante : génération')));
   App.rendreListe();
@@ -2618,7 +2618,7 @@ App.importerRevue = async e => {
     E0.lignes = d.lignes.filter(l => connues.has(l.sourceId));
     App.majStats();
     App.sauver();
-    if (manquantes.length) alert('Ajoute d’abord ces dossiers dans les réglages, puis recharge la revue : ' + manquantes.join(', '));
+    if (manquantes.length) alert('Ajoutez d’abord ces dossiers dans les réglages, puis rechargez la revue : ' + manquantes.join(', '));
     App.rendreRevue();
   } catch (err) { alert(err.message); }
 };
@@ -2687,7 +2687,7 @@ App.integrerReponse = texte => {
   const attendus = (App.claude && App.claude.codes) || [];
   const manquants = attendus.filter(c => !rep.has(c));
   const msg = [];
-  if (!rep.size) msg.push('Aucune réponse reconnue. Vérifie que tu as collé tout le bloc de code de Claude, avec les codes entre crochets [R001].');
+  if (!rep.size) msg.push('Aucune réponse reconnue. Vérifiez que vous avez collé tout le bloc de code de Claude, avec les codes entre crochets [R001].');
   else {
     msg.push(`${ok} ligne(s) mises à jour.`);
     if (aCompleter) msg.push(`${aCompleter} ligne(s) où Claude manquait d’information : description à compléter à la main.`);
@@ -2708,17 +2708,17 @@ App.panneauClaude = () => {
   const det = h('details', { class: 'carte claude', open: !!App.claudeOuvert, ontoggle: e => { App.claudeOuvert = e.target.open; } },
     h('summary', {}, `Descriptions avec Claude (facultatif) : ${faits} rédigée(s), ${reste} restante(s)`));
   const zoneDemande = C.demande ? h('div', {},
-    h('label', {}, `1. Demande prête (${C.codes.length} ressources). Copie-la et colle-la dans une conversation Claude.`,
+    h('label', {}, `1. Demande prête (${C.codes.length} ressources). Copiez-la et collez-la dans une conversation Claude.`,
       h('textarea', { rows: 6, readonly: true, class: 'mono' }, C.demande)),
     h('div', { class: 'actions gauche' },
-      h('button', { class: 'bouton principal', onclick: async e => { const ok = await App.copier(C.demande); e.target.textContent = ok ? 'Copié' : 'Copie impossible : sélectionne le texte'; } }, 'Copier la demande'),
+      h('button', { class: 'bouton principal', onclick: async e => { const ok = await App.copier(C.demande); e.target.textContent = ok ? 'Copié' : 'Copie impossible : sélectionnez le texte'; } }, 'Copier la demande'),
       h('button', { class: 'bouton', onclick: () => App.telecharger(new Blob([C.demande], { type: 'text/plain;charset=utf-8' }), `Demande_Claude_${C.codes[0]}-${C.codes[C.codes.length - 1]}.txt`) }, 'Télécharger (.txt)')),
-    h('label', {}, '2. Colle ici la réponse de Claude (le bloc de code entier) :',
+    h('label', {}, '2. Collez ici la réponse de Claude (le bloc de code entier) :',
       h('textarea', { rows: 6, id: 'reponse-claude', class: 'mono', placeholder: '[R001]\nDESCRIPTION: …\nMOTS-CLES: …' })),
     h('div', { class: 'actions gauche' },
       h('button', { class: 'bouton principal', onclick: () => App.integrerReponse($('#reponse-claude').value) }, 'Intégrer la réponse'))) : null;
   ajouter(det,
-    h('p', { class: 'aide' }, 'Claude propose le titre, la description et les mots-clés, et signale un éventuel problème (corrigé inclus, document formateur, autre auteur). La page prépare une demande par lot de ', String(App.TAILLE_LOT), ' ressources. Tu la colles dans Claude (claude.ai, abonnement du Pôle), puis tu colles sa réponse ici. Les extraits de tes documents sont alors transmis à Claude : n’utilise pas cette option pour un document confidentiel.'),
+    h('p', { class: 'aide' }, 'Claude propose le titre, la description et les mots-clés, et signale un éventuel problème (corrigé inclus, document formateur, autre auteur). La page prépare une demande par lot de ', String(App.TAILLE_LOT), ' ressources. Vous la collez dans Claude (claude.ai, abonnement du Pôle), puis vous collez sa réponse ici. Les extraits de vos documents sont alors transmis à Claude : n’utilisez pas cette option pour un document confidentiel.'),
     C.bilan ? h('p', { class: 'ok bloc' }, C.bilan) : null,
     zoneDemande,
     !C.demande ? h('div', { class: 'actions gauche' },
@@ -2753,7 +2753,7 @@ App.rendreGeneration = () => {
   zone.append(h('div', { class: 'carte' },
     h('h2', {}, 'Fichier d’import et dossier d’export'),
     h('label', {}, 'Nom du fichier d’import', h('input', { value: E0.nomImport, oninput: e => { E0.nomImport = e.target.value; App.sauver(); } })),
-    h('p', { class: 'aide' }, 'Choisis un dossier (par exemple sur ton bureau). L’outil y crée un sous-dossier « Export_EASi » avec le fichier d’import et une copie des fichiers retenus, rangés selon la colonne I. Tes fichiers d’origine ne sont ni déplacés ni modifiés.'),
+    h('p', { class: 'aide' }, 'Choisissez un dossier (par exemple sur votre bureau). L’outil y crée un sous-dossier « Export_EASi » avec le fichier d’import et une copie des fichiers retenus, rangés selon la colonne I. Vos fichiers d’origine ne sont ni déplacés ni modifiés.'),
     h('div', { class: 'actions gauche' },
       h('button', { class: 'bouton principal', disabled: !peut, onclick: App.generer }, 'Choisir le dossier et générer'),
       h('button', { class: 'bouton', disabled: !peut || !App.etat.modele, onclick: App.telechargerImport }, 'Télécharger seulement le fichier d’import')),
@@ -2830,9 +2830,9 @@ App.generer = async () => {
     const nUrl = App.etat.lignes.filter(l => l.statut === 'RETENU' && l.url).length;
     res.replaceChildren(h('div', { class: 'ok bloc' },
       h('p', {}, h('strong', {}, `${racine.name}\\Export_EASi\\`), ecrit ? h('strong', {}, nom)
-        : ' : le fichier d’import n’a pas pu être écrit dans ce dossier, il a été téléchargé. Place-le dans Export_EASi.'),
+        : ' : le fichier d’import n’a pas pu être écrit dans ce dossier, il a été téléchargé. Placez-le dans Export_EASi.'),
       h('p', {}, `${lignes.length + nUrl} lignes : ${copies} fichiers copiés${deja ? `, ${deja} déjà présents` : ''}, ${nUrl} page(s) web référencée(s) par URL.`),
-      h('p', {}, `Transmets à ${App.CONTACT_QUALITE} le dossier Export_EASi complet.`)));
+      h('p', {}, `Transmettez à ${App.CONTACT_QUALITE} le dossier Export_EASi complet.`)));
   } catch (e) {
     txt.textContent = 'Erreur : ' + e.message + (App.etapeGen ? ` (${App.etapeGen})` : '');
     console.error(e, App.etapeGen);
@@ -2862,7 +2862,7 @@ App.verifierVersion = async () => {
     let deja = true;
     try { deja = !!sessionStorage.getItem(cle); sessionStorage.setItem(cle, '1'); } catch (e) { /* stockage indisponible : pas de rechargement automatique */ }
     if (!deja) { location.reload(); return; }
-    $('#nouvelle-version-texte').textContent = `Une nouvelle version de l’assistant est en ligne (version ${v.numero}${v.date ? ' du ' + dateFr(Date.parse(v.date)) : ''}). Tu utilises encore la version ${App.VERSION.numero}.`;
+    $('#nouvelle-version-texte').textContent = `Une nouvelle version de l’assistant est en ligne (version ${v.numero}${v.date ? ' du ' + dateFr(Date.parse(v.date)) : ''}). Vous utilisez encore la version ${App.VERSION.numero}.`;
     $('#recharger').onclick = () => location.reload();
     $('#nouvelle-version').hidden = false;
   } catch (e) { /* hors ligne ou version.json absent : on garde cette version */ }
@@ -2893,7 +2893,7 @@ App.demarrer = async () => {
     const bandeau = $('#reprise');
     bandeau.hidden = false;
     App.sauvegardeSuspendue = true;
-    $('#reprise-texte').textContent = `Session enregistrée : ${sauve.sources.length} dossier(s), ${sauve.lignes.length} ligne(s)${sauve.dateAnalyse ? ', analyse du ' + new Date(sauve.dateAnalyse).toLocaleDateString('fr-FR') : ''}. Tant que tu n’as pas choisi, rien n’est enregistré.`;
+    $('#reprise-texte').textContent = `Session enregistrée : ${sauve.sources.length} dossier(s), ${sauve.lignes.length} ligne(s)${sauve.dateAnalyse ? ', analyse du ' + new Date(sauve.dateAnalyse).toLocaleDateString('fr-FR') : ''}. Tant que vous n’avez pas choisi, rien n’est enregistré.`;
     $('#reprendre').onclick = async () => {
       App.etat = Object.assign(etatInitial(), sauve);
       App.etat.reglages = Object.assign(etatInitial().reglages, sauve.reglages || {});
