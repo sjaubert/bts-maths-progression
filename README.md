@@ -345,12 +345,13 @@ Pôle Formation UIMM Centre-Val de Loire. Programme de mathématiques des BTS in
 - Résoudre une équation différentielle du premier ou second ordre (cas simples à la main, sinon logiciel).
 - Déterminer la solution vérifiant une condition initiale donnée.
 
-> **Commentaires :** On s'attache à relier les exemples avec les enseignements scientifiques (phénomènes d'évolution). L'utilisation des outils logiciels est sollicitée. Supports disponibles (charte UIMM) : cours du 1er ordre (RC, RL, refroidissement, chute visqueuse, cinétique, méthode d'Euler), cours du 2nd ordre, et TD.
+> **Commentaires :** On s'attache à relier les exemples avec les enseignements scientifiques (phénomènes d'évolution). L'utilisation des outils logiciels est sollicitée. Supports disponibles (charte UIMM) : cours du 1er ordre (RC, RL, refroidissement, chute visqueuse, cinétique, méthode d'Euler), cours du 2nd ordre, TD, et un simulateur interactif : <a href='https://sjaubert.github.io/bts-maths-progression/MOD06/MOD06_Simulateur_EquaDiff_v1_0.html' target='_blank'>ouvrir le simulateur d'équations différentielles</a> (10 situations physiques : circuits RC, RL et RLC, refroidissement, chute dans un fluide, bac de mélange et vidange, ressorts, flotteur, résonance, analogie électromécanique).
 
 **Ressources** ([ouvrir le dossier MOD06](https://github.com/sjaubert/bts-maths-progression/tree/main/MOD06))
 
 - [Cours Equations Differentielles Ordre1](MOD06/Cours_Equations_Differentielles_Ordre1.pdf)
 - [Cours Equations Differentielles Ordre2](MOD06/Cours_Equations_Differentielles_Ordre2.pdf)
+- [MOD06 Simulateur EquaDiff v1 0.html](MOD06/MOD06_Simulateur_EquaDiff_v1_0.html)
 - [TD Activites Equations Differentielles](MOD06/TD_Activites_Equations_Differentielles.pdf)
 - [TD EDL1 MOD06](MOD06/TD_EDL1_MOD06.pdf)
 - [TD EDL1 MOD06 app](MOD06/TD_EDL1_MOD06_app.pdf)

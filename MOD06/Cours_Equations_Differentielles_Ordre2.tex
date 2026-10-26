@@ -513,7 +513,7 @@ ou de façon équivalente : $y_h(t) = C\,e^{\alpha t}\cos(\beta t + \varphi)$
 
 \begin{remarque}
 \begin{itemize}
-  \item $\alpha$ est le \textbf{coefficient d'amortissement} : si $\alpha < 0$, les oscillations sont amorties
+  \item $\alpha$ fixe la \textbf{décroissance de l'amplitude} (enveloppe $e^{\alpha t}$) : si $\alpha < 0$, les oscillations sont amorties
   \item $\beta$ est la \textbf{pseudo-pulsation} des oscillations
   \item La \textbf{pseudo-période} vaut $T = \frac{2\pi}{\beta}$
 \end{itemize}
@@ -728,15 +728,15 @@ $y'(0) = -A + 2B = 1 + 2B = 0 \Rightarrow B = -\frac{1}{2}$
 \begin{appliindus}[-- Réponse indicielle d'un capteur de température]
 Un capteur de température industriel (thermocouple dans un doigt de gant) peut être modélisé par un système du second ordre. Lorsqu'il est plongé dans un fluide à $100\,°$C à $t=0$ :
 \[
-\tau^2\,\ddot{T} + 2m\tau\,\dot{T} + T = 100
+\tau^2\,\ddot{T} + 2\xi\tau\,\dot{T} + T = 100
 \]
 avec $T(0) = 20\,°$C (température initiale) et $T'(0) = 0$.
 
-Le facteur d'amortissement $m$ détermine la rapidité et la qualité de la réponse du capteur :
+Le facteur d'amortissement $\xi$ (lettre grecque xi) détermine la rapidité et la qualité de la réponse du capteur :
 \begin{itemize}
-  \item $m > 1$ : réponse lente sans dépassement
-  \item $m = 1$ : réponse la plus rapide sans dépassement
-  \item $m < 1$ : réponse rapide mais avec des oscillations
+  \item $\xi > 1$ : réponse lente sans dépassement
+  \item $\xi = 1$ : réponse la plus rapide sans dépassement
+  \item $\xi < 1$ : réponse rapide mais avec des oscillations
 \end{itemize}
 
 Le choix du capteur dans un \textbf{process industriel} dépend de ce compromis rapidité/précision.
@@ -753,7 +753,9 @@ Le choix du capteur dans un \textbf{process industriel} dépend de ce compromis 
 \begin{center}
 \begin{tikzpicture}[scale=1.2, >=Stealth, thick]
   % Circuit
-  \draw (0,0) -- (4,0);
+  \draw (0,0) -- (0.5,0);
+  \draw (2.1,0) -- (2.5,0);
+  \draw (3.7,0) -- (4,0);
   % Résistance
   \draw (0.5,0) -- (0.7,0.3) -- (1.1,-0.3) -- (1.5,0.3) -- (1.9,-0.3) -- (2.1,0);
   \node[above] at (1.3,0.4) {$R$};
@@ -763,7 +765,8 @@ Le choix du capteur dans un \textbf{process industriel} dépend de ce compromis 
         arc[start angle=180, end angle=0, radius=0.2];
   \node[above] at (3.1,0.4) {$L$};
   % Générateur
-  \draw (0,0) -- (0,-2);
+  \draw (0,0) -- (0,-0.8);
+  \draw (0,-1.1) -- (0,-2);
   \draw (-0.3,-0.8) -- (0.3,-0.8);
   \draw (-0.15,-1.1) -- (0.15,-1.1);
   \node[left] at (-0.3,-0.95) {$E$};
@@ -776,13 +779,13 @@ Le choix du capteur dans un \textbf{process industriel} dépend de ce compromis 
   % Fil retour
   \draw (0,-2) -- (4,-2);
   % Flèche courant
-  \draw[->, red, thick] (0.3,0.6) -- (1.5,0.6) node[midway, above] {$i(t)$};
+  \draw[->, red, thick] (0.3,1.0) -- (1.5,1.0) node[midway, above] {$i(t)$};
 \end{tikzpicture}
 \end{center}
 
-L'équation du circuit s'écrit :
+La loi des mailles $u_L + u_R + u_C = E$, avec $i = C\,\dfrac{du_C}{dt}$, donne :
 \[
-L\,\frac{d^2u_C}{dt^2} + R\,\frac{du_C}{dt} + \frac{u_C}{1} = E
+LC\,\frac{d^2u_C}{dt^2} + RC\,\frac{du_C}{dt} + u_C = E
 \]
 En divisant par $LC$ et en posant $\omega_0 = \frac{1}{\sqrt{LC}}$ (pulsation propre) et $Q = \frac{1}{R}\sqrt{\frac{L}{C}}$ (facteur de qualité) :
 \[
@@ -805,13 +808,13 @@ Le mouvement d'une masse $m$ suspendue à un ressort de raideur $k$, avec frotte
 m\,\ddot{x} + f\,\dot{x} + k\,x = F(t)
 \]
 
-On pose la pulsation propre $\omega_0 = \sqrt{\frac{k}{m}}$ et le coefficient d'amortissement réduit $m = \frac{f}{2\sqrt{mk}}$ :
+On pose la pulsation propre $\omega_0 = \sqrt{\frac{k}{m}}$ et le coefficient d'amortissement réduit $\xi = \frac{f}{2\sqrt{mk}}$ (en automatique, on le note souvent $m$ ou $z$) :
 \[
-\ddot{x} + 2m\omega_0\,\dot{x} + \omega_0^2\,x = \frac{F(t)}{m}
+\ddot{x} + 2\xi\omega_0\,\dot{x} + \omega_0^2\,x = \frac{F(t)}{m}
 \]
 
 \begin{appliindus}[-- Dimensionnement d'un amortisseur de machine]
-Une presse industrielle de $m = 200\,$kg montée sur plots élastiques ($k = 8\,000\,$N/m). On souhaite un retour à l'équilibre \textbf{critique} ($m = 1$) :
+Une presse industrielle de $m = 200\,$kg montée sur plots élastiques ($k = 8\,000\,$N/m). On souhaite un retour à l'équilibre \textbf{critique} ($\xi = 1$) :
 
 $f_c = 2\sqrt{mk} = 2\sqrt{200 \times 8000} = 2\sqrt{1\,600\,000} \approx 2\,530\,$N$\cdot$s/m
 
@@ -833,12 +836,12 @@ La détermination du régime permet de prédire les vibrations et d'éviter les 
 \begin{appliindus}[-- Système asservi du second ordre]
 En régulation industrielle, de nombreux systèmes (positionnement de bras robotique, régulation de débit, contrôle de niveau) sont modélisés par un système du second ordre. La fonction de transfert a la forme canonique :
 \[
-H(p) = \frac{K}{1 + \frac{2m}{\omega_0}p + \frac{p^2}{\omega_0^2}}
+H(p) = \frac{K}{1 + \frac{2\xi}{\omega_0}p + \frac{p^2}{\omega_0^2}}
 \]
 La réponse temporelle à un échelon est la solution de l'équation différentielle associée. Les critères de performance industrielle sont :
 \begin{itemize}
-  \item \textbf{Temps de réponse à 5\%} : $t_r \approx \frac{3}{m\omega_0}$
-  \item \textbf{Dépassement} : $D = e^{-\frac{\pi m}{\sqrt{1-m^2}}} \times 100\,\%$
+  \item \textbf{Temps de réponse à 5\%} : $t_r \approx \frac{3}{\xi\omega_0}$
+  \item \textbf{Dépassement} : $D = e^{-\frac{\pi \xi}{\sqrt{1-\xi^2}}} \times 100\,\%$
   \item \textbf{Erreur statique} : dépend du gain $K$
 \end{itemize}
 \end{appliindus}
@@ -880,9 +883,9 @@ Un circuit RLC série est constitué d'une résistance $R = 100\,\Omega$, d'une 
 \end{enumerate}
 
 \subsection*{Exercice 5 -- Vibrations de machine}
-Un moteur électrique de masse $m = 150\,$kg est fixé sur des silentblocs de raideur totale $k = 60\,000\,$N/m. Le coefficient d'amortissement est $f = 3\,000\,$N$\cdot$s/m.
+Un moteur électrique de masse $m = 150\,$kg est fixé sur des silentblocs de raideur totale $k = 60\,000\,$N/m. Le coefficient de frottement visqueux est $f = 3\,000\,$N$\cdot$s/m.
 \begin{enumerate}[label=\alph*)]
-  \item Calculer la pulsation propre $\omega_0$ et le coefficient d'amortissement $m$.
+  \item Calculer la pulsation propre $\omega_0$ et le coefficient d'amortissement réduit $\xi$.
   \item Déterminer le type de régime.
   \item Si le moteur est écarté de $5\,$mm de sa position d'équilibre puis relâché sans vitesse initiale, déterminer $x(t)$.
   \item Calculer la pseudo-période des oscillations et le temps de réponse à 5\%.
@@ -894,7 +897,7 @@ Un pendule simple de longueur $\ell = 1\,$m, amorti par frottement visqueux ($\m
 \ddot{\theta} + \frac{\mu}{m}\,\dot{\theta} + \frac{g}{\ell}\,\theta = 0
 \]
 \begin{enumerate}[label=\alph*)]
-  \item Calculer les paramètres $\omega_0$ et $m$.
+  \item Calculer les paramètres $\omega_0$ et $\xi$.
   \item Résoudre avec $\theta(0) = 0{,}1\,$rad et $\dot{\theta}(0) = 0$.
   \item Au bout de combien de périodes l'amplitude a-t-elle diminué de moitié ?
 \end{enumerate}
@@ -935,11 +938,11 @@ $\Delta < 0$ : $\alpha \pm j\beta$ & $e^{\alpha t}(A\cos\beta t + B\sin\beta t)$
 \textbf{Paramètres physiques :}
 
 $\omega_0 = \sqrt{\dfrac{c}{a}}$ \quad (pulsation propre) \qquad
-$m = \dfrac{b}{2\sqrt{ac}}$ \quad (amortissement réduit)
+$\xi = \dfrac{b}{2\sqrt{ac}}$ \quad (amortissement réduit)
 
 \vspace{6pt}
 $T_0 = \dfrac{2\pi}{\omega_0}$ \quad (période propre) \qquad
-$T_{ps} = \dfrac{2\pi}{\omega_0\sqrt{1-m^2}}$ \quad (pseudo-période, $m < 1$)
+$T_{ps} = \dfrac{2\pi}{\omega_0\sqrt{1-\xi^2}}$ \quad (pseudo-période, $\xi < 1$)
 \end{tcolorbox}
 
 \vfill
