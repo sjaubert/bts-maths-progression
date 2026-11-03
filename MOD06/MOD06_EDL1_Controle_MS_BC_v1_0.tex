@@ -1,0 +1,203 @@
+% ============================================================
+% Contrôle : Équations différentielles du premier ordre
+% BTS MS 2e année - Sujet B-C (lundi 2 novembre 2026, 15h15)
+% Pôle Formation UIMM - CVDL - S. JAUBERT
+% Corrigé enseignant : MOD06_EDL1_Controle_MS_Corrige_v1_0
+% Compilation : pdflatex, deux passes (nombre total de pages).
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=1.8cm, bottom=3cm, left=2cm, right=2cm, headheight=14pt, footskip=1.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,tabularx,needspace}
+\usepackage{lastpage}
+\usepackage{hyperref}
+
+% ----- Charte UIMM -----
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*, itemsep=3pt}
+\setlist[enumerate,2]{label=\alph*), itemsep=2pt}
+
+% ----- Paramètres du sujet -----
+\newcommand{\groupe}{B-C}
+\newcommand{\creneau}{Lundi 2 novembre 2026, 15h15}
+
+% ----- En-tête et pied de page (modèle PR3) -----
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\small\renewcommand{\arraystretch}{1.3}%
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash\itshape}X|>{\centering\arraybackslash}p{1.8cm}|>{\centering\arraybackslash}p{3.6cm}|>{\centering\arraybackslash}p{1.9cm}|}
+\hline
+BTS MS 2 -- MOD06 Équations différentielles -- Contrôle, sujet \groupe & {\scriptsize\itshape Auteur :}\newline SJ & MAJ du 01/11/2026\newline{\color{uimmblue}Version 1.0} & Page :\newline \thepage/\pageref*{LastPage}\\
+\hline
+\end{tabularx}}
+
+% ----- Exercices -----
+\newcounter{exo}
+% \exo{titre}{compétences}{capacités}{barème}
+\newcommand{\exo}[4]{\needspace{0.5\textheight}\refstepcounter{exo}\vspace{8pt}%
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, boxrule=0.8pt, arc=2pt, left=6pt, right=6pt, top=3pt, bottom=3pt]
+{\color{uimmblue}\bfseries Exercice \theexo\ : #1}\hfill{\color{uimmblue}\bfseries #4}\\
+{\small\color{uimmred}\bfseries #2\quad #3}
+\end{tcolorbox}}
+% Espace de réponse (blanc), hauteur en cm
+\newcommand{\rep}[1]{\par\noindent\begin{minipage}[t][#1cm]{\linewidth}\mbox{}\end{minipage}\par}
+\newcommand{\pts}[1]{\unskip\nobreak\hfill\mbox{\small\color{uimmgray}(#1)}}
+
+\begin{document}
+\thispagestyle{fancy}
+
+% ============================================================
+% EN-TÊTE PR3
+% ============================================================
+\noindent{\renewcommand{\arraystretch}{1.1}%
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}m{2.9cm}|>{\centering\arraybackslash}m{4.3cm}|>{\centering\arraybackslash}X|}
+\hline
+\rule{0pt}{2.4cm}\IfFileExists{logo_uimm_placeholder.jpg}{\includegraphics[height=2.2cm]{logo_uimm_placeholder.jpg}}{\fbox{\parbox[c][2cm][c]{2.4cm}{\centering\bfseries\color{uimmblue}UIMM}}} &
+{\bfseries\large CFAI CENTRE}\newline{\footnotesize 74, Route Nationale\newline La Chapelle St Mesmin\newline orleans@poleformation-\newline uimmcvdl.fr} &
+{\Large\bfseries\color{uimmblue}Contrôle : Équations différentielles\newline{}du premier ordre}\newline{}{\small BTS MS 2\textsuperscript{e} année -- \textbf{Sujet \groupe}}\newline{}{\footnotesize\creneau}\\
+\hline
+\end{tabularx}}
+
+\vspace{-1pt}
+\noindent{\footnotesize\renewcommand{\arraystretch}{1.2}\hyphenpenalty=10000\exhyphenpenalty=10000%
+\newcommand{\on}{\cellcolor{uimmblue!22}}%
+\arrayrulecolor{black}\setlength{\arrayrulewidth}{0.7pt}%
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}%
+\begin{tabular}{|C{1.85cm}|C{2.05cm}|C{1.85cm}|C{2.0cm}|C{1.8cm}|C{2.15cm}|C{2.2cm}|}
+\hline
+\bfseries C1 S'informer & \bfseries C2 Chercher & \on\bfseries C3 Modéliser & \on\bfseries C4 Raisonner, argumenter & \multicolumn{2}{C{4.38cm}|}{\cellcolor{uimmblue!22}\bfseries C5 Calculer, illustrer, mettre en œuvre une démarche} & \on\bfseries C6 Communiquer\\
+\hline
+\end{tabular}}
+
+\vspace{8pt}
+% ----- Cartouche élève -----
+\noindent{\renewcommand{\arraystretch}{2.1}%
+\begin{tabularx}{\textwidth}{|>{\bfseries\color{uimmblue}}l X|>{\bfseries\color{uimmblue}}l p{2.6cm}|>{\bfseries\color{uimmblue}}l p{1.6cm}|}
+\hline
+Nom : & & Groupe : & B\,$\square$\quad C\,$\square$ & Note : & \hfill / 20\\
+\hline
+Prénom : & & \multicolumn{4}{l|}{\color{uimmgray}\footnotesize Répondre dans les espaces prévus.}\\
+\hline
+\end{tabularx}}
+
+\vspace{6pt}
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.6pt, arc=2pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\small\textbf{Durée : 1 h 15.} Aucun document autorisé. Téléphone portable interdit (éteint, rangé dans le sac). Calculatrice autorisée en \textbf{mode examen}. Répondre \textbf{directement sur le sujet}, dans les espaces prévus. Toute réponse doit être justifiée par un calcul. Barème indicatif sur 20.
+\end{tcolorbox}
+
+% ============================================================
+% RAPPEL
+% ============================================================
+\begin{tcolorbox}[colback=uimmlightblue!40, colframe=uimmblue, boxrule=0.8pt, arc=2pt, left=8pt, right=8pt, top=4pt, bottom=4pt, title={\bfseries Rappel : résoudre $a\,y' + b\,y = c$ ($a$, $b$, $c$ constantes, $a \neq 0$)}, coltitle=white, colbacktitle=uimmblue]
+\small
+\begin{enumerate}[leftmargin=*, itemsep=1pt, topsep=1pt]
+  \item \textbf{Réduire l'équation} : tous les termes en $y'$ et en $y$ à gauche, la constante à droite. Lire $a$, $b$ et $c$.
+  \item \textbf{Forme normalisée} : diviser par $a$, on obtient $y' + \alpha\,y = \dfrac{c}{a}$ avec $\alpha = \dfrac{b}{a}$.
+  \item \textbf{Équation homogène} $y' + \alpha\,y = 0$ : ses solutions sont $y_h(t) = C\,e^{-\alpha t}$, $C$ constante réelle.
+  \item \textbf{Solution particulière constante} (si $b \neq 0$) : $y_p = \dfrac{c}{b}$.
+  \item \textbf{Solution générale} : $y(t) = y_h(t) + y_p = C\,e^{-\alpha t} + \dfrac{c}{b}$.
+  \item \textbf{Condition initiale} $y(t_0) = y_0$ : remplacer $t$ par $t_0$, en déduire $C$, écrire la solution unique.
+\end{enumerate}
+\textbf{Constante de temps} (si $\alpha > 0$) : $\tau = \dfrac{1}{\alpha}$. À $t = \tau$, environ $63\,\%$ de l'évolution est réalisée.\\
+\textbf{Exponentielle et logarithme} : $e^{0} = 1$ ; \ $\big(e^{kt}\big)' = k\,e^{kt}$ ; \ si $\alpha > 0$, $e^{-\alpha t} \to 0$ quand $t \to +\infty$ ; \ pour $A > 0$ : $e^{X} = A \iff X = \ln A$ ; \ $\ln\dfrac{1}{A} = -\ln A$.
+\end{tcolorbox}
+
+% ============================================================
+\exo{Résolution d'équations différentielles}{C4 C5}{[S01] [C01] [C02]}{11 points}
+% ============================================================
+La fonction inconnue $y$ est une fonction de la variable $t$. Pour chaque équation : la réduire, la résoudre, puis déterminer la solution qui vérifie la condition initiale.
+
+\medskip
+\textbf{\color{uimmblue}Partie A : équations homogènes}
+\begin{enumerate}
+  \needspace{5.1cm}
+  \item $y = y'$ \quad et \quad $y(0) = 3$. \pts{1 pt}
+  \rep{3.5}
+  \needspace{5.6cm}
+  \item $5y' - y = 2y' + 5y$ \quad et \quad $y(0) = 1$. \pts{1,5 pt}
+  \rep{4.0}
+  \needspace{5.1cm}
+  \item $3y' = y$ \quad et \quad $y(0) = 6$. \pts{1 pt}
+  \rep{3.5}
+  \needspace{6.1cm}
+  \item $\dfrac{y'}{4} + y = 0$ \quad et \quad $y(1) = 2$ \quad (la condition n'est pas donnée en $t = 0$). \pts{1,5 pt}
+  \rep{4.5}
+\end{enumerate}
+
+\needspace{7cm}\medskip
+\textbf{\color{uimmblue}Partie B : second membre constant}
+\begin{enumerate}[resume]
+  \needspace{5.6cm}
+  \item $y' + 5y = 10$ \quad et \quad $y(0) = 0$. \pts{1 pt}
+  \rep{4.0}
+  \needspace{6.1cm}
+  \item $3y' + y = y' - 3y + 8$ \quad et \quad $y(0) = 5$. \pts{1,5 pt}
+  \rep{4.5}
+  \needspace{6.1cm}
+  \item $\dfrac{y'}{4} = \dfrac{y'}{2} - 1$ \quad et \quad $y(0) = -1$. \pts{1,5 pt}
+  \rep{4.5}
+  \needspace{6.6cm}
+  \item $3\,(y + 1) = y'$ \quad et \quad $y(0) = 1$. \pts{2 pts}
+  \rep{5.0}
+\end{enumerate}
+
+% ============================================================
+\exo{Refroidissement de l'huile d'une centrale hydraulique}{C3 C4 C5 C6}{[S01] [C01] [C02]}{9 points}
+% ============================================================
+Une presse est arrêtée pour une opération de maintenance : le technicien doit remplacer le filtre de retour de sa centrale hydraulique. Après l'arrêt, l'huile refroidit dans le réservoir. On note $\theta(t)$ sa température (en $^\circ$C), $t$ étant le temps en minutes écoulé depuis l'arrêt. À l'arrêt, $\theta(0) = 70\,^\circ$C.
+
+On admet le modèle suivant (loi de Newton) : la vitesse de refroidissement $\theta'(t)$ est \textbf{proportionnelle} à l'écart $\theta(t) - \theta_a$ entre la température de l'huile et la température de l'atelier $\theta_a = 20\,^\circ$C, avec le coefficient de proportionnalité $-k$, où $k = 0{,}04\ \text{min}^{-1}$.
+
+Pour éviter tout risque de brûlure, la consigne de maintenance n'autorise l'ouverture du circuit que si la température de l'huile est inférieure ou égale à $40\,^\circ$C (seuil retenu pour cet exercice).
+
+\begin{enumerate}
+  \needspace{4.6cm}
+  \item Traduire le modèle par une égalité entre $\theta'(t)$ et $\theta(t)$. Montrer que $\theta$ vérifie l'équation \[ (E) : \quad \theta' + 0{,}04\,\theta = 0{,}8 . \] \pts{1 pt}
+  \rep{3.0}
+  \needspace{3.1cm}
+  \item Résoudre l'équation homogène associée à $(E)$. \pts{0,5 pt}
+  \rep{1.5}
+  \needspace{3.1cm}
+  \item Déterminer une solution particulière constante de $(E)$. \pts{0,5 pt}
+  \rep{1.5}
+  \needspace{5.6cm}
+  \item En déduire la solution générale de $(E)$, puis montrer que $\theta(t) = 20 + 50\,e^{-0{,}04\,t}$. \pts{1,5 pt}
+  \rep{4.0}
+  \needspace{4.6cm}
+  \item Calculer $\theta'(t)$. Étudier son signe et en déduire le sens de variation de $\theta$ sur $[0\,;\,+\infty[$. Interpréter. \pts{1 pt}
+  \rep{3.0}
+  \needspace{3.6cm}
+  \item Déterminer la limite de $\theta(t)$ quand $t$ tend vers $+\infty$. Interpréter ce résultat pour l'huile. \pts{1 pt}
+  \rep{2.0}
+  \needspace{4.6cm}
+  \item On note $\tau = \dfrac{1}{0{,}04}$ la constante de temps. Calculer $\tau$, puis $\theta(\tau)$ arrondi au dixième. Quel pourcentage du refroidissement total (de $70\,^\circ$C à la limite) est réalisé à cet instant ? \pts{1 pt}
+  \rep{3.0}
+  \needspace{5.6cm}
+  \item Déterminer par le calcul l'instant $t_1$ à partir duquel l'intervention est autorisée. Arrondir à la minute. \pts{1,5 pt}
+  \rep{4.0}
+  \needspace{4.6cm}
+  \item Le technicien arrive sur la presse $15$ minutes après l'arrêt. Peut-il ouvrir le circuit immédiatement ? Sinon, combien de temps doit-il encore attendre ? Justifier par un calcul. \pts{1 pt}
+  \rep{3.0}
+\end{enumerate}
+
+
+\end{document}
