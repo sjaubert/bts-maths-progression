@@ -1,0 +1,339 @@
+% ============================================================
+% Corrigé du TD progressif : La loi normale -- cinq situations de terrain
+% Pôle Formation UIMM - CVDL - BTS Industriel - S. JAUBERT
+% Enoncé : MOD08_Loi_Normale_TD_Progressif_v1_0
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+% Préambule commun TD / corrigé -- MOD08 Loi normale, TD progressif v1_0
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{patterns}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace,booktabs}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\titleformat{\subsection}{\large\bfseries\color{uimmblue}}{}{0pt}{}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=10pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt}
+\newtcolorbox{rappel}[1]{colback=uimmlightblue, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=0.8pt, arc=2pt,
+  left=8pt, right=8pt, top=3pt, bottom=3pt, before skip=6pt, after skip=5pt, fontupper=\small}
+
+\newcommand{\calc}{\,{\color{uimmred}\small\textbf{[calculatrice]}}}
+\newcommand{\sanscalc}{\,{\color{uimmred}\small\textbf{[sans calculatrice]}}}
+\newcommand{\duree}[1]{\hfill{\normalsize\color{uimmred}#1}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.74*\i) -- (\linewidth-1pt,-0.74*\i);}
+  \end{tikzpicture}\par\smallskip}
+\newcommand{\EnTete}[1]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{8cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS Industriel -- Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{uimmblue}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill \thepage}}}
+% Cloche : #1 = facteur d'échelle horizontal, #2 = hauteur
+\newcommand{\cloche}[2]{\draw[uimmblue, thick, domain=-3.6:3.6, samples=80, smooth]
+  plot ({#1*\x},{#2*exp(-\x*\x/2)});\draw[uimmgray] ({-3.8*#1},0) -- ({3.8*#1},0);}
+\EnTete{Corrigé TD progressif}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt, breakable}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\LN}{Cours MOD08 \textit{Loi normale}}
+\newcommand{\ES}{TD progressif, encadré \textit{L'essentiel} p.~1}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=8pt, bottom=8pt]
+{\color{white}\LARGE\bfseries Corrigé -- TD progressif MOD08}\\[4pt]
+{\color{white}\large La loi normale~: cinq situations de terrain \hfill Document formateur}
+\end{tcolorbox}
+
+\begin{consigne}
+\textbf{Repères d'animation.}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Progression~: exercices 1 et 2 en calcul direct~; exercice 3, premier seuil sur une loi centrée~; exercice 4, seuil puis recherche de $\mu$~; exercice 5, seuils puis recherche de $\sigma$.
+  \item Durées indicatives~: 20 + 20 + 25 + 25 + 30 min. Les exercices 1 à 3 forment le socle. Les exercices 4 et 5 préparent la reprise du TD v2 (problèmes 1, question 5, et 3, question 3).
+  \item Chaque réponse porte sa référence~: section et page du \LN{} (pagination imprimée), ou encadré \textit{L'essentiel} du TD progressif.
+  \item Toutes les valeurs numériques ont été recalculées en Python (\texttt{scipy.stats.norm}). On note $\Phi$ la fonction de répartition de $\mathcal{N}(0\,;1)$.
+\end{itemize}
+\end{consigne}
+
+\begin{center}\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{clll}
+\toprule
+\textbf{Ex.} & \textbf{Contexte} & \textbf{Savoir-faire visé} & \textbf{Résultat clé} \\
+\midrule
+1 & Production, sciage & Règle 68 -- 95 -- 99,7, calcul direct & $182$ non conformes par poste \\
+2 & Maintenance, roulements & Calcul direct, rôle de $\sigma$ & $6{,}68\,\%$ contre $2{,}28\,\%$ \\
+3 & Robotique, insertion & Décentrage, premier seuil & $h \approx 0{,}052$ mm \\
+4 & Production, vissage & Seuil, recherche de $\mu$ & $\mu = 25{,}24$ N$\cdot$m \\
+5 & Chargé d'affaires & Seuils, recherche de $\sigma$ & $45$ jours, $136\,500$~\texteuro, $\sigma = 2{,}4$ jours \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ============================================================
+\section{Exercice 1 -- Débit d'entretoises}
+
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.1 Définition et rôle des paramètres p.~6~; \ES{}, bloc 1}
+$\mu = 120{,}00$ et $\sigma = 0{,}05$. Graduations, de gauche à droite~:
+\[
+119{,}85 \quad 119{,}90 \quad 119{,}95 \quad 120{,}00 \quad 120{,}05 \quad 120{,}10 \quad 120{,}15.
+\]
+Zone conforme~: entre $119{,}90$ et $120{,}10$, soit entre $\mu - 2\sigma$ et $\mu + 2\sigma$.
+\piege{graduer de $0{,}10$ en $0{,}10$ (confusion entre tolérance et écart-type).}
+\end{correction}
+
+\begin{correction}[-- Question 2]
+\source{\LN{}, §3.4 La règle des 68 -- 95 -- 99,7 p.~7}
+\begin{enumerate}
+  \item $119{,}95 = \mu - \sigma$ et $120{,}05 = \mu + \sigma$. Donc $P(119{,}95 \leq L \leq 120{,}05) \approx 0{,}68$.
+  \item Conforme~: $\mu - 2\sigma \leq L \leq \mu + 2\sigma$. Probabilité environ $0{,}95$.
+  \item Il reste $1 - 0{,}95 = 0{,}05$ hors tolérance. Par symétrie, la moitié est à droite~: $P(L > 120{,}10) \approx 0{,}025$.
+\end{enumerate}
+\piege{répondre $0{,}05$ à la question c) en oubliant de partager entre les deux côtés.}
+\end{correction}
+
+\begin{correction}[-- Question 3]
+\source{\LN{}, §3.2 Calcul d'une probabilité p.~6}
+\[
+P(119{,}90 \leq L \leq 120{,}10) \approx 0{,}9545, \qquad P(L < 119{,}90) \approx 0{,}0228.
+\]
+La règle donnait $0{,}95$ et $0{,}025$~: l'ordre de grandeur est bon, la calculatrice affine.
+\piege{inverser $\mu$ et $\sigma$ dans la saisie (ordre différent sur TI et sur Casio).}
+\end{correction}
+
+\begin{correction}[-- Question 4]
+\source{\LN{}, §3.2 p.~6}
+$P(\text{non conforme}) = 1 - 0{,}9545 = 0{,}0455$. Nombre moyen par poste~: $4\,000 \times 0{,}0455 \approx 182$ entretoises.
+\end{correction}
+
+\begin{correction}[-- Question 5]
+\source{\LN{}, §3.3 Standardisation p.~7~; \ES{}, bloc 2}
+\begin{enumerate}
+  \item $z = \dfrac{120{,}13 - 120{,}00}{0{,}05} = 2{,}6$. La mesure est à $2{,}6$ écarts-types au-dessus de la moyenne.
+  \item $P(L > 120{,}13) = P(Z > 2{,}6) \approx 0{,}0047$.
+  \item Une telle valeur arrive moins d'une fois sur $200$ si la scie est bien réglée, soit environ $19$ pièces sur $4\,000$. Une mesure isolée ne prouve pas un déréglage. Elle justifie de contrôler les pièces suivantes~: si d'autres valeurs hautes apparaissent, la moyenne a dérivé.
+\end{enumerate}
+\piege{conclure «~la machine est déréglée~» sur une seule mesure~; ou, à l'inverse, «~c'est possible, donc ce n'est rien~».}
+\end{correction}
+
+% ============================================================
+\section{Exercice 2 -- Roulements de convoyeurs}
+
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 p.~6 et §3.3 p.~7}
+$T \sim \mathcal{N}(18\,000\,;2\,000)$. $z = \dfrac{15\,000 - 18\,000}{2\,000} = -1{,}5$.
+\[
+P(T < 15\,000) = \Phi(-1{,}5) \approx 0{,}0668.
+\]
+\piege{saisir $0$ comme borne inférieure~: ici l'écart est invisible, mais l'habitude est mauvaise. Garder $-10^{99}$.}
+\end{correction}
+
+\begin{correction}[-- Question 2]
+\source{\LN{}, §3.2 p.~6}
+$z = \dfrac{20\,000 - 18\,000}{2\,000} = 1$. \quad $P(T > 20\,000) = 1 - \Phi(1) \approx 0{,}1587$.
+\piege{donner $P(T < 20\,000) = 0{,}8413$.}
+\end{correction}
+
+\begin{correction}[-- Question 3]
+\source{\LN{}, §3.2 p.~6}
+Les bornes sont à $z = -1$ et $z = 1{,}5$. L'intervalle n'est pas centré sur $\mu$.
+\[
+P(16\,000 \leq T \leq 21\,000) = \Phi(1{,}5) - \Phi(-1) \approx 0{,}9332 - 0{,}1587 = 0{,}7745.
+\]
+\end{correction}
+
+\begin{correction}[-- Question 4]
+\source{\LN{}, §3.2 p.~6}
+$40 \times 0{,}0668 \approx 2{,}7$. On attend en moyenne entre $2$ et $3$ casses avant la visite préventive.
+\end{correction}
+
+\begin{correction}[-- Question 5]
+\source{\LN{}, §3.1 p.~6 (rôle de $\sigma$) et §3.3 p.~7}
+\begin{enumerate}
+  \item $z = \dfrac{15\,000 - 17\,000}{1\,000} = -2$. \quad $P(T_B < 15\,000) = \Phi(-2) \approx 0{,}0228$.
+  \item Le roulement B dure moins longtemps en moyenne, mais il est beaucoup plus régulier. Ce qui compte pour la maintenance, c'est la casse \textbf{avant} $15\,000$ h~: $2{,}28\,\%$ pour B contre $6{,}68\,\%$ pour A, soit environ $0{,}9$ casse attendue sur $40$ roulements au lieu de $2{,}7$. Avec un remplacement préventif à $15\,000$ h, B est le meilleur choix. La moyenne seule ne suffit pas~: il faut regarder l'écart-type.
+\end{enumerate}
+\piege{comparer uniquement les moyennes~; croire qu'un écart-type plus petit est un défaut.}
+\end{correction}
+
+% ============================================================
+\section{Exercice 3 -- Précision d'un robot d'insertion}
+
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 p.~6}
+$X \sim \mathcal{N}(0\,;0{,}02)$. Les bornes sont à $z = \pm 2{,}5$.
+\[
+P(-0{,}05 \leq X \leq 0{,}05) \approx 0{,}9876.
+\]
+\end{correction}
+
+\begin{correction}[-- Question 2]
+\source{\LN{}, §3.2 p.~6}
+$P(\text{défaut}) = 1 - 0{,}9876 = 0{,}0124$. \quad $2\,400 \times 0{,}01242 \approx 30$ arrêts par poste.
+\end{correction}
+
+\begin{correction}[-- Question 3]
+\source{\LN{}, §3.2 p.~6 et §3.3 p.~7}
+\begin{enumerate}
+  \item $X \sim \mathcal{N}(0{,}01\,;0{,}02)$. Les bornes sont à $z = \dfrac{-0{,}05 - 0{,}01}{0{,}02} = -3$ et $z = \dfrac{0{,}05 - 0{,}01}{0{,}02} = 2$.
+  \[
+  P(-0{,}05 \leq X \leq 0{,}05) = \Phi(2) - \Phi(-3) \approx 0{,}9759.
+  \]
+  \item $P(\text{défaut}) \approx 0{,}0241$. \quad $2\,400 \times 0{,}0241 \approx 58$ arrêts. Un décalage de $10$ micromètres, la moitié d'un écart-type, double presque le nombre d'arrêts. Presque tous les défauts se trouvent du côté du décalage ($2{,}28\,\%$ contre $0{,}13\,\%$).
+\end{enumerate}
+\piege{garder $\mu = 0$~; calculer $2\,P(X > 0{,}05)$ alors que la loi n'est plus centrée sur l'intervalle.}
+\end{correction}
+
+\begin{correction}[-- Question 4]
+\source{\LN{}, §4.1 Trouver un seuil sur $X$ p.~8~; §2.3 Problème inverse p.~5~; \ES{}, bloc 3}
+\begin{enumerate}
+  \item $a = \texttt{FracNormale}(0{,}95\,;\,0\,;\,0{,}02) \approx 0{,}033$ mm. Vérification~: $a = 0 + 1{,}6449 \times 0{,}02 = 0{,}0329$.
+  \item L'aire centrale vaut $0{,}99$. Il reste $0{,}01$, partagé en deux queues de $0{,}005$. L'aire à gauche de $h$ vaut donc $0{,}99 + 0{,}005 = 0{,}995$.
+  \[
+  h = \texttt{FracNormale}(0{,}995\,;\,0\,;\,0{,}02) = 2{,}5758 \times 0{,}02 \approx 0{,}052 \text{ mm.}
+  \]
+  \item $99\,\%$ des poses sont à moins de $0{,}052$ mm de la cible, pas de $0{,}05$ mm. L'annonce est légèrement optimiste~: à moins de $0{,}05$ mm, on trouve $98{,}76\,\%$ des poses (question 1).
+\end{enumerate}
+\piege{saisir $0{,}99$ comme aire à gauche à la question b), ce qui donne $h \approx 0{,}047$~; oublier le schéma.}
+\end{correction}
+
+% ============================================================
+\section{Exercice 4 -- Couple de serrage d'une visseuse}
+
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 p.~6 et §3.3 p.~7}
+$C \sim \mathcal{N}(25{,}0\,;0{,}4)$. Les bornes sont à $z = \dfrac{24{,}0 - 25{,}0}{0{,}4} = -2{,}5$ et $z = \dfrac{26{,}2 - 25{,}0}{0{,}4} = 3$.
+\[
+P(C < 24{,}0) \approx 0{,}0062, \qquad P(C > 26{,}2) \approx 0{,}0013, \qquad P(24{,}0 \leq C \leq 26{,}2) \approx 0{,}9924.
+\]
+Proportion de non conformes~: $0{,}76\,\%$.
+\end{correction}
+
+\begin{correction}[-- Question 2]
+\source{\LN{}, §4.1 p.~8~; \ES{}, bloc 3}
+«~Dépassé par $99\,\%$ des vissages~»~: $P(C > c_1) = 0{,}99$, donc $P(C \leq c_1) = 0{,}01$. L'aire à gauche vaut $0{,}01$.
+\[
+c_1 = \texttt{FracNormale}(0{,}01\,;\,25{,}0\,;\,0{,}4) = 25{,}0 - 2{,}3263 \times 0{,}4 \approx 24{,}07 \text{ N$\cdot$m.}
+\]
+\piege{saisir $0{,}99$ et trouver $25{,}93$~: un couple dépassé par $99\,\%$ des vissages est forcément sous la moyenne.}
+\end{correction}
+
+\begin{correction}[-- Question 3]
+\source{\LN{}, §4.2 Retrouver un paramètre $\mu$ ou $\sigma$ p.~8~; \ES{}, bloc 3}
+\begin{enumerate}
+  \item $P(C < 24{,}0) \leq 0{,}001$.
+  \item On passe à la loi centrée réduite~: $P\!\left(Z < \dfrac{24{,}0 - \mu}{0{,}4}\right) \leq 0{,}001$. Or $\texttt{FracNormale}(0{,}001) \approx -3{,}0902$. Il faut donc
+  \[
+  \frac{24{,}0 - \mu}{0{,}4} \leq -3{,}0902 \iff \mu \geq 24{,}0 + 3{,}0902 \times 0{,}4 \approx 25{,}2361.
+  \]
+  On arrondit par excès~: $\mu = 25{,}24$ N$\cdot$m. Vérification~: $P(C < 24{,}0) \approx 0{,}00097 \leq 0{,}001$. Avec $25{,}23$, on obtient $0{,}00105$~: l'exigence n'est pas respectée.
+\end{enumerate}
+\piege{oublier le signe moins de $z_{0{,}001}$ et trouver $\mu = 22{,}76$~; arrondir à $25{,}23$ ou $25{,}2$.}
+\end{correction}
+
+\begin{correction}[-- Question 4]
+\source{\LN{}, §3.2 p.~6 et §3.1 p.~6 (rôle de $\sigma$)}
+Avec $\mu = 25{,}24$~: $z = \dfrac{26{,}2 - 25{,}24}{0{,}4} = 2{,}4$, donc $P(C > 26{,}2) \approx 0{,}0082$.
+
+Non conformes~: $0{,}0010 + 0{,}0082 = 0{,}0092$, soit $0{,}92\,\%$ contre $0{,}76\,\%$ à la question 1.
+
+Le client est satisfait du côté bas, mais les sur-serrages sont multipliés par six. On a déplacé le problème. Pour gagner des deux côtés, il faut réduire la dispersion $\sigma$ (visseuse plus précise, entretien, étalonnage).
+\piege{additionner les valeurs arrondies de la question 1 avec le nouveau réglage~; conclure que le nouveau réglage est «~meilleur~» sans regarder le côté haut.}
+\end{correction}
+
+% ============================================================
+\section{Exercice 5 -- Délai et prix d'un chantier}
+
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 p.~6 et §3.3 p.~7}
+$D \sim \mathcal{N}(38\,;4)$. $z = \dfrac{40 - 38}{4} = 0{,}5$.
+\[
+P(D \leq 40) = \Phi(0{,}5) \approx 0{,}6915, \qquad P(D > 40) \approx 0{,}3085.
+\]
+Près d'un chantier sur trois dépasserait le délai. S'engager sur $40$ jours est risqué.
+\end{correction}
+
+\begin{correction}[-- Question 2]
+\source{\LN{}, §4.1 p.~8~; \ES{}, bloc 3}
+On cherche $d$ tel que $P(D \leq d) = 0{,}95$.
+\[
+d = \texttt{FracNormale}(0{,}95\,;\,38\,;\,4) = 38 + 1{,}6449 \times 4 \approx 44{,}58.
+\]
+On arrondit par excès~: $45$ jours. Vérification~: $P(D \leq 45) \approx 0{,}9599$, alors que $P(D \leq 44) \approx 0{,}9332$.
+\piege{arrondir à $44$ jours (arrondi par défaut)~; saisir $0{,}05$ comme aire à gauche.}
+\end{correction}
+
+\begin{correction}[-- Question 3]
+\source{\LN{}, §3.2 p.~6}
+$K \sim \mathcal{N}(120\,000\,;8\,000)$. $z = \dfrac{130\,000 - 120\,000}{8\,000} = 1{,}25$.
+\[
+P(K > 130\,000) = 1 - \Phi(1{,}25) \approx 0{,}1056.
+\]
+Plus d'une affaire sur dix serait perdante à ce prix.
+\end{correction}
+
+\begin{correction}[-- Question 4]
+\source{\LN{}, §4.1 p.~8~; \ES{}, bloc 3}
+On note $v$ le prix de vente. On veut $P(K > v) \leq 0{,}02$, soit $P(K \leq v) \geq 0{,}98$.
+\[
+v \geq \texttt{FracNormale}(0{,}98\,;\,120\,000\,;\,8\,000) = 120\,000 + 2{,}0537 \times 8\,000 \approx 136\,430.
+\]
+On arrondit par excès~: $136\,500$~\texteuro. Vérification~: $P(K > 136\,500) \approx 0{,}0196$, alors que $P(K > 136\,400) \approx 0{,}0202$.
+\piege{saisir $0{,}02$ comme aire à gauche et trouver $103\,570$~\texteuro, un prix inférieur au coût moyen.}
+\end{correction}
+
+\begin{correction}[-- Question 5]
+\source{\LN{}, §4.2 p.~8, méthode «~Retrouver $\mu$ ou $\sigma$~»~; \ES{}, bloc 3}
+\begin{enumerate}
+  \item On veut $P(D \leq 42) \geq 0{,}95$ avec $D \sim \mathcal{N}(38\,;\sigma)$. On passe à la loi centrée réduite~:
+  \[
+  P\!\left(Z \leq \frac{42 - 38}{\sigma}\right) \geq 0{,}95 \iff \frac{4}{\sigma} \geq 1{,}6449 \iff \sigma \leq \frac{4}{1{,}6449} \approx 2{,}43.
+  \]
+  On arrondit par défaut~: $\sigma = 2{,}4$ jours. Vérification~: avec $2{,}4$, $P(D \leq 42) \approx 0{,}9522$~; avec $2{,}5$, $P(D \leq 42) \approx 0{,}9452$.
+  \item Réduire l'écart-type, c'est rendre les chantiers plus réguliers, sans forcément les raccourcir. Il faut passer de $4$ à $2{,}4$ jours, soit $40\,\%$ de dispersion en moins. Actions possibles~: sécuriser les approvisionnements avant le démarrage, faire une visite préalable du site, standardiser les gammes de montage, figer le périmètre avec le client, planifier la co-activité.
+\end{enumerate}
+\piege{arrondir à $2{,}5$ (au-dessus du maximum)~; chercher à diminuer $\mu$ alors que l'énoncé le fixe~; inverser le sens de l'inégalité en divisant.}
+\end{correction}
+
+\end{document}
