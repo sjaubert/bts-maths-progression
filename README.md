@@ -198,6 +198,8 @@ Pôle Formation UIMM Centre-Val de Loire. Programme de mathématiques des BTS in
 - [MOD08 Loi Normale Cours v1 0](MOD08/MOD08_Loi_Normale_Cours_v1_0.pdf)
 - [MOD08 Loi Normale TD v1 0](MOD08/MOD08_Loi_Normale_TD_v1_0.pdf)
 - [MOD08 Loi Normale TD Progressif v1 0](MOD08/MOD08_Loi_Normale_TD_Progressif_v1_0.pdf)
+- [MOD08 TP CPRP Capabilite Butee v2 0](MOD08/MOD08_TP_CPRP_Capabilite_Butee_v2_0.pdf)
+- [MOD08 TP CPRP Capabilite Butee Stagiaire v2 0.xlsx](MOD08/MOD08_TP_CPRP_Capabilite_Butee_Stagiaire_v2_0.xlsx)
 - [MOD08 Lois Probabilite Simulateur v1 0.html](MOD08/MOD08_Lois_Probabilite_Simulateur_v1_0.html)
 - [Cours Dénombrement Probabilités](MOD08/Cours_D%C3%A9nombrement___Probabilit%C3%A9s.pdf)
 - [Cours Dénombrement corrigé ex](MOD08/Cours_D%C3%A9nombrement___corrig%C3%A9_ex.pdf)
