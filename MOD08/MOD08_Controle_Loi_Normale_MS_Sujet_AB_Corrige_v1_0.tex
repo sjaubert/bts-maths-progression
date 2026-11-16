@@ -1,0 +1,236 @@
+\documentclass[a4paper,11pt]{article}
+% Préambule commun -- MOD08 Contrôles loi normale BTS MS, v1_0
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace,booktabs}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=8pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{rappel}{colback=uimmlightblue, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={Rappels de cours}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=3pt, bottom=4pt, before skip=6pt, after skip=4pt, fontupper=\normalsize}
+\newtcolorbox{correction}[1][]{%
+  colback=green!5, colframe=green!50!black,
+  fonttitle=\bfseries\color{white}, title={\textsf{Correction}~#1},
+  coltitle=white, boxrule=1pt, arc=3pt,
+  left=8pt, right=8pt, top=6pt, bottom=6pt, before skip=8pt, after skip=8pt}
+
+\newcommand{\pts}[1]{\hfill\mbox{\color{uimmred}\small\textbf{(#1)}}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.78*\i) -- (\linewidth-1pt,-0.78*\i);}
+  \end{tikzpicture}\par\smallskip}
+\newcommand{\source}[1]{{\footnotesize\color{uimmgray}\textbf{Réf.}\enspace #1}\par\smallskip}
+\newcommand{\piege}[1]{\par\smallskip{\footnotesize\color{uimmred!80!black}\textbf{Erreurs attendues~:} #1}}
+\newcommand{\bareme}[1]{\par\smallskip{\footnotesize\color{uimmblue}\textbf{Barème~:} #1}}
+\newcommand{\LN}{Cours MOD08 \textit{Loi normale}}
+\newcommand{\EnTete}[3]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{7cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS MS 1\textsuperscript{re} année\\ Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{#3}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{Corrigé contrôle AB}{Corrigé AB -- Contrôle 1 h}{uimmblue}
+\newcommand{\GRP}{A -- B}
+\newcommand{\RECAP}{%
+1 & Pompe, température de palier & Lecture, $z$, calcul direct & $z = 2$~; $0{,}0228$~; $0{,}6827$~; $0{,}0401$ \\
+2 & Courroies de convoyeurs & Intervalles, symétrie & $0{,}0228$~; $\approx 2$ sur $80$~; $0{,}8860$~; $0{,}0228$ \\
+3 & Courroies, nouvelle exigence & Seuils, sens de l'arrondi & $t = 8\,510$ h~; $x = 13\,262$ h \\
+4 & Air comprimé & Probabilité, puis $\mu$, puis $\sigma$ & $0{,}0548$~; non~; $\mu = 6{,}65$~; $\sigma = 0{,}15$ \\
+}
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmblue, colframe=uimmblue, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=8pt, bottom=8pt]
+{\color{white}\LARGE\bfseries Corrigé -- Contrôle MOD08 \hfill Groupes \GRP}\\[3pt]
+{\color{white}\large La loi normale en maintenance \hfill Document formateur}
+\end{tcolorbox}
+
+\begin{consigne}\small
+\textbf{Repères d'évaluation.}
+\begin{itemize}[leftmargin=12pt, itemsep=1pt, topsep=2pt]
+  \item Barème sur $20$ points~: exercice 1 sur $4$, exercice 2 sur $5$, exercice 3 sur $5$, exercice 4 sur $6$. Durées indicatives~: $8 + 12 + 15 + 20$ min, soit $55$ min, plus $5$ min de lecture.
+  \item Progression~: exercices 1 et 2, calcul direct~; exercice 3, seuil (problème inverse)~; exercice 4, probabilité, puis recherche de $\mu$, puis de $\sigma$.
+  \item Principe de notation~: pour une probabilité, la moitié des points va à l'évènement écrit avec la variable aléatoire et à la standardisation, l'autre moitié au résultat. Un résultat exact sans démarche n'est pas noté au maximum.
+  \item Tolérance~: un résultat obtenu avec $z$ arrondi au centième est accepté si l'écart avec la valeur attendue reste de l'ordre de $10^{-3}$. Pour un seuil ou un paramètre, le \textbf{sens de l'arrondi} est exigé.
+  \item Références~: section et page imprimée du \LN{}. Toutes les valeurs ont été recalculées en Python (\texttt{scipy.stats.norm}). On note $\Phi$ la fonction de répartition de $\mathcal{N}(0\,;1)$.
+\end{itemize}
+\end{consigne}
+
+\begin{center}\small
+\renewcommand{\arraystretch}{1.2}
+\begin{tabular}{clll}
+\toprule
+\textbf{Ex.} & \textbf{Contexte} & \textbf{Savoir-faire visé} & \textbf{Résultats clés} \\
+\midrule
+\RECAP
+\bottomrule
+\end{tabular}
+\end{center}
+
+
+\section{Exercice 1 -- Température d'un palier de pompe \hfill {\normalsize\color{uimmred}4 points}}
+
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.3 Standardisation p.~7}
+\[ z = \frac{70 - 62}{4} = 2. \]
+$70\,^\circ$C se situe à $2$ écarts-types au-dessus de la moyenne $62\,^\circ$C.
+\bareme{calcul de $z$ $0{,}5$~; interprétation en nombre d'écarts-types $0{,}5$.}
+\piege{dire que $z = 2$ «~degrés~»~; diviser par $\sigma^2$~; oublier de centrer ($70/4 = 17{,}5$).}
+\end{correction}
+
+\begin{correction}[-- Question 2]
+\source{\LN{}, §3.2 Calcul d'une probabilité p.~6~; §3.3 p.~7}
+\[ P(T > 70) = 1 - P(T \leq 70) = 1 - P(Z \leq 2) = 1 - 0{,}9772 = 0{,}0228. \]
+Sur $1\,000$ relevés en fonctionnement normal~: $1\,000 \times 0{,}0228 \approx 23$ alarmes intempestives.
+\bareme{évènement et standardisation $0{,}5$~; résultat et interprétation $0{,}5$.}
+\piege{donner $P(T \leq 70) = 0{,}9772$, c'est-à-dire l'aire du mauvais côté.}
+\end{correction}
+
+\begin{correction}[-- Question 3]
+\source{\LN{}, §3.4 La règle des 68 -- 95 -- 99,7 p.~7~; §3.2 p.~6}
+$58 = \mu - \sigma$ et $66 = \mu + \sigma$, donc $z$ vaut $-1$ et $1$~:
+\[ P(58 \leq T \leq 66) = \Phi(1) - \Phi(-1) = 0{,}6827. \]
+La règle donne $\approx 0{,}68$~: le résultat est cohérent.
+\bareme{reconnaître $\mu \pm \sigma$ $0{,}5$~; résultat $0{,}5$.}
+\piege{ne pas soustraire les deux aires à gauche et répondre $0{,}8413$.}
+\end{correction}
+
+\begin{correction}[-- Question 4]
+\source{\LN{}, §3.2 p.~6~; §3.3 p.~7}
+\[ z = \frac{55 - 62}{4} = -1{,}75, \qquad P(T < 55) = P(Z < -1{,}75) = 0{,}0401. \]
+Environ $4\,\%$ des relevés (un sur $25$) sont aussi bas en fonctionnement normal~: un relevé isolé sous $55\,^\circ$C ne prouve pas une marche à vide.
+\bareme{$z$ négatif correct $0{,}5$~; résultat $0{,}5$.}
+\piege{oublier le signe de $z$ et trouver $0{,}9599$.}
+\end{correction}
+
+\section{Exercice 2 -- Courroies de convoyeurs \hfill {\normalsize\color{uimmred}5 points}}
+
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 p.~6~; §3.3 p.~7}
+\[ z = \frac{9\,000 - 12\,000}{1\,500} = -2, \qquad P(D < 9\,000) = P(Z < -2) = 0{,}0228. \]
+\bareme{évènement et $z$ $0{,}5$~; résultat $0{,}5$.}
+\piege{confondre $\sigma = 1\,500$ avec la tolérance de $3\,000$ h~; arrondir $z$ à $-1{,}5$.}
+\end{correction}
+
+\begin{correction}[-- Question 2]
+\source{\LN{}, §3.2 p.~6 (nombre moyen $= n \times p$, comme dans le TD progressif, exercice 1)}
+\[ 80 \times 0{,}0228 = 1{,}82 \approx 2. \]
+En moyenne, $2$ courroies sur $80$ cassent avant leur remplacement préventif.
+\bareme{produit $n \times p$ $0{,}5$~; interprétation (entier, «~en moyenne~») $0{,}5$.}
+\piege{écrire «~exactement $2$ courroies~» alors qu'il s'agit d'une moyenne.}
+\end{correction}
+
+\begin{correction}[-- Question 3]
+\source{\LN{}, §3.2 p.~6~; §3.3 p.~7}
+\[ z_1 = \frac{9\,000 - 12\,000}{1\,500} = -2, \qquad z_2 = \frac{14\,000 - 12\,000}{1\,500} \approx 1{,}33. \]
+\[ P(9\,000 \leq D \leq 14\,000) = \Phi(1{,}33) - \Phi(-2) \approx 0{,}9088 - 0{,}0228 = 0{,}8860. \]
+\bareme{standardisation des deux bornes $0{,}5$~; différence des aires $0{,}5$~; résultat $0{,}5$. Avec $z_2$ arrondi à $1{,}33$, on trouve $0{,}8855$~: accepté.}
+\piege{oublier de soustraire $\Phi(-2)$ et répondre $0{,}9088$.}
+\end{correction}
+
+\begin{correction}[-- Question 4]
+\source{\LN{}, §2.1 Propriétés de symétrie p.~4~; §3.3 p.~7}
+$15\,000 = \mu + 2\sigma$ et $9\,000 = \mu - 2\sigma$~: les deux bornes sont symétriques par rapport à $\mu$. Après standardisation, $P(Z > 2) = P(Z < -2)$. Donc
+\[ P(D > 15\,000) = P(D < 9\,000) = 0{,}0228. \]
+\bareme{repérer $\mu \pm 2\sigma$ et invoquer la symétrie $1$~; résultat $0{,}5$.}
+\piege{recalculer $1 - 0{,}9772$ sans justifier par la symétrie (résultat juste, démarche non demandée~: $0{,}5$ point au plus).}
+\end{correction}
+
+\section{Exercice 3 -- Revoir la date de remplacement \hfill {\normalsize\color{uimmred}5 points}}
+
+\begin{correction}[-- Question 1]
+\source{\LN{}, §4.1 Trouver un seuil sur $X$ p.~8~; §2.3 Problème inverse p.~5}
+L'exigence s'écrit $P(D < t) \leq 0{,}01$. À la limite, $P(D < t) = 0{,}01$, soit après standardisation $P\!\left(Z < \dfrac{t - 12\,000}{1\,500}\right) = 0{,}01$. On lit
+\[ z = \texttt{FracNormale}(0{,}01) \approx -2{,}3263. \]
+\bareme{traduction de l'exigence $0{,}5$~; $z$ avec le bon signe $0{,}5$.}
+\piege{chercher $z$ pour $0{,}99$ (signe positif)~: la date serait supérieure à $12\,000$ h.}
+\end{correction}
+
+\begin{correction}[-- Question 2]
+\source{\LN{}, §4.1 p.~8~; TD progressif, exercices 4 et 5 (sens de l'arrondi)}
+\[ \frac{t - 12\,000}{1\,500} = -2{,}3263 \ \Longrightarrow\ t = 12\,000 - 2{,}3263 \times 1\,500 = 8\,510{,}48. \]
+Plus $t$ est grand, plus la proportion de casses avant $t$ augmente. La date doit donc \textbf{ne pas dépasser} $8\,510{,}48$~: on arrondit par défaut, $t = 8\,510$ h.\\
+Vérification~: $P(D < 8\,510) = 0{,}99915\,\%$, exigence respectée~; $P(D < 8\,511) = 1{,}0009\,\%$, exigence non respectée.
+\bareme{calcul de $t$ $1$~; arrondi par défaut justifié $1$. Réponse $8\,511$ h~: $1$ point au plus.}
+\piege{arrondir au plus proche ($8\,510$ ici, mais sans justification)~; arrondir par excès à $8\,511$.}
+\end{correction}
+
+\begin{correction}[-- Question 3]
+\source{\LN{}, §4.1 p.~8 (aire à droite~: se ramener à $P(X \leq x) = 1 - p$)}
+$P(D > x) = 0{,}20 \iff P(D \leq x) = 0{,}80$. Donc
+\[ z = \texttt{FracNormale}(0{,}80) \approx 0{,}8416, \qquad x = 12\,000 + 0{,}8416 \times 1\,500 = 13\,262{,}4. \]
+Une courroie fait partie des $20\,\%$ les plus durables à partir de $13\,262$ h.
+\bareme{passage à l'aire à gauche $1$~; calcul de $x$ $1$.}
+\piege{chercher $z$ pour $0{,}20$ et trouver $x = 10\,737{,}6$ (aire du mauvais côté).}
+\end{correction}
+
+\section{Exercice 4 -- Pression du réseau d'air comprimé \hfill {\normalsize\color{uimmred}6 points}}
+
+\begin{correction}[-- Question 1]
+\source{\LN{}, §3.2 p.~6~; §3.3 p.~7}
+\[ z = \frac{6{,}0 - 6{,}4}{0{,}25} = -1{,}6, \qquad P(X < 6{,}0) = P(Z < -1{,}6) = 0{,}0548. \]
+\bareme{évènement et $z$ $1$~; résultat $0{,}5$.}
+\piege{ne pas centrer ($6{,}0/0{,}25 = 24$)~; garder le signe $+$ et trouver $0{,}9452$.}
+\end{correction}
+
+\begin{correction}[-- Question 2]
+\source{énoncé (cahier des charges)}
+$0{,}0548 > 0{,}005$~: le cahier des charges \textbf{n'est pas respecté}. La probabilité d'arrêt est environ onze fois trop élevée (soit $5{,}5\,\%$ du temps au lieu de $0{,}5\,\%$ au plus).
+\bareme{comparaison à $0{,}005$ et conclusion $1$.}
+\piege{conclure «~respecté~» car $0{,}0548$ est «~petit~».}
+\end{correction}
+
+\begin{correction}[-- Question 3]
+\source{\LN{}, §4.2 Retrouver un paramètre $\mu$ ou $\sigma$ p.~8~; §4.1 p.~8}
+On veut $P(X < 6{,}0) \leq 0{,}005$. À la limite~: $\dfrac{6{,}0 - \mu}{0{,}25} = \texttt{FracNormale}(0{,}005) \approx -2{,}5758$, donc
+\[ \mu = 6{,}0 + 2{,}5758 \times 0{,}25 = 6{,}6440. \]
+Plus $\mu$ est grand, plus la probabilité d'arrêt diminue~: il faut $\mu \geq 6{,}6440$, valeur minimale. On arrondit par excès~: $\mu = 6{,}65$ bar.\\
+Vérification~: avec $6{,}64$, $P(X < 6{,}0) = 0{,}523\,\%$, exigence non respectée~; avec $6{,}65$, $0{,}466\,\%$.
+\bareme{équation en $\mu$ avec le bon $z$ $1$~; calcul $0{,}5$~; arrondi par excès justifié $0{,}5$.}
+\piege{arrondir à $6{,}64$ (au plus proche)~; trouver $\mu = 5{,}36$ (signe de $z$ oublié).}
+\end{correction}
+
+\begin{correction}[-- Question 4]
+\source{\LN{}, §4.2 p.~8 (exemple \textit{Recherche de l'écart-type})}
+$\dfrac{6{,}0 - 6{,}4}{\sigma} = -2{,}5758$, donc
+\[ \sigma = \frac{-0{,}4}{-2{,}5758} = 0{,}1553. \]
+Plus $\sigma$ est petit, plus la cloche est resserrée autour de $6{,}4$ et plus la probabilité d'arrêt diminue~: il faut $\sigma \leq 0{,}1553$, valeur maximale. On arrondit par défaut~: $\sigma = 0{,}15$ bar.\\
+Vérification~: avec $0{,}16$, $P(X < 6{,}0) = 0{,}621\,\%$, exigence non respectée~; avec $0{,}15$, $0{,}383\,\%$.
+\bareme{équation en $\sigma$ $0{,}5$~; calcul $0{,}5$~; arrondi par défaut justifié $0{,}5$.}
+\piege{arrondir à $0{,}16$~; diviser $-2{,}5758$ par $-0{,}4$ (inverser le quotient).}
+\end{correction}
+\end{document}
