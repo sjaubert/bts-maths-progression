@@ -628,6 +628,16 @@
         ]
     };
 
+    // Ressources en ligne (hors dossier local), affichées après les fichiers locaux
+    const externalResources = {
+        "[MOD08]": [
+            {
+                label: "La machine est-elle capable ?",
+                url: "https://sjaubert.github.io/00FC/OI/TQ_2026%20CQPM%20Technicien%20qualit%C3%A9%20-%20Bourges%205-6%20Novembre%20%202026/V4_Formation_Salaries/La_machine_est-elle_capable.html"
+            }
+        ]
+    };
+
     function renderNav() {
         const container = document.getElementById('nav-container');
         let html = '';
@@ -657,10 +667,13 @@
 
         const folder = mod.code.replace(/[\[\]]/g, '');
         const res = resourceMap[mod.code] || [];
+        const ext = externalResources[mod.code] || [];
         let resHtml;
-        if (res.length > 0) {
+        if (res.length > 0 || ext.length > 0) {
             const links = res.map(f =>
                 `<li><a href="${folder}/${encodeURIComponent(f)}" target="_blank">${f.replace(/\.pdf$/i, '').replace(/_+/g, ' ')}</a></li>`
+            ).join('') + ext.map(r =>
+                `<li><a href="${r.url}" target="_blank" rel="noopener">${r.label}</a> (en ligne)</li>`
             ).join('');
             resHtml = `<div class="section">
                 <h3>Ressources locales <a class="folder-link" href="${folder}" target="_blank">Ouvrir le dossier</a></h3>
