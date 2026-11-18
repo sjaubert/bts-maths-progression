@@ -1,0 +1,207 @@
+% ============================================================
+% DS MOD08 -- Loi normale : réglage, cumul de durées, décision (sujet)
+% BTS ATI / CRSA -- durée 1 h -- calculatrice autorisée, aucun document
+% Pôle Formation UIMM - CVDL - S. JAUBERT
+% Corrigé et barème : MOD08_DS_Loi_Normale_ATI_CRSA_Corrige_v1_0
+% Thèmes : loi normale directe et inverse, somme de variables aléatoires, probabilité conditionnelle
+% Inspiré du TD MOD08 v2.0 (problèmes 1, 4, 5 et 6). Situations et valeurs fictives.
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\usepackage{courier}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=3cm, bottom=2.5cm, left=2cm, right=2cm, headheight=2cm]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{tikz}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,needspace,booktabs}
+\usepackage{titlesec}
+\usepackage{hyperref}
+
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+
+\titleformat{\section}{\Large\bfseries\color{uimmblue}}{}{0pt}{}[\vspace{2pt}{\color{uimmblue}\titlerule[1.2pt]}]
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*}
+\setlist[enumerate,2]{label=\alph*), leftmargin=*}
+\setlist[itemize,1]{label={\color{uimmblue}\textbullet}}
+
+\newtcolorbox{exo}[1]{colback=white, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={#1}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=5pt, bottom=6pt, before skip=8pt, after skip=6pt}
+\newtcolorbox{consigne}{colback=uimmlightgray, colframe=uimmgray, boxrule=0.8pt, arc=3pt,
+  left=8pt, right=8pt, top=4pt, bottom=4pt}
+\newtcolorbox{rappel}{colback=uimmlightblue, colframe=uimmblue, fonttitle=\bfseries\color{white},
+  coltitle=white, title={Rappels de cours}, boxrule=1pt, arc=2pt,
+  left=8pt, right=8pt, top=3pt, bottom=4pt, before skip=6pt, after skip=4pt, fontupper=\normalsize}
+
+\newcommand{\pts}[1]{\hfill\mbox{\color{uimmred}\small\textbf{(#1)}}}
+% Zone de réponse lignée : #1 = nombre de lignes
+\newcommand{\zone}[1]{\par\smallskip\noindent\begin{tikzpicture}
+  \foreach \i in {1,...,#1}{\draw[uimmgray!30] (0,-0.78*\i) -- (\linewidth-1pt,-0.78*\i);}
+  \end{tikzpicture}\par\smallskip}
+% Cadre vide pour l'arbre pondéré : #1 = hauteur
+\newcommand{\cadre}[1]{\par\smallskip\begin{tcolorbox}[colback=white, colframe=uimmgray!50, boxrule=0.6pt, arc=2pt, height=#1]\end{tcolorbox}\par\smallskip}
+\newcommand{\EnTete}[3]{%
+\pagestyle{fancy}\fancyhf{}\renewcommand{\headrulewidth}{0pt}
+\fancyhead[L]{\raisebox{-0.5\height}{\includegraphics[height=1.5cm]{logo_uimm_placeholder.jpg}}}
+\fancyhead[C]{\begin{minipage}{7cm}\centering
+  {\small\color{uimmblue}\textbf{Pôle Formation UIMM - CVDL}}\\
+  {\footnotesize\color{uimmgray} BTS ATI / CRSA\\ Mathématiques}\end{minipage}}
+\fancyhead[R]{{\small\color{#3}\textbf{MOD08 -- #1}}}
+\fancyfoot[C]{{\color{uimmblue}\rule{\textwidth}{1pt}}\\[2pt]
+  {\footnotesize\color{uimmgray} Pôle Formation UIMM -- Centre-Val de Loire \hfill S. JAUBERT \hfill #2 -- \thepage}}}
+\EnTete{DS loi normale}{DS 1 h}{uimmred}
+
+\begin{document}
+
+\begin{tcolorbox}[colback=uimmred, colframe=uimmred, sharp corners, boxrule=0pt,
+  left=14pt, right=14pt, top=8pt, bottom=8pt]
+{\color{white}\LARGE\bfseries Devoir surveillé -- MOD08}\\[3pt]
+{\color{white}\large La loi normale en production et en maintenance \hfill Durée~: 1 h}
+\end{tcolorbox}
+
+\vspace{2pt}
+\noindent{\small\renewcommand{\arraystretch}{1.5}%
+\begin{tabular}{@{}>{\bfseries\color{uimmblue}}l@{\hspace{6pt}}p{8.6cm}@{\hspace{10pt}}>{\bfseries\color{uimmblue}}l@{\hspace{6pt}}p{3.2cm}@{}}
+Nom, prénom~: & \dotfill & Section~: & \dotfill \\
+ & & Note~: & \dotfill\ / 20 \\
+\end{tabular}}
+
+\begin{consigne}\small
+\textbf{Consignes.} Durée $1$ h. Calculatrice autorisée, aucun document. Smartphone interdit (éteint et rangé dans le sac). Répondre sur le sujet, dans les zones prévues.
+\begin{itemize}[leftmargin=12pt, itemsep=0pt, topsep=2pt]
+  \item Pour chaque probabilité~: écrire l'évènement avec la variable aléatoire \textbf{avant} tout calcul, puis le résultat. Un résultat seul ne rapporte pas tous les points.
+  \item Probabilités arrondies à $10^{-4}$. Dans les calculs enchaînés, conserver les valeurs exactes de la calculatrice.
+  \item Quand le résultat est un réglage qui doit garantir une exigence, l'arrondir \textbf{dans le sens qui respecte l'exigence}, et le dire.
+  \item Barème indicatif~: exercice 1 sur $6$ points, exercice 2 sur $7$, exercice 3 sur $7$. Durées conseillées~: $15$\,+\,$20$\,+\,$20$\,min.
+\end{itemize}
+\end{consigne}
+
+\begin{rappel}
+\textbf{Loi normale centrée réduite.} Si $X \sim \mathcal{N}(\mu\,;\sigma)$, alors $Z = \dfrac{X-\mu}{\sigma}$ suit la loi $\mathcal{N}(0\,;1)$, et
+\[ P(X \leq x) = P(Z \leq z) \quad\text{avec}\quad z = \frac{x-\mu}{\sigma}. \]
+$P(X > a) = 1 - P(X \leq a)$~; \ $P(a \leq X \leq b) = P(X \leq b) - P(X \leq a)$~; \ symétrie~: $P(Z \leq -z) = 1 - P(Z \leq z)$.\\
+\textbf{Problème inverse.} Pour $P(X \leq x) = p$ (aire \textbf{à gauche}), on lit $z$ tel que $P(Z \leq z) = p$, puis $x = \mu + z\,\sigma$. Pour retrouver $\mu$ ou $\sigma$, on garde le même $z$.
+
+\smallskip
+\textbf{Somme de variables normales indépendantes.} Si $X \sim \mathcal{N}(\mu_1\,;\sigma_1)$ et $Y \sim \mathcal{N}(\mu_2\,;\sigma_2)$ sont indépendantes~:
+\[ X+Y \sim \mathcal{N}\!\left(\mu_1+\mu_2\,;\sqrt{\sigma_1^2+\sigma_2^2}\right), \qquad X-Y \sim \mathcal{N}\!\left(\mu_1-\mu_2\,;\sqrt{\sigma_1^2+\sigma_2^2}\right). \]
+Les \textbf{variances} s'additionnent, pas les écarts-types. Pour $n$ variables indépendantes de même loi $\mathcal{N}(\mu\,;\sigma)$, la somme suit $\mathcal{N}(n\mu\,;\sigma\sqrt{n})$.
+
+\smallskip
+\textbf{Probabilité conditionnelle.} $P_A(B) = \dfrac{P(A \cap B)}{P(A)}$, donc $P(A \cap B) = P(A)\,P_A(B)$. Si $A$ et $\overline{A}$ forment une partition~: $P(B) = P(A)\,P_A(B) + P(\overline{A})\,P_{\overline{A}}(B)$ (arbre pondéré).
+
+\smallskip
+\textbf{Calculatrice.} Probabilité~: TI \texttt{normalFRép(a,b,$\mu$,$\sigma$)}, Casio \texttt{Ncd} (borne infinie~: \texttt{-1E99} ou \texttt{1E99}). Seuil~: TI \texttt{FracNormale($p$,$\mu$,$\sigma$)}, Casio \texttt{InvN} (aire à gauche~; Casio~: saisir $\sigma$ avant $\mu$).
+\end{rappel}
+
+% ============================================================
+\newpage
+\section{Exercice 1 -- Pliage de tôle sur presse plieuse \hfill {\normalsize\color{uimmred}6 points}}
+\begin{exo}{Équerres de fixation de capteurs}
+Une presse plieuse à commande numérique produit des équerres de fixation en tôle d'acier. L'angle de pliage $A$, en degrés, doit respecter la tolérance $90{,}0 \pm 1{,}0$, soit $89 \leq A \leq 91$. Depuis le dernier changement d'outil, le retour élastique de la tôle n'est plus compensé correctement~: $A$ suit la loi normale $\mathcal{N}(90{,}4\,;0{,}5)$.
+\end{exo}
+\begin{enumerate}
+  \needspace{5.6cm}
+  \item Calculer la probabilité qu'une équerre soit conforme, puis la probabilité qu'une équerre ait un angle supérieur à $91$. Dans quel sens se trouvent surtout les équerres non conformes~? \pts{1,5 pt}
+  \zone{4}
+  \needspace{5.6cm}
+  \item Le régleur modifie la profondeur de pliage pour recentrer la machine sur l'angle nominal~: $\mu = 90{,}0$, avec le même écart-type $\sigma = 0{,}5$.
+  \begin{enumerate}
+    \needspace{2.8cm}
+    \item Calculer la nouvelle proportion d'équerres conformes. \pts{1 pt}
+    \zone{2}
+    \needspace{2.8cm}
+    \item Sur un lot de $2\,000$ équerres, combien d'équerres non conformes attend-on en moyenne~? \pts{0,5 pt}
+    \zone{2}
+  \end{enumerate}
+  \needspace{4.6cm}
+  \item Le client exige au moins $99\,\%$ d'équerres conformes. On admet que, pour un écart-type donné, la proportion d'équerres conformes est maximale lorsque la machine est centrée sur $90{,}0$.
+  \begin{enumerate}
+    \needspace{3.0cm}
+    \item Montrer que l'exigence du client ne peut pas être atteinte en agissant uniquement sur la moyenne $\mu$, tant que $\sigma = 0{,}5$. \pts{0,5 pt}
+    \zone{2}
+    \needspace{5.8cm}
+    \item La machine reste centrée ($\mu = 90{,}0$). Déterminer la valeur maximale de $\sigma$, arrondie au dixième de degré, qui respecte l'exigence du client. \pts{2,5 pts}
+    \zone{6}
+  \end{enumerate}
+\end{enumerate}
+
+% ============================================================
+\needspace{11cm}
+\section{Exercice 2 -- Temps de cycle d'une cellule de vissage \hfill {\normalsize\color{uimmred}7 points}}
+\begin{exo}{Cellule robotisée d'assemblage de carters}
+Une cellule robotisée assemble des carters de motoréducteur. Un cycle comprend trois phases consécutives~: la prise du carter sur le convoyeur d'entrée ($T_1$), le vissage ($T_2$), puis la dépose sur le convoyeur de sortie et le retour en position de prise ($T_3$). Les durées, en secondes, suivent les lois normales
+\[ T_1 \sim \mathcal{N}(2{,}4\,;0{,}2), \qquad T_2 \sim \mathcal{N}(6{,}0\,;0{,}3), \qquad T_3 \sim \mathcal{N}(3{,}0\,;0{,}2), \]
+et on admet que ces trois durées sont indépendantes. On note $T = T_1 + T_2 + T_3$ la durée d'un cycle. La cadence contractuelle de $300$ carters par heure impose un cycle d'au plus $12{,}0$\,s.
+\end{exo}
+\begin{enumerate}
+  \needspace{5.4cm}
+  \item Donner la loi de $T$. Un stagiaire affirme que $\sigma_T = 0{,}2 + 0{,}3 + 0{,}2 = 0{,}7$\,s. Que penser de cette affirmation~? \pts{2 pts}
+  \zone{4}
+  \needspace{5.4cm}
+  \item Calculer la probabilité qu'un cycle dure plus de $12{,}0$\,s. Sur $1\,000$ cycles, combien dépassent $12{,}0$\,s en moyenne~? \pts{1,5 pt}
+  \zone{4}
+  \needspace{5.4cm}
+  \item Le client accepte de renégocier la durée de cycle contractuelle $D$, à condition qu'au moins $98\,\%$ des cycles durent au plus $D$. Déterminer la plus petite valeur de $D$, arrondie au dixième de seconde, qui respecte cette condition. \pts{2 pts}
+  \zone{4}
+  \needspace{7.4cm}
+  \item Le robot remplit des bacs de $20$ carters, soit $20$ cycles successifs indépendants, chacun de même loi que $T$. Un chariot autonome évacue un bac toutes les $4$\,min et le changement de bac dure $8$\,s~: le bac doit donc être rempli en au plus $232$\,s. On note $S$ la durée de remplissage d'un bac.
+  \begin{enumerate}
+    \needspace{3.4cm}
+    \item Donner la loi de $S$. \pts{0,5 pt}
+    \zone{2}
+    \needspace{4.4cm}
+    \item Calculer la probabilité que le bac soit rempli à temps. Comparer avec le résultat de la question 2 et commenter. \pts{1 pt}
+    \zone{3}
+  \end{enumerate}
+\end{enumerate}
+
+% ============================================================
+\needspace{10cm}
+\section{Exercice 3 -- Surveillance vibratoire de paliers \hfill {\normalsize\color{uimmred}7 points}}
+\begin{exo}{Alarme d'un système de surveillance}
+Sur un parc de ventilateurs industriels, on mesure sur chaque palier la vitesse vibratoire efficace $V$, en mm/s. Les valeurs de l'énoncé sont fictives et ne reprennent aucun seuil normatif.
+\begin{itemize}[leftmargin=12pt, itemsep=0pt, topsep=2pt]
+  \item Un palier \textbf{sain} (évènement $S$) a une vitesse $V \sim \mathcal{N}(2{,}0\,;0{,}5)$.
+  \item Un palier avec un \textbf{défaut naissant} (évènement $D = \overline{S}$) a une vitesse $V \sim \mathcal{N}(4{,}0\,;1{,}0)$.
+  \item $5\,\%$ des paliers du parc présentent un défaut naissant.
+\end{itemize}
+Une \textbf{alarme} (évènement $A$) se déclenche lorsque $V > s$, où $s$ est le seuil réglé dans l'automate. Le seuil actuel est $s = 3{,}0$ mm/s.
+\end{exo}
+\begin{enumerate}
+  \needspace{5.4cm}
+  \item Calculer $\alpha = P_S(A)$, risque de fausse alarme, et $\beta = P_D(\overline{A})$, risque de non-détection. Interpréter chacun par une phrase. \pts{1,5 pt}
+  \zone{4}
+  \needspace{6.0cm}
+  \item Construire l'arbre pondéré de la situation, puis calculer $P(A)$. \pts{1,5 pt}
+  \cadre{3.8cm}
+  \needspace{4.2cm}
+  \item Une alarme vient de se déclencher sur un palier. Quelle est la probabilité que ce palier présente réellement un défaut naissant~? Interpréter ce résultat. \pts{1,5 pt}
+  \zone{3}
+  \needspace{7.4cm}
+  \item Le responsable maintenance exige que le risque de non-détection ne dépasse pas $5\,\%$.
+  \begin{enumerate}
+    \needspace{4.4cm}
+    \item Déterminer le seuil maximal $s$, arrondi au centième de mm/s dans le sens qui respecte l'exigence. \pts{1,5 pt}
+    \zone{3}
+    \needspace{4.4cm}
+    \item Pour ce seuil, calculer $\alpha$. Commenter le compromis entre fausses alarmes et non-détection. \pts{1 pt}
+    \zone{3}
+  \end{enumerate}
+\end{enumerate}
+
+\end{document}
