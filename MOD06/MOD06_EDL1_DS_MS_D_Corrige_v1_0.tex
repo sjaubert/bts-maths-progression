@@ -1,0 +1,209 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=1.8cm, bottom=3cm, left=2cm, right=2cm, headheight=14pt, footskip=1.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,tabularx,needspace}
+\usepackage{lastpage}
+\usepackage{hyperref}
+
+% ----- Charte UIMM -----
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*, itemsep=3pt}
+\setlist[enumerate,2]{label=\alph*), itemsep=2pt}
+
+% ----- Paramètres du sujet -----
+\newcommand{\groupe}{D}
+\newcommand{\creneau}{Mardi 24 novembre 2026}
+
+% ----- En-tête et pied de page (modèle PR3) -----
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\small\renewcommand{\arraystretch}{1.3}%
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash\itshape}X|>{\centering\arraybackslash}p{1.8cm}|>{\centering\arraybackslash}p{3.6cm}|>{\centering\arraybackslash}p{1.9cm}|}
+\hline
+BTS MS 2 -- MOD06 Équations différentielles -- DS, corrigé groupe \groupe & {\scriptsize\itshape Auteur :}\newline SJ & MAJ du 24/11/2026\newline{\color{uimmblue}Version 1.0} & Page :\newline \thepage/\pageref*{LastPage}\\
+\hline
+\end{tabularx}}
+
+% ----- Exercices -----
+\newcounter{exo}
+% \exo{titre}{compétences}{capacités}{barème}
+\newcommand{\exo}[4]{\needspace{0.5\textheight}\refstepcounter{exo}\vspace{8pt}%
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, boxrule=0.8pt, arc=2pt, left=6pt, right=6pt, top=3pt, bottom=3pt]
+{\color{uimmblue}\bfseries Exercice \theexo\ : #1}\hfill{\color{uimmblue}\bfseries #4}\\
+{\small\color{uimmred}\bfseries #2\quad #3}
+\end{tcolorbox}}
+% Espace de réponse (blanc), hauteur en cm
+\newcommand{\rep}[1]{\par\noindent\begin{minipage}[t][#1cm]{\linewidth}\mbox{}\end{minipage}\par}
+\newcommand{\pts}[1]{\unskip\nobreak\hfill\mbox{\small\color{uimmgray}(#1)}}
+
+\begin{document}
+\thispagestyle{fancy}
+
+% ============================================================
+% EN-TÊTE PR3
+% ============================================================
+\noindent{\renewcommand{\arraystretch}{1.1}%
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}m{2.9cm}|>{\centering\arraybackslash}m{4.3cm}|>{\centering\arraybackslash}X|}
+\hline
+\rule{0pt}{2.4cm}\IfFileExists{logo_uimm_placeholder.jpg}{\includegraphics[height=2.2cm]{logo_uimm_placeholder.jpg}}{\fbox{\parbox[c][2cm][c]{2.4cm}{\centering\bfseries\color{uimmblue}UIMM}}} &
+{\bfseries\large CFAI CENTRE}\newline{\footnotesize 74, Route Nationale\newline La Chapelle St Mesmin\newline orleans@poleformation-\newline uimmcvdl.fr} &
+{\Large\bfseries\color{uimmblue}Corrigé : Équations différentielles\newline{}du premier ordre}\newline{}{\small BTS MS 2\textsuperscript{e} année -- \textbf{Groupe \groupe}}\newline{}{\footnotesize\creneau}\\
+\hline
+\end{tabularx}}
+
+\newcommand{\reference}[1]{\par\smallskip{\footnotesize\color{uimmblue}\textbf{Réf. :} #1}}
+\newcommand{\errs}[1]{\par{\footnotesize\color{uimmred}\textbf{Erreurs attendues :} \color{uimmgray}#1}}
+\newcommand{\bareme}[1]{\par{\footnotesize\color{uimmgray}\textbf{Barème :} #1}}
+\newcommand{\qq}[2]{\needspace{3.8cm}\par\medskip\noindent{\color{uimmblue}\bfseries #1}\ #2\par\vspace{2pt}}
+\setlength{\abovedisplayskip}{3pt}\setlength{\belowdisplayskip}{3pt}
+
+\vspace{4pt}
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.6pt, arc=2pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\small\textbf{Usage.} Les références renvoient au sujet remis aux stagiaires : page du sujet et étape du \textbf{Rappel} (page 1). Chaque question liste les erreurs algébriques attendues, pour identifier la lacune au-delà du point perdu. Les barèmes admettent la \textbf{cohérence} : une erreur de réduction n'est pas pénalisée une seconde fois dans la suite de la question. La grille de diagnostic est en dernière page.
+\end{tcolorbox}
+
+% ============================================================
+\exo{Réduire avant de résoudre}{C4 C5}{[S01] [C01] [C02]}{10 points}
+% ============================================================
+Chaque équation vaut $2$ points : a) réduction et lecture de $a$, $b$, $c$ : $0{,}5 + 0{,}5$ ; b) $\alpha$ et solution générale : $0{,}5 + 0{,}5$.
+
+\qq{1.}{$5y' - 2y = 3y' + 4y$.}
+a) On regroupe : $5y' - 3y' - 2y - 4y = 0$, soit $2y' - 6y = 0$. Donc $a = 2$, $b = -6$, $c = 0$.
+
+b) $\alpha = \dfrac{b}{a} = \dfrac{-6}{2} = -3$. Équation homogène : $y_h(t) = C\,e^{-\alpha t} = C\,e^{3t}$. Comme $c = 0$, $y_p = 0$. Solution générale : $y(t) = C\,e^{3t}$, $C \in \mathbb{R}$.
+\reference{sujet p. 2 ; Rappel p. 1, étapes 1 à 5.}
+\errs{$5y' + 3y' = 8y'$ ou $-2y + 4y = 2y$ (terme changé de côté sans changer de signe) ; $\alpha = -3$ mais solution écrite $C\,e^{-3t}$ (le signe de $-\alpha$ est oublié).}
+
+\qq{2.}{$3\,(y' - 2y) = 2y' + 9$.}
+a) On développe : $3y' - 6y = 2y' + 9$, puis $3y' - 2y' - 6y = 9$, soit $y' - 6y = 9$. Donc $a = 1$, $b = -6$, $c = 9$.
+
+b) $\alpha = \dfrac{-6}{1} = -6$, donc $y_h(t) = C\,e^{6t}$. Solution constante : $y_p = \dfrac{c}{b} = \dfrac{9}{-6} = -\dfrac{3}{2}$. Solution générale : $y(t) = C\,e^{6t} - \dfrac{3}{2}$.
+\reference{sujet p. 2 ; Rappel p. 1, étapes 1, 3, 4, 5.}
+\errs{$3(y' - 2y) = 3y' - 2y$ (distribution oubliée sur le second terme) ; $y_p = \dfrac{9}{6}$ (signe) ; $y_p = \dfrac{c}{a} = 9$ (confusion entre $c/a$, second membre de la forme normalisée, et $c/b$, solution constante) ; fraction $-\dfrac{9}{6}$ non simplifiée.}
+
+\qq{3.}{$\dfrac{y'}{2} - \dfrac{y}{3} = 1$.}
+a) L'équation est déjà réduite : $a = \dfrac{1}{2}$, $b = -\dfrac{1}{3}$, $c = 1$. Multiplier par $6$ donne $3y' - 2y = 6$ ($a = 3$, $b = -2$, $c = 6$), accepté.
+
+b) $\alpha = \dfrac{b}{a} = \dfrac{-1/3}{1/2} = -\dfrac{1}{3} \times 2 = -\dfrac{2}{3}$. Donc $y_h(t) = C\,e^{\frac{2}{3}t}$. Solution constante : $y_p = \dfrac{c}{b} = \dfrac{1}{-1/3} = -3$. Solution générale : $y(t) = C\,e^{\frac{2}{3}t} - 3$.
+\reference{sujet p. 2 ; Rappel p. 1, étapes 1 à 5.}
+\errs{$\alpha = \left(-\dfrac{1}{3}\right)\times\dfrac{1}{2} = -\dfrac{1}{6}$ (diviser par une fraction traité comme une multiplication) ; $\alpha = -\dfrac{3}{2}$ (fraction inversée) ; multiplication par $6$ appliquée à un seul terme ($3y' - 2y = 1$) ; $y_p = -\dfrac{1}{3}$.}
+
+\qq{4.}{$2y - y' = 4 + y$.}
+a) $2y - y - y' = 4$, soit $-y' + y = 4$. Donc $a = -1$, $b = 1$, $c = 4$. Écrire $y' - y = -4$ ($a = 1$, $b = -1$, $c = -4$) est accepté.
+
+b) $\alpha = \dfrac{b}{a} = \dfrac{1}{-1} = -1$, donc $y_h(t) = C\,e^{t}$. Solution constante : $y_p = \dfrac{c}{b} = \dfrac{4}{1} = 4$. Solution générale : $y(t) = C\,e^{t} + 4$.
+\reference{sujet p. 3 ; Rappel p. 1, étapes 1 à 5.}
+\errs{lire $-y' + y = 4$ comme $y' + y = 4$ ($a = 1$ : le signe moins devant $y'$ est ignoré), d'où $C\,e^{-t} + 4$ ; $2y - y = 2$ ; $\alpha = +1$.}
+
+\qq{5.}{$4 - 3y' = 2\,(y + 5) - y'$.}
+a) On développe : $4 - 3y' = 2y + 10 - y'$. On regroupe : $-3y' + y' - 2y = 10 - 4$, soit $-2y' - 2y = 6$. Donc $a = -2$, $b = -2$, $c = 6$. Écrire $y' + y = -3$ est accepté.
+
+b) $\alpha = \dfrac{-2}{-2} = 1$, donc $y_h(t) = C\,e^{-t}$. Solution constante : $y_p = \dfrac{c}{b} = \dfrac{6}{-2} = -3$. Solution générale : $y(t) = C\,e^{-t} - 3$.
+\reference{sujet p. 3 ; Rappel p. 1, étapes 1 à 5.}
+\errs{$2(y + 5) = 2y + 5$ ; $-3y' + y' = -4y'$ ; $c = -6$ (le $4$ passe à droite sans changer de signe) ; $\alpha = -1$ (règle des signes pour $\dfrac{-2}{-2}$).}
+
+% ============================================================
+\exo{Mise sous tension d'un condensateur}{C4 C5 C6}{[S01] [C01] [C02]}{10 points}
+% ============================================================
+\qq{1.}{Montrer que $(E)$ équivaut à $u' + 2u = 12$. \hfill {\small(1 pt)}}
+On passe $-u$ à gauche, il devient $+u$ : $\dfrac{u'}{2} + u = 6$. On multiplie \textbf{tous} les termes par $2$ : $u' + 2u = 12$.
+\reference{sujet p. 3 ; Rappel p. 1, étapes 1 et 2.}
+\bareme{$0{,}5$ changement de côté avec changement de signe ; $0{,}5$ multiplication de tous les termes par $2$.}
+\errs{$\dfrac{u'}{2} - u = 6$ ; $u' + u = 12$ (seul le second membre est multiplié par $2$) ; $u' + 2u = 6$.}
+
+\qq{2.}{Solution générale de $u' + 2u = 12$. \hfill {\small(2 pts)}}
+Équation homogène $u' + 2u = 0$ : $\alpha = 2$, donc $u_h(t) = C\,e^{-2t}$. Solution constante : $u_p = \dfrac{c}{b} = \dfrac{12}{2} = 6$ (vérification : $0 + 2 \times 6 = 12$). Solution générale : $u(t) = C\,e^{-2t} + 6$.
+\reference{sujet p. 3 ; Rappel p. 1, étapes 3, 4, 5.}
+\bareme{$0{,}75$ homogène ; $0{,}75$ solution constante ; $0{,}5$ somme.}
+\errs{$C\,e^{2t}$ ; $u_p = 12$ (division par $b$ oubliée) ; $u_p = 6$ trouvé mais absent de la solution générale.}
+
+\qq{3.}{Constante $C$ et $u(t) = 6 - 4\,e^{-2t}$. \hfill {\small(1,5 pt)}}
+$u(0) = C\,e^{0} + 6 = C + 6$ car $e^{0} = 1$. Or $u(0) = 2$, donc $C = 2 - 6 = -4$. D'où $u(t) = 6 - 4\,e^{-2t}$.
+\reference{sujet p. 4 ; Rappel p. 1, étape 6 et $e^{0} = 1$.}
+\bareme{$0{,}5$ remplacement de $t$ par $0$ avec $e^{0} = 1$ ; $0{,}5$ résolution ; $0{,}5$ écriture finale.}
+\errs{$C = 2 + 6 = 8$ ou $C = 4$ (signe en passant $6$ de l'autre côté) ; $C = 2$ (solution constante ignorée) ; $e^{0} = 0$.}
+
+\qq{4.}{Limite de $u(t)$ en $+\infty$ et constante de temps $\tau$. \hfill {\small(1 pt)}}
+Comme $\alpha = 2 > 0$, $e^{-2t} \to 0$ quand $t \to +\infty$, donc $\lim\limits_{t \to +\infty} u(t) = 6$ V. Constante de temps : $\tau = \dfrac{1}{\alpha} = \dfrac{1}{2} = 0{,}5$ s.
+\reference{sujet p. 4 ; Rappel p. 1, « Constante de temps » et « Exponentielle et logarithme ».}
+\bareme{$0{,}5$ limite ; $0{,}5$ constante de temps.}
+\errs{limite $+\infty$ ou $2$ ; $\tau = 2$ ($\alpha$ au lieu de $1/\alpha$).}
+
+\qq{5.}{$u(\tau)$ arrondi au centième. \hfill {\small(1 pt)}}
+$u(0{,}5) = 6 - 4\,e^{-2 \times 0{,}5} = 6 - 4\,e^{-1} \approx 6 - 1{,}4715 = 4{,}5285$, soit $u(\tau) \approx 4{,}53$ V.
+\reference{sujet p. 4 ; Rappel p. 1, étape 5 (forme de la solution).}
+\bareme{$0{,}5$ exposant $-1$ correct ; $0{,}5$ valeur arrondie.}
+\errs{$(6 - 4)\,e^{-1} \approx 0{,}74$ (priorité des opérations) ; exposant $-2$ au lieu de $-1$ ; troncature : $4{,}52$.}
+
+\qq{6.}{Instant $t_1$ tel que $u(t_1) = 5$ V. \hfill {\small(2 pts)}}
+$6 - 4\,e^{-2t_1} = 5 \iff -4\,e^{-2t_1} = -1 \iff e^{-2t_1} = \dfrac{1}{4}$. On applique le logarithme : $-2t_1 = \ln\dfrac{1}{4} = -\ln 4$, donc $t_1 = \dfrac{\ln 4}{2} = \ln 2$. Valeur arrondie : $t_1 \approx 0{,}69$ s.
+
+Contrôle : $t_1 > \tau$ et $u(\tau) \approx 4{,}53 < 5$, cohérent.
+\reference{sujet p. 4 ; Rappel p. 1, « Exponentielle et logarithme » : $e^{X} = A \iff X = \ln A$ et $\ln\dfrac{1}{A} = -\ln A$.}
+\bareme{$0{,}75$ exponentielle isolée ; $0{,}5$ passage au logarithme ; $0{,}5$ division par $-2$ ; $0{,}25$ valeur exacte et arrondie. $\dfrac{\ln 4}{2}$ est accepté comme valeur exacte.}
+\errs{$6 - 4\,e^{-2t_1} = 5 \Rightarrow 2\,e^{-2t_1} = 5$ (soustraction de $4$ à $6$) ; $e^{-2t_1} = -\dfrac{1}{4}$ puis $\ln$ d'un nombre négatif ; $e^{-2t_1} = 4$ ; $t_1 = -\dfrac{\ln 4}{2} < 0$ non remarqué ; $\ln\dfrac{1}{4}$ non transformé en $-\ln 4$.}
+
+\qq{7.}{Tension initiale sachant que $u(1) = 5{,}5$ V. \hfill {\small(1,5 pt)}}
+D'après la question 2, $u(t) = 6 + C\,e^{-2t}$. La condition est donnée en $t_0 = 1$ : $u(1) = 6 + C\,e^{-2} = 5{,}5$, donc $C\,e^{-2} = -0{,}5$, puis $C = \dfrac{-0{,}5}{e^{-2}} = -0{,}5\,e^{2} \approx -3{,}6945$. Alors $u(0) = 6 + C \approx 6 - 3{,}6945 = 2{,}3055$, soit $u(0) \approx 2{,}31$ V.
+
+Contrôle : $u(0) \approx 2{,}31 < u(1) = 5{,}5 < 6$, la tension croît vers $6$ V.
+\reference{sujet p. 4 ; Rappel p. 1, étape 6 (condition en $t_0 = 1$) ; question 2 du même exercice.}
+\bareme{$0{,}5$ remplacement de $t$ par $1$ ; $0{,}5$ isolement de $C$ ; $0{,}5$ calcul de $u(0)$ et arrondi.}
+\errs{$C = -0{,}5\,e^{-2}$ (diviser par $e^{-2}$ traité comme multiplier) ; $C = -0{,}5 - 6$ ; $u(0) = 5{,}5$ (la condition en $t_0 = 1$ prise pour une condition en $0$) ; $u(0) = C$ sans le $6$.}
+
+% ============================================================
+\needspace{9cm}
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, boxrule=0.8pt, arc=2pt, left=6pt, right=6pt, top=3pt, bottom=3pt]
+{\color{uimmblue}\bfseries Grille de diagnostic des lacunes algébriques}
+\end{tcolorbox}
+\small
+\renewcommand{\arraystretch}{1.35}
+\noindent\begin{tabularx}{\textwidth}{|>{\raggedright\arraybackslash}p{4.9cm}|>{\raggedright\arraybackslash}p{3.3cm}|>{\raggedright\arraybackslash}X|}
+\hline
+\rowcolor{uimmlightblue}\textbf{Lacune} & \textbf{Questions} & \textbf{Symptôme} \\
+\hline
+Changer un terme de côté (signe) & Ex.\,1 : 1, 2, 4, 5 \newline Ex.\,2 : Q1, Q3, Q6 & Terme déplacé sans changement de signe \\
+\hline
+Développer une parenthèse & Ex.\,1 : 2, 5 & Un seul terme multiplié \\
+\hline
+Regrouper les termes semblables & Ex.\,1 : 1, 4, 5 & $y'$ et $y$ mélangés, coefficient faux \\
+\hline
+Fractions : diviser, multiplier & Ex.\,1 : 3 \newline Ex.\,2 : Q1 & $\dfrac{b}{a}$ avec $a$ fraction, multiplication d'un seul membre \\
+\hline
+Coefficient dominant négatif, règle des signes & Ex.\,1 : 4, 5 & $a = -1$ lu comme $1$ ; $\dfrac{-2}{-2} = -1$ \\
+\hline
+Confusion $\dfrac{c}{a}$ et $\dfrac{c}{b}$ & Ex.\,1 : 2, 3 \newline Ex.\,2 : Q2 & Solution constante $= c/a$ \\
+\hline
+Signe de l'exposant ($-\alpha$) & Ex.\,1 : 1 à 5 \newline Ex.\,2 : Q2 & $\alpha < 0$ mais $e^{-\alpha t}$ écrit $e^{-|\alpha| t}$ \\
+\hline
+Puissances et exponentielle & Ex.\,2 : Q3, Q5, Q7 & $e^{0} = 0$ ; diviser par $e^{-2}$ \\
+\hline
+Priorités opératoires, arrondi & Ex.\,2 : Q5 & $(6-4)\,e^{-1}$ ; troncature \\
+\hline
+Logarithme & Ex.\,2 : Q6 & $\ln$ d'un négatif ; $\ln\dfrac{1}{4}$ non simplifié \\
+\hline
+\end{tabularx}
+
+\medskip
+\textbf{Lecture rapide.} Un stagiaire qui perd surtout sur les a) de l'exercice 1 a une lacune de calcul littéral (signes, distribution, regroupement, fractions). Un stagiaire qui réussit les a) mais perd sur les b) maîtrise l'algèbre mais pas la méthode du rappel (étapes 3 à 5). Un stagiaire qui réussit l'exercice 1 mais échoue aux questions 3, 5, 6 et 7 de l'exercice 2 a une lacune sur les exponentielles et les logarithmes.
+
+\end{document}

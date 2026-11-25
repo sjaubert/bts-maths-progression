@@ -1,0 +1,184 @@
+% ============================================================
+% DS : Équations différentielles du premier ordre (EDL1 uniquement)
+% BTS MS 2e année - groupe D (mardi 24 novembre 2026)
+% Pôle Formation UIMM - CVDL - S. JAUBERT
+% Corrigé enseignant : MOD06_EDL1_DS_MS_D_Corrige_v1_0
+% Compilation : pdflatex, deux passes (nombre total de pages).
+% ============================================================
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+% babel-french absent sur certains postes : chargement conditionnel
+\IfFileExists{french.ldf}{\usepackage[french]{babel}}{}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[top=1.8cm, bottom=3cm, left=2cm, right=2cm, headheight=14pt, footskip=1.6cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage[most]{tcolorbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{array,tabularx,needspace}
+\usepackage{lastpage}
+\usepackage{hyperref}
+
+% ----- Charte UIMM -----
+\definecolor{uimmblue}{HTML}{005C85}
+\definecolor{uimmred}{HTML}{D31326}
+\definecolor{uimmlightblue}{HTML}{E8F1F8}
+\definecolor{uimmgray}{HTML}{333333}
+\definecolor{uimmlightgray}{HTML}{F5F5F5}
+\hypersetup{colorlinks=true, linkcolor=uimmblue, urlcolor=uimmblue}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{3pt}
+\setlist[enumerate,1]{label={\color{uimmblue}\textbf{\arabic*.}}, leftmargin=*, itemsep=3pt}
+\setlist[enumerate,2]{label=\alph*), itemsep=2pt}
+
+% ----- Paramètres du sujet -----
+\newcommand{\groupe}{D}
+\newcommand{\creneau}{Mardi 24 novembre 2026}
+
+% ----- En-tête et pied de page (modèle PR3) -----
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0pt}
+\fancyfoot[C]{\small\renewcommand{\arraystretch}{1.3}%
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash\itshape}X|>{\centering\arraybackslash}p{1.8cm}|>{\centering\arraybackslash}p{3.6cm}|>{\centering\arraybackslash}p{1.9cm}|}
+\hline
+BTS MS 2 -- MOD06 Équations différentielles -- DS, groupe \groupe & {\scriptsize\itshape Auteur :}\newline SJ & MAJ du 24/11/2026\newline{\color{uimmblue}Version 1.0} & Page :\newline \thepage/\pageref*{LastPage}\\
+\hline
+\end{tabularx}}
+
+% ----- Exercices -----
+\newcounter{exo}
+% \exo{titre}{compétences}{capacités}{barème}
+\newcommand{\exo}[4]{\needspace{0.5\textheight}\refstepcounter{exo}\vspace{8pt}%
+\begin{tcolorbox}[colback=uimmlightblue, colframe=uimmblue, boxrule=0.8pt, arc=2pt, left=6pt, right=6pt, top=3pt, bottom=3pt]
+{\color{uimmblue}\bfseries Exercice \theexo\ : #1}\hfill{\color{uimmblue}\bfseries #4}\\
+{\small\color{uimmred}\bfseries #2\quad #3}
+\end{tcolorbox}}
+% Espace de réponse (blanc), hauteur en cm
+\newcommand{\rep}[1]{\par\noindent\begin{minipage}[t][#1cm]{\linewidth}\mbox{}\end{minipage}\par}
+\newcommand{\pts}[1]{\unskip\nobreak\hfill\mbox{\small\color{uimmgray}(#1)}}
+
+\begin{document}
+\thispagestyle{fancy}
+
+% ============================================================
+% EN-TÊTE PR3
+% ============================================================
+\noindent{\renewcommand{\arraystretch}{1.1}%
+\begin{tabularx}{\textwidth}{|>{\centering\arraybackslash}m{2.9cm}|>{\centering\arraybackslash}m{4.3cm}|>{\centering\arraybackslash}X|}
+\hline
+\rule{0pt}{2.4cm}\IfFileExists{logo_uimm_placeholder.jpg}{\includegraphics[height=2.2cm]{logo_uimm_placeholder.jpg}}{\fbox{\parbox[c][2cm][c]{2.4cm}{\centering\bfseries\color{uimmblue}UIMM}}} &
+{\bfseries\large CFAI CENTRE}\newline{\footnotesize 74, Route Nationale\newline La Chapelle St Mesmin\newline orleans@poleformation-\newline uimmcvdl.fr} &
+{\Large\bfseries\color{uimmblue}DS : Équations différentielles\newline{}du premier ordre}\newline{}{\small BTS MS 2\textsuperscript{e} année -- \textbf{Groupe \groupe}}\newline{}{\footnotesize\creneau}\\
+\hline
+\end{tabularx}}
+
+\vspace{-1pt}
+\noindent{\footnotesize\renewcommand{\arraystretch}{1.2}\hyphenpenalty=10000\exhyphenpenalty=10000%
+\newcommand{\on}{\cellcolor{uimmblue!22}}%
+\arrayrulecolor{black}\setlength{\arrayrulewidth}{0.7pt}%
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}%
+\begin{tabular}{|C{1.85cm}|C{2.05cm}|C{1.85cm}|C{2.0cm}|C{1.8cm}|C{2.15cm}|C{2.2cm}|}
+\hline
+\bfseries C1 S'informer & \bfseries C2 Chercher & \bfseries C3 Modéliser & \on\bfseries C4 Raisonner, argumenter & \multicolumn{2}{C{4.38cm}|}{\cellcolor{uimmblue!22}\bfseries C5 Calculer, illustrer, mettre en œuvre une démarche} & \on\bfseries C6 Communiquer\\
+\hline
+\end{tabular}}
+
+\vspace{8pt}
+% ----- Cartouche élève -----
+\noindent{\renewcommand{\arraystretch}{2.1}%
+\begin{tabularx}{\textwidth}{|>{\bfseries\color{uimmblue}}l X|>{\bfseries\color{uimmblue}}l p{2.6cm}|>{\bfseries\color{uimmblue}}l p{1.6cm}|}
+\hline
+Nom : & & Groupe : & BTS MS 2 -- \groupe & Note : & \hfill / 20\\
+\hline
+Prénom : & & \multicolumn{4}{l|}{\color{uimmgray}\footnotesize Répondre dans les espaces prévus.}\\
+\hline
+\end{tabularx}}
+
+\vspace{6pt}
+\begin{tcolorbox}[colback=uimmlightgray, colframe=uimmgray, boxrule=0.6pt, arc=2pt, left=8pt, right=8pt, top=4pt, bottom=4pt]
+\small\textbf{Durée : 1 h.} Aucun document autorisé. Téléphone portable interdit (éteint, rangé dans le sac). Calculatrice autorisée en \textbf{mode examen}. Répondre \textbf{directement sur le sujet}, dans les espaces prévus. Toute réponse doit être justifiée par un calcul. Barème indicatif sur 20.
+\end{tcolorbox}
+
+% ============================================================
+% RAPPEL
+% ============================================================
+\begin{tcolorbox}[colback=uimmlightblue!40, colframe=uimmblue, boxrule=0.8pt, arc=2pt, left=8pt, right=8pt, top=4pt, bottom=4pt, title={\bfseries Rappel : résoudre $a\,y' + b\,y = c$ ($a$, $b$, $c$ constantes, $a \neq 0$)}, coltitle=white, colbacktitle=uimmblue]
+\small
+\begin{enumerate}[leftmargin=*, itemsep=1pt, topsep=1pt]
+  \item \textbf{Réduire l'équation} : tous les termes en $y'$ et en $y$ à gauche, la constante à droite. Lire $a$, $b$ et $c$.
+  \item \textbf{Forme normalisée} : diviser par $a$, on obtient $y' + \alpha\,y = \dfrac{c}{a}$ avec $\alpha = \dfrac{b}{a}$.
+  \item \textbf{Équation homogène} $y' + \alpha\,y = 0$ : ses solutions sont $y_h(t) = C\,e^{-\alpha t}$, $C$ constante réelle.
+  \item \textbf{Solution particulière constante} (si $b \neq 0$) : $y_p = \dfrac{c}{b}$.
+  \item \textbf{Solution générale} : $y(t) = y_h(t) + y_p = C\,e^{-\alpha t} + \dfrac{c}{b}$.
+  \item \textbf{Condition initiale} $y(t_0) = y_0$ : remplacer $t$ par $t_0$, en déduire $C$, écrire la solution unique.
+\end{enumerate}
+\textbf{Constante de temps} (si $\alpha > 0$) : $\tau = \dfrac{1}{\alpha}$. À $t = \tau$, environ $63\,\%$ de l'évolution est réalisée.\\
+\textbf{Exponentielle et logarithme} : $e^{0} = 1$ ; \ $\big(e^{kt}\big)' = k\,e^{kt}$ ; \ si $\alpha > 0$, $e^{-\alpha t} \to 0$ quand $t \to +\infty$ ; \ pour $A > 0$ : $e^{X} = A \iff X = \ln A$ ; \ $\ln\dfrac{1}{A} = -\ln A$.
+\end{tcolorbox}
+
+% ============================================================
+\exo{Réduire avant de résoudre}{C4 C5}{[S01] [C01] [C02]}{10 points}
+% ============================================================
+La fonction inconnue $y$ est une fonction de la variable $t$. Il n'y a pas de condition initiale dans cet exercice. Pour chaque équation :
+
+\begin{enumerate}[label=\alph*), leftmargin=1.2cm, itemsep=1pt, topsep=2pt]
+  \item la \textbf{réduire} : l'écrire sous la forme $a\,y' + b\,y = c$ et donner $a$, $b$ et $c$ \hfill \mbox{\small\color{uimmgray}(1 pt)}
+  \item calculer $\alpha = \dfrac{b}{a}$, puis donner la \textbf{solution générale}. \hfill \mbox{\small\color{uimmgray}(1 pt)}
+\end{enumerate}
+Les résultats sont donnés sous forme exacte (fraction simplifiée ou décimal exact). Détailler les calculs de réduction.
+
+\medskip
+\begin{enumerate}
+  \needspace{5.4cm}
+  \item $5y' - 2y = 3y' + 4y$. \pts{2 pts}
+  \rep{4.0}
+  \needspace{5.4cm}
+  \item $3\,(y' - 2y) = 2y' + 9$. \pts{2 pts}
+  \rep{4.0}
+  \needspace{5.4cm}
+  \item $\dfrac{y'}{2} - \dfrac{y}{3} = 1$. \pts{2 pts}
+  \rep{4.0}
+  \needspace{5.4cm}
+  \item $2y - y' = 4 + y$. \pts{2 pts}
+  \rep{4.0}
+  \needspace{5.4cm}
+  \item $4 - 3y' = 2\,(y + 5) - y'$. \pts{2 pts}
+  \rep{4.0}
+\end{enumerate}
+
+% ============================================================
+\exo{Mise sous tension d'un condensateur}{C4 C5 C6}{[S01] [C01] [C02]}{10 points}
+% ============================================================
+Un condensateur, chargé initialement sous $2$\,V, est relié à une source de tension continue à l'instant $t = 0$. La tension $u(t)$ à ses bornes (en volts, $t$ étant en secondes) vérifie, pour $t \geq 0$, l'équation
+\[ (E) : \quad \dfrac{u'}{2} = 6 - u \qquad \text{avec} \qquad u(0) = 2 . \]
+
+\begin{enumerate}
+  \needspace{3.6cm}
+  \item Montrer que $(E)$ équivaut à $u' + 2u = 12$. \pts{1 pt}
+  \rep{2.4}
+  \needspace{5.1cm}
+  \item Donner la solution générale de $u' + 2u = 12$ (équation homogène, solution particulière constante, puis somme). \pts{2 pts}
+  \rep{3.4}
+  \needspace{4.6cm}
+  \item Déterminer la constante $C$ grâce à $u(0) = 2$, puis montrer que $u(t) = 6 - 4\,e^{-2t}$. \pts{1,5 pt}
+  \rep{3.0}
+  \needspace{3.6cm}
+  \item Déterminer la limite de $u(t)$ quand $t \to +\infty$, puis la constante de temps $\tau$. \pts{1 pt}
+  \rep{2.0}
+  \needspace{3.6cm}
+  \item Calculer $u(\tau)$, arrondi au centième. \pts{1 pt}
+  \rep{2.0}
+  \needspace{5.6cm}
+  \item Déterminer par le calcul l'instant $t_1$ tel que $u(t_1) = 5$\,V. Donner la valeur exacte, puis la valeur arrondie au centième de seconde. \pts{2 pts}
+  \rep{4.0}
+  \needspace{5.6cm}
+  \item Pour une autre mise en service, avec la même équation $(E)$, on mesure $u(1) = 5{,}5$\,V. Déterminer la tension initiale $u(0)$, arrondie au centième de volt. \pts{1,5 pt}
+  \rep{4.0}
+\end{enumerate}
+
+\end{document}
